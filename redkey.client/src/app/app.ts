@@ -1,38 +1,11 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, signal } from '@angular/core';
-
-interface WeatherForecast {
-  date: string;
-  temperatureC: number;
-  temperatureF: number;
-  summary: string;
-}
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { ToastOutlet } from './shared/components/toast-outlet/toast-outlet';
 
 @Component({
   selector: 'app-root',
+  imports: [RouterOutlet, ToastOutlet],
   templateUrl: './app.html',
-  standalone: false,
-  styleUrl: './app.css'
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class App implements OnInit {
-  public forecasts: WeatherForecast[] = [];
-
-  constructor(private http: HttpClient) {}
-
-  ngOnInit() {
-    this.getForecasts();
-  }
-
-  getForecasts() {
-    this.http.get<WeatherForecast[]>('/weatherforecast').subscribe(
-      (result) => {
-        this.forecasts = result;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
-
-  protected readonly title = signal('redkey.client');
-}
+export class App {}

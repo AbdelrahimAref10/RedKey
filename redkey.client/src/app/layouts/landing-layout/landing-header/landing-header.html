@@ -1,0 +1,52 @@
+@let t = i18n.t();
+<div class="topbar">
+  <div class="container topbar-in">
+    <span class="info"><app-icon name="phone" [size]="15" /><span class="ltr">{{ t.topbar.phone }}</span></span>
+    <span class="info"><app-icon name="mail" [size]="15" />{{ t.topbar.email }}</span>
+    <span class="info hide-md"><app-icon name="clock" [size]="15" />{{ t.topbar.hours }}</span>
+    <span class="spacer"></span>
+    <a href="#" class="soc" aria-label="Facebook"><app-icon name="facebook" [size]="15" /></a>
+    <a href="#" class="soc" aria-label="Instagram"><app-icon name="instagram" [size]="15" /></a>
+    <a href="#" class="soc" aria-label="LinkedIn"><app-icon name="linkedin" [size]="15" /></a>
+    <app-language-switcher [onDark]="true" />
+  </div>
+</div>
+
+<header class="header">
+  <div class="container header-in">
+    <a routerLink="/" class="brand" aria-label="RedKey"><app-logo [size]="40" /></a>
+
+    <nav class="nav" [class.open]="menuOpen()" (click)="menuOpen.set(false)">
+      @for (link of links; track link.key) {
+        <a
+          [routerLink]="link.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: link.exact }">{{ t.nav[link.key] }}</a>
+      }
+      <div class="nav-mobile-actions">
+        <app-language-switcher />
+      </div>
+    </nav>
+
+    <div class="actions">
+      @if (auth.isAuthenticated()) {
+        <a class="btn btn-primary btn-sm" [routerLink]="auth.homeUrl()">
+          <app-icon name="grid" [size]="16" />{{ t.nav.dashboard }}
+        </a>
+      } @else {
+        <a class="btn btn-ghost btn-sm hide-sm" routerLink="/login">
+          <app-icon name="user" [size]="16" />{{ t.nav.login }}
+        </a>
+        <a class="btn btn-primary btn-sm" routerLink="/register">{{ t.nav.register }}</a>
+      }
+      <button
+        type="button"
+        class="burger"
+        (click)="menuOpen.set(!menuOpen())"
+        [attr.aria-expanded]="menuOpen()"
+        [attr.aria-label]="t.common.menu">
+        <app-icon [name]="menuOpen() ? 'close' : 'menu'" [size]="22" />
+      </button>
+    </div>
+  </div>
+</header>

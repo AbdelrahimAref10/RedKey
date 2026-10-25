@@ -1,0 +1,8 @@
+<div class="toasts" role="status" aria-live="polite">
+  @for (toast of toastService.toasts(); track toast.id) {
+    <button type="button" class="toast" [class]="'toast toast-' + toast.kind" (click)="toastService.dismiss(toast.id)">
+      <app-icon [name]="toast.kind === 'error' ? 'info' : 'checkCircle'" [size]="18" />
+      <span>{{ toast.message }}</span>
+    </button>
+  }
+</div>

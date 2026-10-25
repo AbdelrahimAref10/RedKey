@@ -1,0 +1,52 @@
+@let t = i18n.t();
+@let c = t.site.contact;
+<section class="page">
+  <div class="container stack">
+    <div class="about">
+      <div class="about-text">
+        <span class="eyebrow">{{ c.eyebrow }}</span>
+        <h1>{{ c.title }}</h1>
+        <p>{{ c.text }}</p>
+      </div>
+      <div class="img-frame about-img">
+        <img [ngSrc]="image" fill priority alt="" />
+      </div>
+    </div>
+
+    <div class="layout">
+      <form class="card form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <h2 class="card-title">{{ c.sendUs }}</h2>
+        <div class="form-grid">
+          <div class="field">
+            <input class="input" formControlName="name" [placeholder]="t.common.name" [attr.aria-label]="t.common.name"
+              [class.is-invalid]="invalid('name')" />
+            @if (invalid('name')) { <span class="field-error">{{ t.auth.validation.required }}</span> }
+          </div>
+          <div class="field">
+            <input class="input" formControlName="phone" type="tel" dir="ltr" [placeholder]="t.common.phone"
+              [attr.aria-label]="t.common.phone" [class.is-invalid]="invalid('phone')" />
+            @if (invalid('phone')) { <span class="field-error">{{ t.auth.validation.phone }}</span> }
+          </div>
+        </div>
+        <select class="select" formControlName="subject" [attr.aria-label]="c.subject">
+          @for (subject of c.subjects; track $index) {
+            <option [ngValue]="$index">{{ subject }}</option>
+          }
+        </select>
+        <div class="field">
+          <textarea class="textarea" rows="4" formControlName="message" [placeholder]="c.message"
+            [attr.aria-label]="c.message" [class.is-invalid]="invalid('message')"></textarea>
+          @if (invalid('message')) { <span class="field-error">{{ t.auth.validation.required }}</span> }
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg send">{{ t.common.send }}</button>
+      </form>
+
+      <aside class="contacts">
+        <div class="card info"><span class="ic"><app-icon name="phone" [size]="20" /></span><div><span class="muted small">{{ c.hotline }}</span><b class="ltr">{{ t.topbar.phone }}</b></div></div>
+        <div class="card info"><span class="ic"><app-icon name="message" [size]="20" /></span><div><span class="muted small">{{ c.whatsapp }}</span><b class="ltr">{{ t.topbar.phone }}</b></div></div>
+        <div class="card info"><span class="ic"><app-icon name="mail" [size]="20" /></span><div><span class="muted small">{{ t.common.email }}</span><b>{{ t.topbar.email }}</b></div></div>
+        <div class="card info"><span class="ic"><app-icon name="pin" [size]="20" /></span><div><span class="muted small">{{ c.office }}</span><b>{{ t.topbar.address }}</b></div></div>
+      </aside>
+    </div>
+  </div>
+</section>

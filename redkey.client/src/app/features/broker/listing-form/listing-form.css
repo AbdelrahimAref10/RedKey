@@ -1,0 +1,75 @@
+:host {
+  display: contents;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 900px;
+}
+
+.docs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 10px;
+}
+
+.doc {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 2px dashed var(--rk-red-200);
+  background: var(--rk-red-50);
+  cursor: pointer;
+}
+
+.doc:hover {
+  border-color: var(--rk-red);
+}
+
+.doc.done {
+  border-style: solid;
+  border-color: var(--rk-success-bg);
+  background: #F4FAF6;
+}
+
+.doc-ic {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  color: var(--rk-red);
+  flex: none;
+}
+
+.doc-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.doc-text small {
+  color: var(--rk-red);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.doc.done .doc-text small {
+  color: var(--rk-muted);
+  font-weight: 400;
+}
+
+.ok {
+  color: var(--rk-success);
+  font-weight: 600;
+  font-size: 12.5px;
+}

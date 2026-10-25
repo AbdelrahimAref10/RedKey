@@ -1,0 +1,18 @@
+@let t = i18n.t();
+<section class="auth">
+  <div class="container">
+    <div class="card-split">
+      <div class="side img-frame">
+        <img [ngSrc]="image" fill priority alt="" />
+        <div class="side-overlay">
+          <span class="side-key"><app-icon name="key" [size]="26" [stroke]="2.2" /></span>
+          <h2>{{ t.auth.sideTitle }}</h2>
+          <p>{{ t.auth.sideText }}</p>
+        </div>
+      </div>
+      <div class="form-side">
+        <ng-content />
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,160 @@
+:host {
+  display: contents;
+}
+
+.topbar {
+  background: var(--rk-red);
+  color: rgba(255, 255, 255, .92);
+  font-size: 13px;
+}
+
+.topbar-in {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 42px;
+}
+
+.info {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.soc {
+  color: #fff;
+  opacity: .85;
+}
+
+.soc:hover {
+  opacity: 1;
+  color: #fff;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, .96);
+  backdrop-filter: saturate(160%) blur(8px);
+  border-block-end: 1px solid var(--rk-line-soft);
+}
+
+.header-in {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: var(--rk-header-h);
+}
+
+.brand {
+  display: inline-flex;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
+}
+
+.nav a {
+  position: relative;
+  padding: 8px 14px;
+  color: var(--rk-ink);
+  font-weight: 600;
+  border-radius: 10px;
+}
+
+.nav a:hover,
+.nav a.active {
+  color: var(--rk-red);
+}
+
+.nav a.active::after {
+  content: '';
+  position: absolute;
+  inset-inline: 14px;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--rk-red);
+}
+
+.nav-mobile-actions {
+  display: none;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.burger {
+  display: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid var(--rk-line);
+  background: #fff;
+  place-items: center;
+}
+
+@media (max-width: 1000px) {
+  .hide-md {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .topbar {
+    display: none;
+  }
+
+  .burger {
+    display: grid;
+  }
+
+  .nav {
+    position: absolute;
+    top: var(--rk-header-h);
+    inset-inline: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    padding: 12px 16px 18px;
+    background: #fff;
+    border-block-end: 1px solid var(--rk-line);
+    box-shadow: var(--rk-shadow);
+    display: none;
+  }
+
+  .nav.open {
+    display: flex;
+  }
+
+  .nav a.active::after {
+    display: none;
+  }
+
+  .nav a.active {
+    background: var(--rk-red-50);
+  }
+
+  .nav-mobile-actions {
+    display: flex;
+    padding: 10px 14px 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .hide-sm {
+    display: none;
+  }
+
+  .header-in {
+    gap: 12px;
+  }
+}

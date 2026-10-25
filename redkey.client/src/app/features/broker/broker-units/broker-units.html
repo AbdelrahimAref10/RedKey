@@ -1,0 +1,39 @@
+@let t = i18n.t();
+@let u = t.broker.units;
+@let lang = i18n.lang();
+<div class="page-head">
+  <div>
+    <h1>{{ u.title }}</h1>
+    <p>{{ u.subtitle }}</p>
+  </div>
+  <div class="chips">
+    <button type="button" class="chip" [class.active]="filter() === 'all'" (click)="filter.set('all')">{{ t.common.all }}</button>
+    <button type="button" class="chip" [class.active]="filter() === 'sale'" (click)="filter.set('sale')">{{ t.common.sale }}</button>
+    <button type="button" class="chip" [class.active]="filter() === 'rent'" (click)="filter.set('rent')">{{ t.common.rent }}</button>
+  </div>
+</div>
+
+<div class="grid">
+  @for (unit of units(); track unit.id; let i = $index) {
+    <article class="unit">
+      <div class="img-frame media">
+        <img [ngSrc]="unit.images[0]" fill [priority]="i < 3" [alt]="unit.title | loc: lang" />
+        <span class="commission">{{ u.commission }} {{ unit.commission }}%</span>
+      </div>
+      <div class="body">
+        <span class="type">{{ t.propertyTypes[unit.type] }} · {{ unit.code }}</span>
+        <b class="title">{{ unit.title | loc: lang }}</b>
+        <span class="muted small">{{ unit.compound | loc: lang }} · {{ unit.city | loc: lang }} · {{ unit.size }} {{ t.common.sqm }}</span>
+        <b class="price">{{ unit.price | money: lang : unit.purpose === 'rent' }}</b>
+      </div>
+      <div class="actions">
+        <a class="btn btn-primary btn-sm" routerLink="/broker/clients/new" [queryParams]="{ unit: unit.id }">
+          <app-icon name="users" [size]="16" />{{ u.registerClient }}
+        </a>
+        <button type="button" class="btn btn-outline btn-sm" (click)="share(unit.id)">
+          <app-icon name="link" [size]="16" />{{ u.share }}
+        </button>
+      </div>
+    </article>
+  }
+</div>

@@ -1,0 +1,32 @@
+:host {
+  display: contents;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.search {
+  flex: 2 1 260px;
+  width: auto;
+}
+
+.unit {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.unit > div:last-child {
+  display: flex;
+  flex-direction: column;
+}
+
+.thumb {
+  width: 58px;
+  height: 46px;
+  border-radius: 10px;
+  flex: none;
+}

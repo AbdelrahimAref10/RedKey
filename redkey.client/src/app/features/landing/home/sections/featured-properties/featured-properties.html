@@ -1,0 +1,29 @@
+@let t = i18n.t();
+<section class="section featured">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">{{ t.landing.featured.eyebrow }}</span>
+        <h2 class="section-title">{{ t.landing.featured.title }}</h2>
+        <p class="section-sub">{{ t.landing.featured.subtitle }}</p>
+      </div>
+      <div class="chips">
+        <button type="button" class="chip" [class.active]="filter() === 'all'" (click)="filter.set('all')">{{ t.common.all }}</button>
+        <button type="button" class="chip" [class.active]="filter() === 'sale'" (click)="filter.set('sale')">{{ t.common.sale }}</button>
+        <button type="button" class="chip" [class.active]="filter() === 'rent'" (click)="filter.set('rent')">{{ t.common.rent }}</button>
+      </div>
+    </div>
+
+    <div class="grid-cards">
+      @for (property of items(); track property.id) {
+        <app-property-card [property]="property" />
+      }
+    </div>
+
+    <div class="more">
+      <a class="btn btn-outline btn-lg" routerLink="/properties">
+        {{ t.landing.featured.viewAll }}<app-icon name="arrowEnd" [size]="18" [flip]="true" />
+      </a>
+    </div>
+  </div>
+</section>

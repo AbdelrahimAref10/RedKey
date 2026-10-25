@@ -1,0 +1,34 @@
+@let t = i18n.t();
+<button type="button" class="trigger" (click)="toggle()" [attr.aria-expanded]="open()" aria-haspopup="true">
+  <span class="avatar">{{ initials() }}</span>
+  <span class="who">
+    <small>{{ t.account.hello }}</small>
+    <b>{{ firstName() }}</b>
+  </span>
+  <app-icon name="chevronDown" [size]="16" />
+</button>
+
+@if (open()) {
+  <div class="panel" role="menu">
+    <div class="panel-user">
+      <span class="avatar lg">{{ initials() }}</span>
+      <div>
+        <b>{{ user()?.fullName }}</b>
+        <span class="ltr email">{{ user()?.email }}</span>
+        @if (roleLabel()) {
+          <span class="badge badge-red">{{ roleLabel() }}</span>
+        }
+      </div>
+    </div>
+    @for (item of links(); track item.link) {
+      <a class="item" role="menuitem" [routerLink]="item.link" (click)="open.set(false)">
+        <app-icon [name]="item.icon" [size]="18" />
+        {{ item.label }}
+      </a>
+    }
+    <button type="button" class="item danger" role="menuitem" (click)="logout()">
+      <app-icon name="logout" [size]="18" [flip]="true" />
+      {{ t.account.logout }}
+    </button>
+  </div>
+}

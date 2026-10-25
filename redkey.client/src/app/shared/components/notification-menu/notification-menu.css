@@ -1,0 +1,111 @@
+:host {
+  position: relative;
+  display: inline-flex;
+}
+
+.bell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid var(--rk-line);
+  background: var(--rk-white);
+  color: var(--rk-ink);
+}
+
+.bell:hover {
+  color: var(--rk-red);
+  border-color: var(--rk-red);
+}
+
+.count {
+  position: absolute;
+  top: -5px;
+  inset-inline-end: -5px;
+  min-width: 19px;
+  height: 19px;
+  padding-inline: 5px;
+  border-radius: 99px;
+  background: var(--rk-red);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  border: 2px solid #fff;
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  inset-inline-end: 0;
+  z-index: 60;
+  width: min(360px, calc(100vw - 32px));
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--rk-shadow-lg);
+  border: 1px solid var(--rk-line-soft);
+  padding: 8px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px 10px;
+}
+
+.link {
+  border: 0;
+  background: none;
+  color: var(--rk-red);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.item {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.item.unread {
+  background: var(--rk-red-50);
+}
+
+.item-icon {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  color: var(--rk-red);
+  box-shadow: inset 0 0 0 1px var(--rk-red-200);
+}
+
+.item-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: 13.5px;
+}
+
+.item-body span {
+  color: var(--rk-text);
+}
+
+.item-body small {
+  color: var(--rk-muted);
+  font-size: 12px;
+}
+
+.empty {
+  padding: 16px;
+  text-align: center;
+  color: var(--rk-muted);
+}

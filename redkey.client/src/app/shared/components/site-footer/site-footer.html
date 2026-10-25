@@ -1,0 +1,55 @@
+@let t = i18n.t();
+<footer class="footer">
+  <div class="container grid">
+    <div class="col brand">
+      <app-logo tone="light" [size]="40" />
+      <p>{{ t.footer.about }}</p>
+      <div class="social">
+        <a href="#" aria-label="Facebook"><app-icon name="facebook" [size]="18" /></a>
+        <a href="#" aria-label="Instagram"><app-icon name="instagram" [size]="18" /></a>
+        <a href="#" aria-label="LinkedIn"><app-icon name="linkedin" [size]="18" /></a>
+      </div>
+    </div>
+
+    <div class="col">
+      <h4>{{ t.footer.quickLinks }}</h4>
+      <a [routerLink]="base() || '/'">{{ t.nav.home }}</a>
+      <a [routerLink]="base() + '/properties'">{{ t.nav.properties }}</a>
+      <a [routerLink]="base() + '/invest'">{{ t.nav.invest }}</a>
+      <a [routerLink]="base() + '/contact'">{{ t.nav.contact }}</a>
+    </div>
+
+    <div class="col">
+      <h4>{{ t.footer.types }}</h4>
+      @for (type of types; track type) {
+        <a [routerLink]="base() + '/properties'" [queryParams]="{ type }">{{ t.propertyTypes[type] }}</a>
+      }
+    </div>
+
+    <div class="col">
+      <h4>{{ t.footer.contact }}</h4>
+      <span class="line"><app-icon name="phone" [size]="16" /><span class="ltr">{{ t.topbar.phone }}</span></span>
+      <span class="line"><app-icon name="mail" [size]="16" />{{ t.topbar.email }}</span>
+      <span class="line"><app-icon name="pin" [size]="16" />{{ t.topbar.address }}</span>
+
+      <h4 class="news-title">{{ t.footer.newsletter }}</h4>
+      <form class="news" (submit)="subscribe($event)">
+        <input
+          type="email"
+          class="news-input"
+          [placeholder]="t.footer.emailPlaceholder"
+          [attr.aria-label]="t.footer.emailPlaceholder"
+          [value]="email()"
+          (input)="email.set($any($event.target).value)" />
+        <button type="submit" class="news-btn">{{ t.footer.subscribe }}</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="container bottom-in">
+      <span>© {{ year }} RedKey Properties · {{ t.footer.rights }}</span>
+      <span>{{ t.footer.app }}</span>
+    </div>
+  </div>
+</footer>

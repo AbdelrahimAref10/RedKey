@@ -1,0 +1,40 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--rk-font-display);
+  font-weight: 700;
+  font-size: 21px;
+  color: var(--rk-ink);
+  white-space: nowrap;
+}
+
+.mark {
+  border-radius: 10px;
+}
+
+.word b {
+  color: var(--rk-red);
+}
+
+.suffix {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--rk-red-50);
+  color: var(--rk-red);
+}
+
+:host(.light) {
+  color: #fff;
+}
+
+:host(.light) .word b {
+  color: #FFC9D2;
+}
+
+:host(.light) .suffix {
+  background: rgba(255, 255, 255, .15);
+  color: #fff;
+}

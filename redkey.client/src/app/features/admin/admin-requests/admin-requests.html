@@ -1,0 +1,51 @@
+@let t = i18n.t();
+@let r = t.admin.requests;
+@let lang = i18n.lang();
+<div class="page-head">
+  <div>
+    <h1>{{ r.title }}</h1>
+    <p>{{ r.subtitle }}</p>
+  </div>
+</div>
+
+<div class="tabs" role="tablist">
+  @for (item of tabs; track item) {
+    <button type="button" role="tab" class="tab" [class.active]="tab() === item" (click)="tab.set(item)">
+      {{ item === 'all' ? t.common.all : typeLabel(t, item) }}
+      <span class="cnt">{{ count(item) }}</span>
+    </button>
+  }
+</div>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{{ r.client }}</th>
+        <th>{{ t.common.phone }}</th>
+        <th>{{ t.admin.dashboard.type }}</th>
+        <th>{{ r.details }}</th>
+        <th>{{ r.time }}</th>
+        <th>{{ t.common.status }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of rows(); track row.id) {
+        <tr>
+          <td><b>{{ row.name | loc: lang }}</b></td>
+          <td class="muted"><span class="ltr">{{ row.phone }}</span></td>
+          <td>{{ typeLabel(t, row.type) }}</td>
+          <td>{{ row.details | loc: lang }}</td>
+          <td class="muted">{{ row.time | loc: lang }}</td>
+          <td>
+            <button type="button" class="badge status" [class]="badge[row.status]" (click)="next(row.id, row.status)">
+              {{ statusLabel(t, row.status) }}<app-icon name="chevronDown" [size]="13" />
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<p class="muted small">{{ r.hint }}</p>

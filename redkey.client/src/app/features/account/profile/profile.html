@@ -1,0 +1,94 @@
+@let t = i18n.t();
+@let p = t.profile;
+<div class="wrap">
+  <div class="page-head">
+    <div>
+      <h1>{{ p.title }}</h1>
+      <p>{{ p.subtitle }}</p>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="card summary">
+      <span class="avatar">{{ initials() }}</span>
+      <b class="name">{{ user()?.fullName }}</b>
+      <span class="badge badge-red">{{ roleLabel() }}</span>
+      <div class="lines">
+        <span><app-icon name="mail" [size]="16" /><span class="ltr">{{ user()?.email }}</span></span>
+        @if (user()?.phoneNumber) {
+          <span><app-icon name="phone" [size]="16" /><span class="ltr">{{ user()?.phoneNumber }}</span></span>
+        }
+        <span><app-icon name="globe" [size]="16" />{{ p.language }}: {{ i18n.lang() === 'ar' ? 'العربية' : 'English' }}</span>
+      </div>
+    </aside>
+
+    <div class="main">
+      <form class="card" [formGroup]="form" (ngSubmit)="save()" novalidate>
+        <div class="card-head">
+          <h2 class="card-title">{{ p.personal }}</h2>
+          @if (!editing()) {
+            <button type="button" class="btn btn-soft btn-sm" (click)="startEdit()"><app-icon name="edit" [size]="16" />{{ p.edit }}</button>
+          }
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="fullName">{{ p.fullName }}</label>
+            <input id="fullName" class="input" formControlName="fullName" [class.is-invalid]="invalid('fullName')" />
+            @if (invalid('fullName')) { <span class="field-error">{{ t.auth.validation.required }}</span> }
+          </div>
+          <div class="field">
+            <label for="email">{{ p.email }}</label>
+            <input id="email" class="input" type="email" dir="ltr" formControlName="email" [class.is-invalid]="invalid('email')" />
+            @if (invalid('email')) { <span class="field-error">{{ t.auth.validation.email }}</span> }
+          </div>
+          <div class="field">
+            <label for="phone">{{ p.phone }}</label>
+            <input id="phone" class="input" type="tel" dir="ltr" formControlName="phoneNumber" [class.is-invalid]="invalid('phoneNumber')" />
+            @if (invalid('phoneNumber')) { <span class="field-error">{{ t.auth.validation.phone }}</span> }
+          </div>
+          <div class="field">
+            <label for="city">{{ p.city }}</label>
+            <input id="city" class="input" formControlName="city" />
+          </div>
+          <div class="field">
+            <label for="address">{{ p.address }}</label>
+            <input id="address" class="input" formControlName="address" />
+          </div>
+          <div class="field">
+            <label for="birthDate">{{ p.birthDate }}</label>
+            <input id="birthDate" class="input" type="date" formControlName="birthDate" />
+          </div>
+        </div>
+
+        @if (editing()) {
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">{{ p.save }}</button>
+            <button type="button" class="btn btn-outline" (click)="cancel()">{{ p.cancel }}</button>
+          </div>
+        }
+      </form>
+
+      <form class="card" [formGroup]="passwordForm" (ngSubmit)="changePassword()" novalidate>
+        <h2 class="card-title">{{ p.security }}</h2>
+        <div class="form-grid sec">
+          <div class="field">
+            <label for="current">{{ p.currentPassword }}</label>
+            <input id="current" class="input" type="password" dir="ltr" formControlName="current" autocomplete="current-password" />
+          </div>
+          <div class="field">
+            <label for="next">{{ p.newPassword }}</label>
+            <input id="next" class="input" type="password" dir="ltr" formControlName="next" autocomplete="new-password"
+              [class.is-invalid]="passwordForm.controls.next.invalid && passwordForm.controls.next.touched" />
+            @if (passwordForm.controls.next.invalid && passwordForm.controls.next.touched) {
+              <span class="field-error">{{ t.auth.validation.passwordWeak }}</span>
+            }
+          </div>
+        </div>
+        <div class="actions">
+          <button type="submit" class="btn btn-outline"><app-icon name="shield" [size]="16" />{{ p.changePassword }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

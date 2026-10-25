@@ -1,0 +1,20 @@
+@let t = i18n.t();
+<section class="wrap">
+  <div class="container">
+    <div class="banner">
+      <div class="text">
+        <span class="tag"><app-icon name="trending" [size]="16" />{{ t.landing.invest.eyebrow }}</span>
+        <h2>{{ t.landing.invest.title }}</h2>
+        <p>{{ t.landing.invest.text }}</p>
+      </div>
+      <div class="steps">
+        @for (step of t.site.invest.steps; track $index) {
+          <div class="step"><b>{{ $index + 1 }}</b><span>{{ step }}</span></div>
+        }
+      </div>
+      <a class="btn btn-light btn-lg" routerLink="/invest">
+        {{ t.landing.invest.cta }}<app-icon name="arrowEnd" [size]="18" [flip]="true" />
+      </a>
+    </div>
+  </div>
+</section>

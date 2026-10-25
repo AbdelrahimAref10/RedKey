@@ -1,0 +1,50 @@
+@let t = i18n.t();
+<aside class="sidebar" [class.open]="sidebarOpen()">
+  <div class="side-head">
+    <a [routerLink]="homeLink()" class="brand"><app-logo [size]="34" [suffix]="brandSuffix()" /></a>
+    <button type="button" class="icon-btn close" (click)="sidebarOpen.set(false)" [attr.aria-label]="t.dashboard.closeMenu">
+      <app-icon name="close" [size]="20" />
+    </button>
+  </div>
+
+  <nav class="side-nav">
+    @for (item of nav(); track item.link) {
+      <a
+        [routerLink]="item.link"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: !!item.exact }"
+        class="side-link">
+        <app-icon [name]="item.icon" [size]="19" />
+        <span>{{ item.label }}</span>
+        @if (item.badge) {
+          <span class="side-badge">{{ item.badge }}</span>
+        }
+      </a>
+    }
+  </nav>
+
+  <button type="button" class="side-link logout" (click)="logout()">
+    <app-icon name="logout" [size]="19" [flip]="true" />
+    <span>{{ t.account.logout }}</span>
+  </button>
+</aside>
+
+@if (sidebarOpen()) {
+  <div class="backdrop" (click)="sidebarOpen.set(false)"></div>
+}
+
+<div class="content">
+  <header class="topbar">
+    <button type="button" class="icon-btn burger" (click)="sidebarOpen.set(true)" [attr.aria-label]="t.dashboard.openMenu">
+      <app-icon name="menu" [size]="22" />
+    </button>
+    <span class="spacer"></span>
+    <app-language-switcher [compact]="true" />
+    <app-notification-menu [items]="notifications()" />
+    <app-user-menu [links]="menuLinks()" [roleLabel]="roleLabel()" />
+  </header>
+
+  <main class="main">
+    <router-outlet />
+  </main>
+</div>

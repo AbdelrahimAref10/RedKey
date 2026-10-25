@@ -1,0 +1,48 @@
+.head {
+  margin-block-end: 26px;
+}
+
+.head h1 {
+  font-size: 30px;
+  margin-block-end: 6px;
+}
+
+.ltr-input::placeholder {
+  text-align: start;
+}
+
+.pw {
+  position: relative;
+}
+
+.pw .input {
+  padding-inline-end: 46px;
+}
+
+.pw-toggle {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: 6px;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: var(--rk-muted);
+  display: grid;
+  place-items: center;
+}
+
+.pw-toggle:hover {
+  color: var(--rk-red);
+}
+
+.auth-switch {
+  text-align: center;
+  color: var(--rk-muted);
+}
+
+.auth-switch a {
+  font-weight: 600;
+}

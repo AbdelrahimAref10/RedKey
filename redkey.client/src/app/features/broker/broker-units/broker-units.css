@@ -1,0 +1,65 @@
+:host {
+  display: contents;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+.unit {
+  display: flex;
+  flex-direction: column;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--rk-white);
+  box-shadow: var(--rk-shadow-sm);
+}
+
+.media {
+  height: 170px;
+}
+
+.commission {
+  position: absolute;
+  top: 12px;
+  inset-inline-start: 12px;
+  padding: 4px 12px;
+  border-radius: 99px;
+  background: var(--rk-red);
+  color: #fff;
+  font-weight: 700;
+  font-size: 12.5px;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px 10px;
+  flex: 1;
+}
+
+.type {
+  color: var(--rk-red);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.title {
+  font-family: var(--rk-font-display);
+  font-weight: 600;
+}
+
+.price {
+  margin-block-start: 4px;
+  color: var(--rk-ink);
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 16px 16px;
+}

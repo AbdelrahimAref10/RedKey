@@ -1,0 +1,128 @@
+:host {
+  position: relative;
+  display: inline-flex;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding-inline: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--rk-line);
+  background: var(--rk-white);
+  color: var(--rk-ink);
+}
+
+.trigger:hover {
+  border-color: var(--rk-red);
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--rk-red);
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  flex: none;
+}
+
+.avatar.lg {
+  width: 44px;
+  height: 44px;
+  font-size: 15px;
+  border-radius: 12px;
+}
+
+.who {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  text-align: start;
+}
+
+.who small {
+  color: var(--rk-muted);
+  font-size: 11px;
+}
+
+.who b {
+  font-size: 13.5px;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .who {
+    display: none;
+  }
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  inset-inline-end: 0;
+  z-index: 60;
+  width: 260px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--rk-shadow-lg);
+  border: 1px solid var(--rk-line-soft);
+  padding: 8px;
+}
+
+.panel-user {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 8px 8px 12px;
+  margin-block-end: 6px;
+  border-block-end: 1px solid var(--rk-line-soft);
+}
+
+.panel-user > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  align-items: flex-start;
+}
+
+.email {
+  color: var(--rk-muted);
+  font-size: 12.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 0;
+  background: none;
+  color: var(--rk-ink);
+  font-weight: 500;
+  font-size: 14px;
+  text-align: start;
+}
+
+.item:hover {
+  background: var(--rk-red-50);
+  color: var(--rk-red);
+}
+
+.item.danger {
+  color: var(--rk-red);
+}

@@ -1,0 +1,54 @@
+@let t = i18n.t();
+@let f = t.broker.clientForm;
+@let lang = i18n.lang();
+<div class="page-head">
+  <div>
+    <nav class="breadcrumb"><a routerLink="/broker/clients">{{ t.broker.nav.clients }}</a><span>›</span><span>{{ f.title }}</span></nav>
+    <h1>{{ f.title }}</h1>
+  </div>
+</div>
+
+<form class="card form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <div class="field">
+    <label for="unit">{{ f.unit }}</label>
+    <select id="unit" class="select" formControlName="unitId">
+      @for (u of units; track u.id) {
+        <option [ngValue]="u.id">{{ u.code }} · {{ u.title | loc: lang }} · {{ u.compound | loc: lang }}</option>
+      }
+    </select>
+  </div>
+
+  @if (selected(); as s) {
+    <div class="picked">
+      <div>
+        <b>{{ s.title | loc: lang }} · {{ s.compound | loc: lang }}</b>
+        <span class="muted small">{{ s.price | money: lang : s.purpose === 'rent' }}</span>
+      </div>
+      <span class="badge badge-red">{{ t.broker.units.commission }} {{ s.commission }}%</span>
+    </div>
+  }
+
+  <div class="form-grid">
+    <div class="field">
+      <label for="name">{{ f.clientName }}</label>
+      <input id="name" class="input" formControlName="name" [placeholder]="f.clientNamePlaceholder" [class.is-invalid]="invalid('name')" />
+      @if (invalid('name')) { <span class="field-error">{{ t.auth.validation.required }}</span> }
+    </div>
+    <div class="field">
+      <label for="phone">{{ f.clientPhone }}</label>
+      <input id="phone" class="input" type="tel" dir="ltr" formControlName="phone" placeholder="+20 10 0000 0000" [class.is-invalid]="invalid('phone')" />
+      @if (invalid('phone')) { <span class="field-error">{{ t.auth.validation.phone }}</span> }
+    </div>
+    <div class="field span-all">
+      <label for="notes">{{ f.notes }}</label>
+      <textarea id="notes" class="textarea" rows="3" formControlName="notes" [placeholder]="f.notesPlaceholder"></textarea>
+    </div>
+  </div>
+
+  <div class="alert alert-info"><app-icon name="shield" [size]="18" />{{ t.broker.clients.note }} {{ f.note }}</div>
+
+  <div class="row">
+    <button type="submit" class="btn btn-primary btn-lg">{{ f.submit }}</button>
+    <a class="btn btn-outline btn-lg" routerLink="/broker/clients">{{ t.common.cancel }}</a>
+  </div>
+</form>

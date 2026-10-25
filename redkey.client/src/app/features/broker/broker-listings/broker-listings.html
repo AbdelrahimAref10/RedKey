@@ -1,0 +1,24 @@
+@let t = i18n.t();
+@let l = t.broker.listings;
+@let lang = i18n.lang();
+<div class="page-head">
+  <div>
+    <h1>{{ l.title }}</h1>
+    <p>{{ l.subtitle }}</p>
+  </div>
+  <a class="btn btn-primary" routerLink="/broker/listings/new">{{ l.add }}</a>
+</div>
+
+<div class="list">
+  @for (row of listings; track row.id) {
+    <article class="card item">
+      <span class="ic"><app-icon name="home" [size]="22" /></span>
+      <div class="info">
+        <b>{{ row.title | loc: lang }}</b>
+        <span class="muted small">{{ row.price | money: lang }} · {{ l.uploaded }} {{ row.uploadedAt | loc: lang }}</span>
+        <span class="small docs"><app-icon name="file" [size]="14" />{{ row.documents | loc: lang }}</span>
+      </div>
+      <span class="badge" [class]="badge[row.status]">{{ t.admin.brokers.st[row.status] }}</span>
+    </article>
+  }
+</div>

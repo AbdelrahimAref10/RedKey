@@ -1,0 +1,108 @@
+@let t = i18n.t();
+@let b = t.admin.brokers;
+@let lang = i18n.lang();
+<div class="page-head">
+  <div>
+    <h1>{{ b.title }}</h1>
+    <p>{{ b.subtitle }}</p>
+  </div>
+</div>
+
+<div class="tabs" role="tablist">
+  @for (item of tabs(); track item.id) {
+    <button type="button" role="tab" class="tab" [class.active]="tab() === item.id" (click)="tab.set(item.id)">
+      {{ item.label }}
+      @if (item.count) { <span class="cnt">{{ item.count }}</span> }
+    </button>
+  }
+</div>
+
+<div class="table-wrap">
+  @switch (tab()) {
+    @case ('join') {
+      <table class="table">
+        <thead><tr><th>{{ b.name }}</th><th>{{ t.common.phone }}</th><th>{{ b.type }}</th><th>{{ b.idCard }}</th><th>{{ b.requestedAt }}</th><th>{{ t.common.status }}</th><th></th></tr></thead>
+        <tbody>
+          @for (r of join(); track r.id) {
+            <tr>
+              <td><b>{{ r.name | loc: lang }}</b></td>
+              <td class="muted"><span class="ltr">{{ r.phone }}</span></td>
+              <td>{{ r.type | loc: lang }}</td>
+              <td>{{ r.idCard | loc: lang }}</td>
+              <td>{{ r.requestedAt | loc: lang }}</td>
+              <td><span class="badge" [class]="badge[r.status]">{{ b.st[r.status] }}</span></td>
+              <td>
+                @if (r.canAct && r.action) {
+                  <button type="button" class="btn btn-xs" [class.btn-dark]="r.action !== 'reject'" [class.btn-soft]="r.action === 'reject'" (click)="act(r)">{{ b[r.action] }}</button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+    @case ('brokers') {
+      <table class="table">
+        <thead><tr><th>{{ b.broker }}</th><th>{{ b.code }}</th><th>{{ b.type }}</th><th>{{ b.reservedClients }}</th><th>{{ b.uploadedUnits }}</th><th>{{ b.sales }}</th><th>{{ t.common.status }}</th></tr></thead>
+        <tbody>
+          @for (r of brokers; track r.code) {
+            <tr>
+              <td><b>{{ r.name | loc: lang }}</b></td>
+              <td><span class="ltr">{{ r.code }}</span></td>
+              <td>{{ r.type | loc: lang }}</td>
+              <td>{{ r.clients }}</td>
+              <td>{{ r.units }}</td>
+              <td>{{ r.sales }}</td>
+              <td><span class="badge" [class]="badge[r.status]">{{ b.st[r.status] }}</span></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+    @case ('clients') {
+      <table class="table">
+        <thead><tr><th>{{ b.client }}</th><th>{{ b.broker }}</th><th>{{ b.unit }}</th><th>{{ b.reservedUntil }}</th><th>{{ t.common.status }}</th><th>{{ b.commission }}</th><th></th></tr></thead>
+        <tbody>
+          @for (r of clients(); track r.id) {
+            <tr>
+              <td><b>{{ r.name | loc: lang }}</b><br /><span class="muted small ltr">{{ r.phone }}</span></td>
+              <td>{{ r.broker | loc: lang }}</td>
+              <td>{{ r.unit | loc: lang }}</td>
+              <td>{{ r.until | loc: lang }}</td>
+              <td><span class="badge" [class]="badge[r.status]">{{ b.st[r.status] }}</span></td>
+              <td>{{ r.commission | loc: lang }}</td>
+              <td>
+                @if (r.canAct && r.action) {
+                  <button type="button" class="btn btn-dark btn-xs" (click)="act(r)">{{ b[r.action] }}</button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+    @case ('units') {
+      <table class="table">
+        <thead><tr><th>{{ b.apartment }}</th><th>{{ b.broker }}</th><th>{{ b.price }}</th><th>{{ b.documents }}</th><th>{{ t.common.status }}</th><th></th></tr></thead>
+        <tbody>
+          @for (r of units(); track r.id) {
+            <tr>
+              <td><b>{{ r.title | loc: lang }}</b></td>
+              <td>{{ r.broker | loc: lang }}</td>
+              <td>{{ r.price | loc: lang }}</td>
+              <td>{{ r.documents | loc: lang }}</td>
+              <td><span class="badge" [class]="badge[r.status]">{{ b.st[r.status] }}</span></td>
+              <td>
+                @if (r.canAct && r.action) {
+                  <button type="button" class="btn btn-dark btn-xs" (click)="act(r)">{{ b[r.action] }}</button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  }
+</div>
+
+<div class="alert alert-info"><app-icon name="info" [size]="18" /><span><b>{{ b.rulesTitle }}</b> {{ b.rules }}</span></div>

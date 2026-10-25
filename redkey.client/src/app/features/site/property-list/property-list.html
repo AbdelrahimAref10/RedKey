@@ -1,0 +1,61 @@
+@let t = i18n.t();
+@let l = t.site.listings;
+<section class="page">
+  <div class="container stack">
+    <div class="filters">
+      <label class="search">
+        <app-icon name="search" [size]="18" />
+        <input
+          class="search-input"
+          [placeholder]="l.searchPlaceholder"
+          [attr.aria-label]="l.searchPlaceholder"
+          [value]="query()"
+          (input)="query.set($any($event.target).value)" />
+      </label>
+
+      <div class="chips">
+        <button type="button" class="chip" [class.active]="purposeFilter() === 'all'" (click)="purposeFilter.set('all')">{{ t.common.all }}</button>
+        <button type="button" class="chip" [class.active]="purposeFilter() === 'sale'" (click)="purposeFilter.set('sale')">{{ t.common.sale }}</button>
+        <button type="button" class="chip" [class.active]="purposeFilter() === 'rent'" (click)="purposeFilter.set('rent')">{{ t.common.rent }}</button>
+      </div>
+
+      <select class="select" [value]="typeFilter()" (change)="typeFilter.set($any($event.target).value)" [attr.aria-label]="t.landing.hero.type">
+        <option value="">{{ l.allTypes }}</option>
+        @for (type of types; track type) {
+          <option [value]="type" [selected]="type === typeFilter()">{{ t.propertyTypes[type] }}</option>
+        }
+      </select>
+
+      <select class="select" [value]="areaFilter()" (change)="areaFilter.set($any($event.target).value)" [attr.aria-label]="t.landing.hero.location">
+        <option value="">{{ t.landing.hero.anyLocation }}</option>
+        @for (a of areas; track a.id) {
+          <option [value]="a.id" [selected]="a.id === areaFilter()">{{ a.name | loc: i18n.lang() }}</option>
+        }
+      </select>
+
+      <select class="select" [value]="priceFilter()" (change)="priceFilter.set(+$any($event.target).value)" [attr.aria-label]="t.landing.hero.price">
+        <option value="0">{{ l.anyPrice }}</option>
+        <option value="5000000">{{ l.under5 }}</option>
+        <option value="10000000">{{ l.under10 }}</option>
+        <option value="20000000">{{ l.under20 }}</option>
+      </select>
+    </div>
+
+    <div class="head">
+      <h1>{{ title() }}</h1>
+      <span class="muted">{{ results().length }} {{ l.results }}</span>
+    </div>
+
+    <div class="grid-cards">
+      @for (property of results(); track property.id; let i = $index) {
+        <app-property-card [property]="property" [base]="base()" [priority]="i < 3" />
+      } @empty {
+        <div class="empty">
+          <app-icon name="search" [size]="36" />
+          <p>{{ l.empty }}</p>
+          <button type="button" class="btn btn-soft" (click)="reset()">{{ l.reset }}</button>
+        </div>
+      }
+    </div>
+  </div>
+</section>

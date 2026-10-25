@@ -1,0 +1,60 @@
+@let t = i18n.t();
+@let op = t.site.opportunity;
+@let lang = i18n.lang();
+<section class="page">
+  <div class="container">
+    @if (opportunity(); as o) {
+      <nav class="breadcrumb">
+        <a [routerLink]="base() + '/invest'">{{ t.nav.invest }}</a>
+        <span>›</span>
+        <span>{{ o.title | loc: lang }}</span>
+      </nav>
+
+      <div class="img-frame cover">
+        <img [ngSrc]="o.image" fill priority [alt]="o.title | loc: lang" />
+      </div>
+
+      <div class="layout">
+        <div class="card main">
+          <h1>{{ o.fullTitle | loc: lang }}</h1>
+          <span class="muted place"><app-icon name="pin" [size]="16" />{{ o.subtitle | loc: lang }}</span>
+          <div class="kpis-row">
+            <div><span>{{ op.expectedYield }}</span><b>{{ o.yield }}%</b></div>
+            <div><span>{{ op.sharePrice }}</span><b>{{ fmt.format(o.sharePrice) }} {{ t.common.egp }}</b></div>
+            <div><span>{{ op.duration }}</span><b>{{ o.durationYears }} {{ t.common.years }}</b></div>
+          </div>
+          <p class="desc">{{ o.description | loc: lang }}</p>
+        </div>
+
+        <aside class="card side">
+          <b class="side-title">{{ op.registerInterest }}</b>
+          <span class="muted small">{{ op.interestText }}</span>
+          <form class="stack form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+            <div class="field">
+              <input class="input" formControlName="name" [placeholder]="t.common.name" [attr.aria-label]="t.common.name"
+                [class.is-invalid]="invalid('name')" />
+              @if (invalid('name')) { <span class="field-error">{{ t.auth.validation.required }}</span> }
+            </div>
+            <div class="field">
+              <input class="input" formControlName="phone" type="tel" dir="ltr" [placeholder]="t.common.phone"
+                [attr.aria-label]="t.common.phone" [class.is-invalid]="invalid('phone')" />
+              @if (invalid('phone')) { <span class="field-error">{{ t.auth.validation.phone }}</span> }
+            </div>
+            <select class="select" formControlName="amount" [attr.aria-label]="op.amount">
+              @for (amount of op.amounts; track $index) {
+                <option [ngValue]="$index">{{ op.amount }}: {{ amount }}</option>
+              }
+            </select>
+            <button type="submit" class="btn btn-primary btn-lg btn-block">{{ t.common.send }}</button>
+          </form>
+        </aside>
+      </div>
+    } @else {
+      <div class="card missing">
+        <app-icon name="info" [size]="34" />
+        <p>{{ op.notFound }}</p>
+        <a class="btn btn-primary" [routerLink]="base() + '/invest'">{{ t.nav.invest }}</a>
+      </div>
+    }
+  </div>
+</section>

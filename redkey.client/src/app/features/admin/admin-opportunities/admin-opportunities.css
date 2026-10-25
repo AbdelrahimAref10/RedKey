@@ -1,0 +1,36 @@
+:host {
+  display: contents;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.opp {
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--rk-white);
+  box-shadow: var(--rk-shadow-sm);
+}
+
+.media {
+  height: 120px;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-block-start: 1px solid var(--rk-line-soft);
+  padding-block-start: 8px;
+  margin-block-start: 4px;
+}

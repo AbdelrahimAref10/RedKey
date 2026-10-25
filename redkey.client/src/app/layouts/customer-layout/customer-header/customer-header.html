@@ -1,0 +1,28 @@
+@let t = i18n.t();
+<header class="header">
+  <div class="container header-in">
+    <a routerLink="/customer" class="brand" aria-label="RedKey"><app-logo [size]="38" /></a>
+
+    <nav class="nav" [class.open]="menuOpen()" (click)="menuOpen.set(false)">
+      <a routerLink="/customer" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{ t.nav.home }}</a>
+      <a routerLink="/customer/properties" [queryParams]="{ purpose: 'sale' }" routerLinkActive="active">{{ t.nav.buy }}</a>
+      <a routerLink="/customer/properties" [queryParams]="{ purpose: 'rent' }">{{ t.nav.rent }}</a>
+      <a routerLink="/customer/invest" routerLinkActive="active">{{ t.nav.invest }}</a>
+      <a routerLink="/customer/contact" routerLinkActive="active">{{ t.nav.about }}</a>
+    </nav>
+
+    <div class="actions">
+      <app-language-switcher [compact]="true" />
+      <app-notification-menu [items]="notifications" />
+      <app-user-menu [links]="menuLinks()" [roleLabel]="t.roles.customer" />
+      <button
+        type="button"
+        class="burger"
+        (click)="menuOpen.set(!menuOpen())"
+        [attr.aria-expanded]="menuOpen()"
+        [attr.aria-label]="t.common.menu">
+        <app-icon [name]="menuOpen() ? 'close' : 'menu'" [size]="22" />
+      </button>
+    </div>
+  </div>
+</header>

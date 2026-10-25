@@ -1,0 +1,35 @@
+.switch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding-inline: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--rk-line);
+  background: var(--rk-white);
+  color: var(--rk-ink);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.switch-btn:hover {
+  border-color: var(--rk-red);
+  color: var(--rk-red);
+}
+
+:host(.compact) .switch-btn {
+  padding-inline: 10px;
+}
+
+:host(.on-dark) .switch-btn {
+  height: 30px;
+  border-color: rgba(255, 255, 255, .3);
+  background: transparent;
+  color: #fff;
+  font-size: 13px;
+}
+
+:host(.on-dark) .switch-btn:hover {
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+}

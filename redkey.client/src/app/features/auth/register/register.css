@@ -1,0 +1,71 @@
+.head {
+  margin-block-end: 22px;
+}
+
+.head h1 {
+  font-size: 28px;
+  margin-block-end: 6px;
+}
+
+.roles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.role {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1.5px solid var(--rk-line);
+  background: #fff;
+  text-align: start;
+  color: var(--rk-text);
+}
+
+.role span {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.35;
+}
+
+.role small {
+  color: var(--rk-muted);
+  font-size: 12.5px;
+}
+
+.role.active {
+  border-color: var(--rk-red);
+  background: var(--rk-red-50);
+  color: var(--rk-red);
+}
+
+.role.active b {
+  color: var(--rk-ink);
+}
+
+.seg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  padding: 10px 14px;
+  border: 1px solid var(--rk-line);
+  border-radius: 12px;
+}
+
+.auth-switch {
+  text-align: center;
+  color: var(--rk-muted);
+}
+
+.auth-switch a {
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .roles {
+    grid-template-columns: 1fr;
+  }
+}

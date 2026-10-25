@@ -1,0 +1,143 @@
+@let t = i18n.t();
+@let r = t.auth.register;
+@let v = t.auth.validation;
+<app-auth-shell>
+  <div class="head">
+    <h1>{{ r.title }}</h1>
+    <p class="muted">{{ r.subtitle }}</p>
+  </div>
+
+  <form class="stack" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="roles" role="radiogroup">
+      <button
+        type="button"
+        class="role"
+        role="radio"
+        [class.active]="!isBroker()"
+        [attr.aria-checked]="!isBroker()"
+        (click)="setRole(UserRole.Customer)">
+        <app-icon name="user" [size]="22" />
+        <span><b>{{ r.customer }}</b><small>{{ r.customerHint }}</small></span>
+      </button>
+      <button
+        type="button"
+        class="role"
+        role="radio"
+        [class.active]="isBroker()"
+        [attr.aria-checked]="isBroker()"
+        (click)="setRole(UserRole.Broker)">
+        <app-icon name="briefcase" [size]="22" />
+        <span><b>{{ r.broker }}</b><small>{{ r.brokerHint }}</small></span>
+      </button>
+    </div>
+
+    @if (error(); as message) {
+      <div class="alert alert-error" role="alert"><app-icon name="info" [size]="18" />{{ message }}</div>
+    }
+
+    <div class="form-grid">
+      <div class="field span-all">
+        <label for="fullName">{{ r.fullName }}</label>
+        <input id="fullName" class="input" formControlName="fullName" autocomplete="name"
+          [placeholder]="r.fullNamePlaceholder" [class.is-invalid]="invalid('fullName')" />
+        @if (invalid('fullName')) { <span class="field-error">{{ v.required }}</span> }
+      </div>
+
+      <div class="field">
+        <label for="email">{{ t.common.email }}</label>
+        <input id="email" class="input" type="email" dir="ltr" formControlName="email" autocomplete="email"
+          [class.is-invalid]="invalid('email')" />
+        @if (invalid('email')) {
+          <span class="field-error">{{ form.controls.email.hasError('required') ? v.required : v.email }}</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="phone">{{ r.phone }}</label>
+        <input id="phone" class="input" type="tel" dir="ltr" formControlName="phoneNumber" autocomplete="tel"
+          placeholder="01xxxxxxxxx" [class.is-invalid]="invalid('phoneNumber')" />
+        @if (invalid('phoneNumber')) {
+          <span class="field-error">{{ form.controls.phoneNumber.hasError('required') ? v.required : v.phone }}</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">{{ r.password }}</label>
+        <input id="password" class="input" type="password" dir="ltr" formControlName="password"
+          autocomplete="new-password" [class.is-invalid]="invalid('password')" />
+        @if (invalid('password')) {
+          <span class="field-error">{{ form.controls.password.hasError('required') ? v.required : v.passwordWeak }}</span>
+        } @else {
+          <span class="hint">{{ r.passwordHint }}</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="confirmPassword">{{ r.confirmPassword }}</label>
+        <input id="confirmPassword" class="input" type="password" dir="ltr" formControlName="confirmPassword"
+          autocomplete="new-password" [class.is-invalid]="invalid('confirmPassword') || mismatch" />
+        @if (invalid('confirmPassword')) {
+          <span class="field-error">{{ v.required }}</span>
+        } @else if (mismatch) {
+          <span class="field-error">{{ v.passwordMismatch }}</span>
+        }
+      </div>
+
+      <div class="field" [class.span-all]="!isBroker()">
+        <label for="city">{{ r.city }}</label>
+        <input id="city" class="input" formControlName="city" autocomplete="address-level2"
+          [placeholder]="r.cityPlaceholder" />
+      </div>
+
+      @if (isBroker()) {
+        <div class="field">
+          <label for="nationalId">{{ r.nationalId }}</label>
+          <input id="nationalId" class="input" dir="ltr" formControlName="nationalId" inputmode="numeric"
+            [placeholder]="r.nationalIdPlaceholder" />
+        </div>
+
+        <div class="field span-all">
+          <span class="field-label">{{ r.brokerType }}</span>
+          <div class="seg">
+            <label class="check">
+              <input type="radio" formControlName="brokerType" [value]="BrokerType.Independent" />{{ r.independent }}
+            </label>
+            <label class="check">
+              <input type="radio" formControlName="brokerType" [value]="BrokerType.Company" />{{ r.company }}
+            </label>
+          </div>
+        </div>
+
+        @if (isCompany()) {
+          <div class="field span-all">
+            <label for="companyName">{{ r.companyName }}</label>
+            <input id="companyName" class="input" formControlName="companyName" autocomplete="organization"
+              [class.is-invalid]="invalid('companyName')" />
+            @if (invalid('companyName')) { <span class="field-error">{{ v.required }}</span> }
+          </div>
+        }
+
+        <div class="alert alert-info span-all"><app-icon name="shield" [size]="18" />{{ r.brokerNote }}</div>
+      }
+    </div>
+
+    <label class="check">
+      <input type="checkbox" formControlName="terms" />
+      {{ r.terms }}
+    </label>
+    @if (invalid('terms')) { <span class="field-error">{{ v.terms }}</span> }
+
+    <button type="submit" class="btn btn-primary btn-lg btn-block" [disabled]="loading()">
+      @if (loading()) {
+        <span class="spinner"></span>{{ t.common.loading }}
+      } @else {
+        {{ r.submit }}
+      }
+    </button>
+
+    <p class="auth-switch">
+      {{ r.haveAccount }}
+      <a routerLink="/login">{{ r.login }}</a>
+    </p>
+  </form>
+</app-auth-shell>

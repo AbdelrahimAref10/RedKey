@@ -1,0 +1,25 @@
+:host {
+  display: contents;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 820px;
+}
+
+.picked {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--rk-red-50);
+}
+
+.picked div {
+  display: flex;
+  flex-direction: column;
+}

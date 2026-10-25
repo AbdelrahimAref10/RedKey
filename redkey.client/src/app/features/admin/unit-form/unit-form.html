@@ -1,0 +1,102 @@
+@let t = i18n.t();
+@let f = t.admin.unitForm;
+<form class="stack-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <div class="page-head">
+    <div>
+      <nav class="breadcrumb">
+        <a routerLink="/admin/units">{{ t.admin.units.title }}</a><span>›</span>
+        <span>{{ property() ? property()!.code : f.newUnit }}</span>
+      </nav>
+      <h1>{{ property() ? f.editTitle : f.newTitle }}</h1>
+    </div>
+    <button type="submit" class="btn btn-primary">{{ f.saveAndPublish }}</button>
+  </div>
+
+  <section class="card form-grid">
+    <div class="field span-all">
+      <label for="title">{{ f.title }}</label>
+      <input id="title" class="input" formControlName="title" [class.is-invalid]="invalid('title')" />
+      @if (invalid('title')) { <span class="field-error">{{ t.auth.validation.required }}</span> }
+    </div>
+    <div class="field">
+      <label for="purpose">{{ f.purpose }}</label>
+      <select id="purpose" class="select" formControlName="purpose">
+        <option ngValue="sale">{{ t.common.sale }}</option>
+        <option ngValue="rent">{{ t.common.rent }}</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="type">{{ f.type }}</label>
+      <select id="type" class="select" formControlName="type">
+        @for (type of types; track type) {
+          <option [ngValue]="type">{{ t.propertyTypes[type] }}</option>
+        }
+      </select>
+    </div>
+    <div class="field">
+      <label for="location">{{ f.location }}</label>
+      <input id="location" class="input" formControlName="location" [class.is-invalid]="invalid('location')" />
+      @if (invalid('location')) { <span class="field-error">{{ t.auth.validation.required }}</span> }
+    </div>
+    <div class="field">
+      <label for="price">{{ f.price }}</label>
+      <input id="price" class="input" type="number" min="0" formControlName="price" [class.is-invalid]="invalid('price')" />
+      @if (invalid('price')) { <span class="field-error">{{ t.auth.validation.required }}</span> }
+    </div>
+    <div class="field">
+      <label for="rooms">{{ f.rooms }}</label>
+      <input id="rooms" class="input" type="number" min="0" formControlName="rooms" />
+    </div>
+    <div class="field">
+      <label for="baths">{{ f.baths }}</label>
+      <input id="baths" class="input" type="number" min="0" formControlName="baths" />
+    </div>
+    <div class="field">
+      <label for="size">{{ f.size }}</label>
+      <input id="size" class="input" type="number" min="0" formControlName="size" [class.is-invalid]="invalid('size')" />
+      @if (invalid('size')) { <span class="field-error">{{ t.auth.validation.required }}</span> }
+    </div>
+    <div class="field">
+      <label for="finishing">{{ f.finishing }}</label>
+      <select id="finishing" class="select" formControlName="finishing">
+        @for (option of f.finishings; track $index) {
+          <option [ngValue]="$index">{{ option }}</option>
+        }
+      </select>
+    </div>
+    <div class="field span-all">
+      <label for="payment">{{ f.payment }}</label>
+      <textarea id="payment" class="textarea" rows="2" formControlName="payment"></textarea>
+    </div>
+    <div class="field span-all">
+      <label for="description">{{ f.description }}</label>
+      <textarea id="description" class="textarea" rows="3" formControlName="description"></textarea>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="card-title">{{ f.images }}</h2>
+    <div class="images">
+      @for (src of images(); track src) {
+        <div class="img-frame thumb"><img [ngSrc]="src" fill alt="" /></div>
+      }
+      @for (name of uploaded(); track $index) {
+        <div class="thumb file"><app-icon name="file" [size]="22" /><span>{{ name }}</span></div>
+      }
+      <label class="thumb upload">
+        <app-icon name="upload" [size]="22" />{{ f.upload }}
+        <input type="file" class="sr-only" multiple accept="image/*" (change)="pick($event)" />
+      </label>
+    </div>
+    <div class="publish">
+      <span>{{ f.visible }}</span>
+      <button
+        type="button"
+        class="switch"
+        role="switch"
+        [attr.aria-checked]="published()"
+        [attr.aria-label]="f.visible"
+        (click)="published.set(!published())"></button>
+    </div>
+  </section>
+</form>

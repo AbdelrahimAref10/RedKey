@@ -1,0 +1,107 @@
+@let t = i18n.t();
+@let pt = t.site.property;
+@let lang = i18n.lang();
+<section class="page">
+  <div class="container">
+    @if (property(); as p) {
+      <nav class="breadcrumb">
+        <a [routerLink]="base() || '/'">{{ t.common.home }}</a>
+        <span>›</span>
+        <a [routerLink]="base() + '/properties'">{{ pt.units }}</a>
+        <span>›</span>
+        <span>{{ p.code }}</span>
+      </nav>
+
+      <div class="gallery">
+        <div class="img-frame g-main">
+          <img [ngSrc]="p.images[0]" fill priority [alt]="p.title | loc: lang" />
+        </div>
+        <div class="img-frame g-side"><img [ngSrc]="p.images[1]" fill alt="" /></div>
+        <div class="img-frame g-side"><img [ngSrc]="p.images[2]" fill alt="" /></div>
+      </div>
+
+      <div class="layout">
+        <div class="main">
+          <div class="card info">
+            <div class="row">
+              <span class="badge badge-red">{{ p.purpose === 'sale' ? t.common.sale : t.common.rent }} · {{ p.delivery | loc: lang }}</span>
+              <span class="badge badge-gray">{{ t.propertyTypes[p.type] }}</span>
+            </div>
+            <h1>{{ p.title | loc: lang }} — {{ p.compound | loc: lang }}</h1>
+            <span class="place"><app-icon name="pin" [size]="16" />{{ p.compound | loc: lang }} · {{ p.city | loc: lang }}</span>
+
+            <div class="specs">
+              <div><app-icon name="bed" [size]="20" /><b>{{ p.beds }}</b><span>{{ pt.rooms }}</span></div>
+              <div><app-icon name="bath" [size]="20" /><b>{{ p.baths }}</b><span>{{ pt.baths }}</span></div>
+              <div><app-icon name="area" [size]="20" /><b>{{ p.size }} {{ t.common.sqm }}</b><span>{{ pt.size }}</span></div>
+              <div><app-icon name="layers" [size]="20" /><b>{{ p.finishing | loc: lang }}</b><span>{{ pt.finishing }}</span></div>
+            </div>
+
+            <p class="desc">{{ p.description | loc: lang }}</p>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title">{{ pt.paymentPlans }}</h2>
+            @for (plan of p.paymentPlans; track $index) {
+              <div class="plan"><span>{{ plan.label | loc: lang }}</span><b>{{ plan.value | loc: lang }}</b></div>
+            }
+          </div>
+
+          <div class="card">
+            <h2 class="card-title">{{ pt.features }}</h2>
+            <ul class="features">
+              @for (feature of p.features; track $index) {
+                <li><app-icon name="checkCircle" [size]="18" />{{ feature | loc: lang }}</li>
+              }
+            </ul>
+          </div>
+        </div>
+
+        <aside class="card side">
+          <span class="muted small">{{ pt.code }}: {{ p.code }}</span>
+          <b class="price">{{ p.price | money: lang : p.purpose === 'rent' }}</b>
+          <a href="#" class="btn btn-whatsapp btn-lg btn-block" (click)="$event.preventDefault()">
+            <app-icon name="message" [size]="18" />{{ pt.whatsapp }}
+          </a>
+
+          <form class="visit" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+            <b>{{ pt.requestVisit }}</b>
+            <div class="field">
+              <input class="input" formControlName="name" [placeholder]="t.common.name" [attr.aria-label]="t.common.name"
+                [class.is-invalid]="invalid('name')" />
+              @if (invalid('name')) { <span class="field-error">{{ t.auth.validation.required }}</span> }
+            </div>
+            <div class="field">
+              <input class="input" formControlName="phone" dir="ltr" type="tel" [placeholder]="t.common.phone"
+                [attr.aria-label]="t.common.phone" [class.is-invalid]="invalid('phone')" />
+              @if (invalid('phone')) { <span class="field-error">{{ t.auth.validation.phone }}</span> }
+            </div>
+            <select class="select" formControlName="time" [attr.aria-label]="pt.bestTime">
+              @for (time of pt.times; track $index) {
+                <option [ngValue]="$index">{{ pt.bestTime }}: {{ time }}</option>
+              }
+            </select>
+            <button type="submit" class="btn btn-primary btn-lg btn-block">{{ pt.sendRequest }}</button>
+          </form>
+        </aside>
+      </div>
+
+      @if (similar().length) {
+        <div class="similar">
+          <h2 class="section-title">{{ pt.similar }}</h2>
+          <div class="grid-cards">
+            @for (s of similar(); track s.id) {
+              <app-property-card [property]="s" [base]="base()" />
+            }
+          </div>
+        </div>
+      }
+    } @else {
+      <div class="card missing">
+        <app-icon name="info" [size]="34" />
+        <p>{{ pt.notFound }}</p>
+        <a class="btn btn-primary" [routerLink]="base() + '/properties'">{{ pt.units }}</a>
+      </div>
+    }
+  </div>
+</section>

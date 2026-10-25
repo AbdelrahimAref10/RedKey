@@ -1,0 +1,21 @@
+@let t = i18n.t();
+<section class="section types">
+  <div class="container">
+    <div class="section-head center">
+      <div>
+        <span class="eyebrow">{{ t.landing.categories.eyebrow }}</span>
+        <h2 class="section-title">{{ t.landing.categories.title }}</h2>
+      </div>
+    </div>
+
+    <div class="grid">
+      @for (item of items; track item.type) {
+        <a class="type" routerLink="/properties" [queryParams]="{ type: item.type }">
+          <span class="icon"><app-icon [name]="item.icon" [size]="28" [stroke]="1.7" /></span>
+          <b>{{ t.propertyTypes[item.type] }}</b>
+          <small>{{ item.count }} {{ t.landing.categories.units }}</small>
+        </a>
+      }
+    </div>
+  </div>
+</section>

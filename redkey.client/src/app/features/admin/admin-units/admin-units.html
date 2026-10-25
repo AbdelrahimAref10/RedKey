@@ -1,0 +1,59 @@
+@let t = i18n.t();
+@let u = t.admin.units;
+@let lang = i18n.lang();
+<div class="page-head">
+  <div>
+    <h1>{{ u.title }}</h1>
+    <p>{{ total }} {{ u.count }}</p>
+  </div>
+  <a class="btn btn-primary" routerLink="/admin/units/new">{{ t.admin.dashboard.addUnit }}</a>
+</div>
+
+<div class="toolbar">
+  <input
+    class="input search"
+    [placeholder]="u.searchPlaceholder"
+    [attr.aria-label]="u.searchPlaceholder"
+    [value]="query()"
+    (input)="query.set($any($event.target).value)" />
+  <div class="chips">
+    <button type="button" class="chip" [class.active]="tab() === 'all'" (click)="tab.set('all')">{{ t.common.all }}</button>
+    <button type="button" class="chip" [class.active]="tab() === 'sale'" (click)="tab.set('sale')">{{ t.common.sale }}</button>
+    <button type="button" class="chip" [class.active]="tab() === 'rent'" (click)="tab.set('rent')">{{ t.common.rent }}</button>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{{ u.unit }}</th>
+        <th>{{ u.purpose }}</th>
+        <th>{{ u.price }}</th>
+        <th>{{ u.requests }}</th>
+        <th>{{ t.common.status }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of rows(); track row.property.id) {
+        <tr>
+          <td>
+            <div class="unit">
+              <div class="img-frame thumb"><img [ngSrc]="row.property.images[0]" fill alt="" /></div>
+              <div>
+                <b>{{ row.property.title | loc: lang }}</b>
+                <span class="muted small">{{ row.property.code }} · {{ row.property.compound | loc: lang }}</span>
+              </div>
+            </div>
+          </td>
+          <td>{{ row.property.purpose === 'sale' ? t.common.sale : t.common.rent }}</td>
+          <td class="nowrap"><b>{{ row.property.price | money: lang : row.property.purpose === 'rent' }}</b></td>
+          <td>{{ row.requests }}</td>
+          <td><span class="badge" [class]="badge[row.status]">{{ u[row.status] }}</span></td>
+          <td><a class="btn btn-soft btn-xs" [routerLink]="['/admin/units', row.property.id, 'edit']">{{ t.common.edit }}</a></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,74 @@
+@let t = i18n.t();
+@let d = t.broker.dashboard;
+@let lang = i18n.lang();
+<div class="page-head">
+  <div>
+    <h1>{{ d.welcome }} {{ firstName() }} 👋</h1>
+    <p>{{ d.code }}: <b class="ltr code">{{ code }}</b></p>
+  </div>
+  <div class="row">
+    <a class="btn btn-outline" routerLink="/broker/listings/new"><app-icon name="plus" [size]="16" />{{ d.addListing }}</a>
+    <a class="btn btn-primary" routerLink="/broker/clients/new"><app-icon name="users" [size]="16" />{{ d.registerClient }}</a>
+  </div>
+</div>
+
+<div class="alert alert-info"><app-icon name="clock" [size]="18" />{{ d.pending }}</div>
+
+<div class="kpis">
+  <div class="kpi accent">
+    <span class="kpi-label">{{ d.clients }}</span>
+    <b class="kpi-value">{{ kpis.clients }}</b>
+    <span class="kpi-delta">+2 {{ d.thisMonth }}</span>
+  </div>
+  <div class="kpi">
+    <span class="kpi-label">{{ d.sales }}</span>
+    <b class="kpi-value">{{ kpis.sales }}</b>
+    <span class="kpi-delta green">+1 {{ d.thisMonth }}</span>
+  </div>
+  <div class="kpi">
+    <span class="kpi-label">{{ d.commission }}</span>
+    <b class="kpi-value">{{ kpis.commission }}</b>
+    <span class="kpi-delta green">+162K</span>
+  </div>
+  <div class="kpi">
+    <span class="kpi-label">{{ d.listings }}</span>
+    <b class="kpi-value">{{ kpis.listings }}</b>
+    <span class="kpi-delta gold">1 {{ t.admin.brokers.st.rev }}</span>
+  </div>
+</div>
+
+<div class="cols">
+  <section class="card">
+    <div class="card-head">
+      <h2 class="card-title">{{ d.topUnits }}</h2>
+      <a routerLink="/broker/units" class="small">{{ t.common.viewAll }}</a>
+    </div>
+    @for (unit of topUnits; track unit.id) {
+      <div class="unit">
+        <div class="unit-info">
+          <b>{{ unit.title | loc: lang }} · {{ unit.compound | loc: lang }}</b>
+          <span class="muted small">{{ unit.price | money: lang }} · {{ unit.size }} {{ t.common.sqm }}</span>
+        </div>
+        <span class="badge badge-red">{{ t.broker.units.commission }} {{ unit.commission }}%</span>
+        <a class="btn btn-soft btn-xs" routerLink="/broker/clients/new" [queryParams]="{ unit: unit.id }">{{ d.registerClient }}</a>
+      </div>
+    }
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2 class="card-title">{{ d.recentClients }}</h2>
+      <a routerLink="/broker/clients" class="small">{{ t.common.viewAll }}</a>
+    </div>
+    @for (client of clients; track client.id) {
+      <div class="client">
+        <span class="avatar">{{ (client.name | loc: lang).charAt(0) }}</span>
+        <div class="client-info">
+          <b>{{ client.name | loc: lang }}</b>
+          <span class="muted small">{{ client.unit | loc: lang }} · {{ client.reservation | loc: lang }}</span>
+        </div>
+        <span class="badge" [class]="badge[client.status]">{{ t.admin.brokers.st[client.status] }}</span>
+      </div>
+    }
+  </section>
+</div>

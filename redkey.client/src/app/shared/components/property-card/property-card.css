@@ -1,0 +1,155 @@
+:host {
+  display: block;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--rk-white);
+  border-radius: 18px;
+  overflow: hidden;
+  color: var(--rk-ink);
+  box-shadow: var(--rk-shadow-sm);
+  border: 1px solid var(--rk-line-soft);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--rk-shadow);
+  color: var(--rk-ink);
+}
+
+.media {
+  height: 210px;
+}
+
+.media img {
+  transition: transform .4s ease;
+}
+
+.card:hover .media img {
+  transform: scale(1.04);
+}
+
+.tag,
+.featured {
+  position: absolute;
+  top: 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 99px;
+}
+
+.tag {
+  inset-inline-start: 12px;
+  background: var(--rk-red);
+  color: #fff;
+}
+
+.tag.rent {
+  background: #fff;
+  color: var(--rk-red);
+}
+
+.featured {
+  inset-inline-start: 12px;
+  top: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(23, 20, 27, .65);
+  color: #fff;
+}
+
+.fav {
+  position: absolute;
+  top: 10px;
+  inset-inline-end: 10px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(255, 255, 255, .92);
+  color: var(--rk-ink);
+  display: grid;
+  place-items: center;
+}
+
+.fav:hover,
+.fav.on {
+  color: var(--rk-red);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 16px 12px;
+  flex: 1;
+}
+
+.type {
+  color: var(--rk-red);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.title {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.place {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--rk-muted);
+  font-size: 13.5px;
+}
+
+.specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-block-start: 6px;
+  color: var(--rk-text);
+  font-size: 13px;
+}
+
+.specs span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-block-start: 1px solid var(--rk-line-soft);
+}
+
+.price {
+  font-family: var(--rk-font-display);
+  font-size: 17px;
+  color: var(--rk-red);
+}
+
+.go {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--rk-red-50);
+  color: var(--rk-red);
+}
+
+.card:hover .go {
+  background: var(--rk-red);
+  color: #fff;
+}

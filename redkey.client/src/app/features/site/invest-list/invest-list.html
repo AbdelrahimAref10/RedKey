@@ -1,0 +1,41 @@
+@let t = i18n.t();
+@let inv = t.site.invest;
+@let lang = i18n.lang();
+<section class="page">
+  <div class="container stack">
+    <div class="band">
+      <div class="band-text">
+        <span class="tag"><app-icon name="trending" [size]="16" />{{ inv.eyebrow }}</span>
+        <h1>{{ inv.title }}</h1>
+        <p>{{ inv.text }}</p>
+      </div>
+      <div class="steps">
+        @for (step of inv.steps; track $index) {
+          <div><b>{{ $index + 1 }}</b><span>{{ step }}</span></div>
+        }
+      </div>
+    </div>
+
+    <h2 class="section-title">{{ inv.available }}</h2>
+
+    <div class="grid">
+      @for (o of opportunities; track o.id; let i = $index) {
+        <a class="opp" [routerLink]="[base() + '/invest', o.id]">
+          <div class="img-frame media">
+            <img [ngSrc]="o.image" fill [priority]="i < 2" [alt]="o.title | loc: lang" />
+            <span class="yield">{{ o.yield }}%</span>
+          </div>
+          <div class="body">
+            <b class="title">{{ o.title | loc: lang }}</b>
+            <span class="muted place"><app-icon name="pin" [size]="15" />{{ o.area | loc: lang }}</span>
+            <div class="stats">
+              <div><b>{{ o.yield }}%</b><span>{{ inv.yield }}</span></div>
+              <div><b>{{ fmt.format(o.sharePrice) }}</b><span>{{ t.common.perShare }}</span></div>
+              <div><b>{{ o.durationYears }} {{ t.common.years }}</b><span>{{ inv.duration }}</span></div>
+            </div>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+</section>

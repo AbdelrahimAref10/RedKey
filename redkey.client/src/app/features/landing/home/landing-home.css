@@ -1,0 +1,16 @@
+:host {
+  display: block;
+}
+
+/* Reserves space for deferred sections (no layout shift while they load). */
+.placeholder {
+  min-height: 520px;
+}
+
+.placeholder.tall {
+  min-height: 760px;
+}
+
+.placeholder.short {
+  min-height: 300px;
+}

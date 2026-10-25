@@ -1,0 +1,21 @@
+@let f = i18n.t().customer.favorites;
+<section class="page">
+  <div class="container stack">
+    <div>
+      <h1>{{ f.title }} <span class="count">{{ favorites.count() }}</span></h1>
+      <p class="muted">{{ f.subtitle }}</p>
+    </div>
+
+    <div class="grid-cards">
+      @for (property of favorites.properties(); track property.id) {
+        <app-property-card [property]="property" base="/customer" />
+      } @empty {
+        <div class="empty">
+          <app-icon name="heart" [size]="40" />
+          <p>{{ f.empty }}</p>
+          <a class="btn btn-primary" routerLink="/customer/properties">{{ f.browse }}</a>
+        </div>
+      }
+    </div>
+  </div>
+</section>

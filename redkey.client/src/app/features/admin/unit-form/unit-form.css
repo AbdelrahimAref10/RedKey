@@ -1,0 +1,60 @@
+:host {
+  display: contents;
+}
+
+.stack-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-block: 12px;
+}
+
+.thumb {
+  width: 150px;
+  height: 104px;
+  border-radius: 12px;
+}
+
+.thumb.file,
+.thumb.upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  text-align: center;
+  font-size: 12.5px;
+}
+
+.thumb.file {
+  background: var(--rk-bg);
+  color: var(--rk-text);
+  word-break: break-all;
+}
+
+.thumb.upload {
+  border: 2px dashed var(--rk-red-200);
+  background: var(--rk-red-50);
+  color: var(--rk-red);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.thumb.upload:hover {
+  border-color: var(--rk-red);
+}
+
+.publish {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block-start: 14px;
+  border-block-start: 1px solid var(--rk-line-soft);
+}

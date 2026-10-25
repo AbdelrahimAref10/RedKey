@@ -1,0 +1,52 @@
+@let t = i18n.t();
+@let f = t.admin.favorites;
+@let lang = i18n.lang();
+<div class="page-head">
+  <div>
+    <h1>{{ f.title }}</h1>
+    <p>{{ f.subtitle }}</p>
+  </div>
+</div>
+
+<div class="tabs" role="tablist">
+  <button type="button" role="tab" class="tab" [class.active]="tab() === 'user'" (click)="tab.set('user')">{{ f.byUser }}</button>
+  <button type="button" role="tab" class="tab" [class.active]="tab() === 'unit'" (click)="tab.set('unit')">{{ f.byUnit }}</button>
+</div>
+
+<div class="table-wrap">
+  @if (tab() === 'user') {
+    <table class="table">
+      <thead><tr><th>{{ f.client }}</th><th>{{ t.common.phone }}</th><th>{{ f.unit }}</th><th>{{ f.price }}</th><th>{{ f.when }}</th><th>{{ f.after }}</th><th></th></tr></thead>
+      <tbody>
+        @for (r of byUser; track $index) {
+          <tr>
+            <td><b>{{ r.name | loc: lang }}</b></td>
+            <td class="muted"><span class="ltr">{{ r.phone }}</span></td>
+            <td>{{ r.unit | loc: lang }}</td>
+            <td class="nowrap">{{ r.price | loc: lang }}</td>
+            <td>{{ r.when | loc: lang }}</td>
+            <td class="muted small">{{ r.after | loc: lang }}</td>
+            <td><a class="btn btn-soft btn-xs" [href]="'tel:' + r.phone.replaceAll(' ', '')"><app-icon name="phone" [size]="14" />{{ f.call }}</a></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <table class="table">
+      <thead><tr><th>{{ f.unitCol }}</th><th>{{ f.price }}</th><th>{{ f.count }}</th><th>{{ f.requested }}</th><th>{{ f.last }}</th></tr></thead>
+      <tbody>
+        @for (r of byUnit; track $index) {
+          <tr>
+            <td><b>{{ r.unit | loc: lang }}</b></td>
+            <td class="nowrap">{{ r.price | loc: lang }}</td>
+            <td><div class="bar-cell"><span class="bar" [style.width.px]="r.bar"></span><b>{{ r.count }}</b></div></td>
+            <td>{{ r.requested }}</td>
+            <td>{{ r.last | loc: lang }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
+
+<div class="alert alert-info"><app-icon name="info" [size]="18" />{{ f.hint }}</div>

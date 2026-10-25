@@ -13,22 +13,23 @@
 
     <div class="col">
       <h4>{{ t.footer.quickLinks }}</h4>
-      <a [routerLink]="base() || '/'">{{ t.nav.home }}</a>
-      <a [routerLink]="base() + '/properties'">{{ t.nav.properties }}</a>
-      <a [routerLink]="base() + '/invest'">{{ t.nav.invest }}</a>
-      <a [routerLink]="base() + '/contact'">{{ t.nav.contact }}</a>
+      <a routerLink="/">{{ t.nav.home }}</a>
+      <a routerLink="/properties">{{ t.nav.properties }}</a>
+      <a routerLink="/invest">{{ t.nav.invest }}</a>
+      <a routerLink="/contact">{{ t.nav.contact }}</a>
     </div>
 
     <div class="col">
       <h4>{{ t.footer.types }}</h4>
       @for (type of types; track type) {
-        <a [routerLink]="base() + '/properties'" [queryParams]="{ type }">{{ t.propertyTypes[type] }}</a>
+        <a routerLink="/properties" [queryParams]="{ type }">{{ t.propertyTypes[type] }}</a>
       }
     </div>
 
     <div class="col">
       <h4>{{ t.footer.contact }}</h4>
-      <span class="line"><app-icon name="phone" [size]="16" /><span class="ltr">{{ t.topbar.phone }}</span></span>
+      <a class="line" [href]="company.phoneLink"><app-icon name="phone" [size]="16" /><span class="ltr">{{ t.topbar.phone }}</span></a>
+      <a class="line" [href]="company.whatsappLink" target="_blank" rel="noopener"><app-icon name="message" [size]="16" />WhatsApp</a>
       <span class="line"><app-icon name="mail" [size]="16" />{{ t.topbar.email }}</span>
       <span class="line"><app-icon name="pin" [size]="16" />{{ t.topbar.address }}</span>
 

@@ -16,8 +16,6 @@ import { Icon } from '../../../shared/components/icon/icon';
 export class InvestList {
   protected readonly i18n = inject(I18nService);
 
-  readonly base = input('');
-
   protected readonly opportunities = OPPORTUNITIES;
   protected readonly fmt = new Intl.NumberFormat('en-US');
 }

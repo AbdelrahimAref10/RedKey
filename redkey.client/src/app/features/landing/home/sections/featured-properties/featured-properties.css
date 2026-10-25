@@ -2,11 +2,6 @@
   background: var(--rk-bg);
 }
 
-.grid-cards {
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
-}
-
 .more {
   display: flex;
   justify-content: center;

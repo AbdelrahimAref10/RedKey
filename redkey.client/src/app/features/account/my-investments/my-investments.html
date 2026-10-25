@@ -1,0 +1,62 @@
+@let t = i18n.t();
+@let m = t.customer.myInvestments;
+@let lang = i18n.lang();
+<section class="page">
+  <div class="container stack">
+    <div>
+      <h1>{{ m.title }}</h1>
+      <p class="muted">{{ m.subtitle }}</p>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi accent">
+        <span class="kpi-label">{{ m.totalInvested }}</span>
+        <b class="kpi-value">{{ summary.totalInvested | money: lang }}</b>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">{{ m.totalReturns }}</span>
+        <b class="kpi-value green">{{ summary.totalReturns | money: lang }}</b>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">{{ m.shares }}</span>
+        <b class="kpi-value">{{ summary.shares }}</b>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">{{ m.avgYield }}</span>
+        <b class="kpi-value red">{{ summary.avgYield }}%</b>
+      </div>
+    </div>
+
+    <div class="grid">
+      @for (item of items; track item.opportunity.id; let i = $index) {
+        <article class="inv">
+          <div class="img-frame media">
+            <img [ngSrc]="item.opportunity.image" fill [priority]="i < 3" [alt]="item.opportunity.title | loc: lang" />
+            <span class="status" [class.pending]="item.investment.status === 'pending'">
+              {{ item.investment.status === 'active' ? m.active : m.pending }}
+            </span>
+          </div>
+          <div class="body">
+            <b class="title">{{ item.opportunity.title | loc: lang }}</b>
+            <span class="muted small">{{ item.opportunity.area | loc: lang }} · {{ m.since }} {{ item.investment.since | loc: lang }}</span>
+            <div class="stats">
+              <div><b>{{ item.investment.shares }}</b><span>{{ m.shares }}</span></div>
+              <div><b>{{ item.investment.invested | money: lang }}</b><span>{{ m.invested }}</span></div>
+              <div><b class="green">{{ item.investment.received | money: lang }}</b><span>{{ m.received }}</span></div>
+            </div>
+            <div class="foot">
+              <span class="small">{{ m.nextDistribution }}: <b>{{ item.investment.nextDistribution | loc: lang }}</b></span>
+              <a class="small link" [routerLink]="['/invest', item.opportunity.id]">{{ m.viewOpportunity }}</a>
+            </div>
+          </div>
+        </article>
+      } @empty {
+        <div class="empty">
+          <app-icon name="trending" [size]="40" />
+          <p>{{ m.empty }}</p>
+          <a class="btn btn-primary" routerLink="/invest">{{ m.browse }}</a>
+        </div>
+      }
+    </div>
+  </div>
+</section>

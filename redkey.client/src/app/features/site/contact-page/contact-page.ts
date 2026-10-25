@@ -3,6 +3,8 @@ import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
+import { LoginRequired } from '../../../core/auth/login-required.service';
+import { COMPANY } from '../../../core/data/company';
 import { IMAGES } from '../../../core/data/images';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import { ToastService } from '../../../core/ui/toast.service';
@@ -18,10 +20,10 @@ import { Icon } from '../../../shared/components/icon/icon';
 export class ContactPage {
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
+  private readonly loginRequired = inject(LoginRequired);
   protected readonly i18n = inject(I18nService);
 
-  readonly base = input('');
-
+  protected readonly company = COMPANY;
   protected readonly image = IMAGES.aboutTeam;
   private readonly user = inject(AuthService).user();
 
@@ -38,11 +40,12 @@ export class ContactPage {
   }
 
   protected submit(): void {
+    if (!this.loginRequired.check()) return;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     this.toast.show(this.i18n.t().common.sentLocally);
-    void this.router.navigateByUrl(this.base() + '/request-sent');
+    void this.router.navigateByUrl('/request-sent');
   }
 }

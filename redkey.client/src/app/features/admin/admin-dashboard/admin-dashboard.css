@@ -9,7 +9,7 @@
 }
 
 .kpi.accent {
-  background: linear-gradient(135deg, var(--rk-red), var(--rk-red-800));
+  background: linear-gradient(135deg, var(--rk-black-700), var(--rk-black));
   color: #fff;
 }
 

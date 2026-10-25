@@ -62,14 +62,15 @@ export const ar = {
     callUs: 'كلّمنا'
   },
   topbar: {
-    phone: '+20 100 000 0000',
+    phone: '01113313311',
     email: 'info@redkey.com',
-    address: 'التجمع الخامس، القاهرة الجديدة',
+    address: 'الغردقة - مكادي',
     hours: 'السبت – الخميس · 10 ص – 8 م'
   },
   landing: {
     hero: {
       eyebrow: 'بيع · إيجار · استثمار',
+      welcome: 'أهلاً',
       title: 'لاقي بيتك أو استثمارك الجاي مع RedKey',
       subtitle: 'وحدات للبيع والإيجار في أهم كمبوندات مصر، وفرص استثمار بالحصص، وفريق بيرد عليك على طول.',
       tabBuy: 'شراء',
@@ -224,6 +225,7 @@ export const ar = {
   },
   auth: {
     sideTitle: 'مفتاحك لبيت أحلامك',
+    loginFirst: 'سجّل دخولك الأول عشان تكمّل',
     sideText: 'تابع طلباتك ووحداتك المفضلة وفرص الاستثمار من مكان واحد.',
     login: {
       title: 'أهلاً بيك تاني',
@@ -296,6 +298,8 @@ export const ar = {
     hello: 'أهلاً',
     profile: 'الملف الشخصي',
     favorites: 'المفضلة',
+    myUnits: 'وحداتي',
+    myInvestments: 'استثماراتي',
     logout: 'تسجيل الخروج',
     myAccount: 'حسابي',
     notifications: 'الإشعارات',
@@ -324,12 +328,38 @@ export const ar = {
     accountType: 'نوع الحساب'
   },
   customer: {
-    home: {
-      welcome: 'أهلاً بيك',
-      title: 'لاقي شقتك أو استثمارك الجاي مع RedKey',
-      subtitle: 'وحدات للبيع والإيجار في أهم كمبوندات مصر، وفريق بيرد عليك على واتساب.',
-      selected: 'وحدات مختارة',
-      allUnits: 'كل الوحدات'
+    myUnits: {
+      title: 'وحداتي',
+      subtitle: 'الوحدات اللي اشتريتها أو مأجرها من RedKey.',
+      owned: 'تمليك',
+      rented: 'إيجار',
+      paid: 'المدفوع',
+      of: 'من',
+      installments: 'الأقساط',
+      nextPayment: 'الدفعة الجاية',
+      contractEnds: 'العقد بينتهي',
+      monthlyRent: 'الإيجار الشهري',
+      delivery: 'الاستلام',
+      viewUnit: 'تفاصيل الوحدة',
+      empty: 'لسه معندكش وحدات.',
+      browse: 'تصفّح الوحدات'
+    },
+    myInvestments: {
+      title: 'استثماراتي',
+      subtitle: 'حصصك في فرص الاستثمار والعوائد اللي وصلتك.',
+      totalInvested: 'إجمالي استثماراتك',
+      totalReturns: 'العوائد اللي وصلتك',
+      shares: 'عدد الحصص',
+      avgYield: 'متوسط العائد',
+      invested: 'المستثمر',
+      received: 'العوائد',
+      since: 'من',
+      active: 'نشط',
+      pending: 'بنكمّل الإجراءات',
+      nextDistribution: 'التوزيع الجاي',
+      viewOpportunity: 'تفاصيل الفرصة',
+      empty: 'لسه معندكش استثمارات.',
+      browse: 'شوف الفرص'
     },
     favorites: {
       title: 'المفضلة',

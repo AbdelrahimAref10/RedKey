@@ -20,7 +20,6 @@ export class PropertyList {
   protected readonly i18n = inject(I18nService);
 
   // Route data + query params (bound by withComponentInputBinding).
-  readonly base = input('');
   readonly purpose = input<string>();
   readonly type = input<string>();
   readonly area = input<string>();

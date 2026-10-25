@@ -3,6 +3,8 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, numberAttr
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
+import { LoginRequired } from '../../../core/auth/login-required.service';
+import { COMPANY } from '../../../core/data/company';
 import { PROPERTIES, findProperty } from '../../../core/data/properties.data';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import { LocPipe } from '../../../core/i18n/loc.pipe';
@@ -21,9 +23,9 @@ import { PropertyCard } from '../../../shared/components/property-card/property-
 export class PropertyDetails {
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
+  private readonly loginRequired = inject(LoginRequired);
   protected readonly i18n = inject(I18nService);
 
-  readonly base = input('');
   readonly id = input(0, { transform: numberAttribute });
 
   protected readonly property = computed(() => findProperty(this.id()));
@@ -41,17 +43,26 @@ export class PropertyDetails {
     time: [0]
   });
 
+  protected whatsapp(event: Event): void {
+    event.preventDefault();
+    if (!this.loginRequired.check()) return;
+    const p = this.property();
+    const text = encodeURIComponent(p ? `RedKey · ${p.code}` : 'RedKey');
+    window.open(`${COMPANY.whatsappLink}?text=${text}`, '_blank', 'noopener');
+  }
+
   protected invalid(name: 'name' | 'phone'): boolean {
     const control = this.form.controls[name];
     return control.invalid && control.touched;
   }
 
   protected submit(): void {
+    if (!this.loginRequired.check()) return;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     this.toast.show(this.i18n.t().common.sentLocally);
-    void this.router.navigateByUrl(this.base() + '/request-sent');
+    void this.router.navigateByUrl('/request-sent');
   }
 }

@@ -5,9 +5,9 @@
   <div class="container">
     @if (property(); as p) {
       <nav class="breadcrumb">
-        <a [routerLink]="base() || '/'">{{ t.common.home }}</a>
+        <a routerLink="/">{{ t.common.home }}</a>
         <span>›</span>
-        <a [routerLink]="base() + '/properties'">{{ pt.units }}</a>
+        <a routerLink="/properties">{{ pt.units }}</a>
         <span>›</span>
         <span>{{ p.code }}</span>
       </nav>
@@ -60,7 +60,7 @@
         <aside class="card side">
           <span class="muted small">{{ pt.code }}: {{ p.code }}</span>
           <b class="price">{{ p.price | money: lang : p.purpose === 'rent' }}</b>
-          <a href="#" class="btn btn-whatsapp btn-lg btn-block" (click)="$event.preventDefault()">
+          <a href="#" class="btn btn-whatsapp btn-lg btn-block" (click)="whatsapp($event)">
             <app-icon name="message" [size]="18" />{{ pt.whatsapp }}
           </a>
 
@@ -91,7 +91,7 @@
           <h2 class="section-title">{{ pt.similar }}</h2>
           <div class="grid-cards">
             @for (s of similar(); track s.id) {
-              <app-property-card [property]="s" [base]="base()" />
+              <app-property-card [property]="s" />
             }
           </div>
         </div>
@@ -100,7 +100,7 @@
       <div class="card missing">
         <app-icon name="info" [size]="34" />
         <p>{{ pt.notFound }}</p>
-        <a class="btn btn-primary" [routerLink]="base() + '/properties'">{{ pt.units }}</a>
+        <a class="btn btn-primary" routerLink="/properties">{{ pt.units }}</a>
       </div>
     }
   </div>

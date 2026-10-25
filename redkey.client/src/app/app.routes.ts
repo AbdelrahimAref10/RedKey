@@ -3,18 +3,12 @@ import { UserRole } from './core/api/redkey-api.generated';
 import { roleGuard } from './core/auth/auth.guards';
 
 /**
- * 4 layouts, each lazy loaded:
- *  - ''         → landing (public website, login, register)
- *  - /customer  → customer website
+ * Lazy loaded layouts:
+ *  - ''         → the website (visitors + signed-in customers, login, register)
  *  - /broker    → broker dashboard
  *  - /admin     → super admin dashboard
  */
 export const routes: Routes = [
-  {
-    path: 'customer',
-    canMatch: [roleGuard(UserRole.Customer)],
-    loadChildren: () => import('./features/customer/customer.routes')
-  },
   {
     path: 'broker',
     canMatch: [roleGuard(UserRole.Broker)],

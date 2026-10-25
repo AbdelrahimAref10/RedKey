@@ -18,11 +18,11 @@ export interface Session {
   user: AuthUserDto;
 }
 
-/** Home route of every role (each one has its own layout). */
+/** Where every role lands after login (customers stay on the website). */
 export const ROLE_HOME: Readonly<Record<UserRole, string>> = {
   [UserRole.SuperAdmin]: '/admin',
   [UserRole.Broker]: '/broker',
-  [UserRole.Customer]: '/customer'
+  [UserRole.Customer]: '/'
 };
 
 @Injectable({ providedIn: 'root' })
@@ -52,7 +52,7 @@ export class AuthService {
   logout(redirect = true): void {
     this._session.set(null);
     removeStoredSession();
-    if (redirect) void this.router.navigateByUrl('/login');
+    if (redirect) void this.router.navigateByUrl('/');
   }
 
   /** Front-end only profile edit (until the profile endpoint exists). */

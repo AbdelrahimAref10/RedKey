@@ -1,6 +1,7 @@
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../../../core/auth/auth.service';
 import { IMAGES } from '../../../../../core/data/images';
 import { AreaId, PropertyType, Purpose } from '../../../../../core/data/models';
 import { AREAS } from '../../../../../core/data/site.data';
@@ -18,6 +19,10 @@ import { Icon } from '../../../../../shared/components/icon/icon';
 export class HeroSearch {
   private readonly router = inject(Router);
   protected readonly i18n = inject(I18nService);
+  private readonly auth = inject(AuthService);
+
+  /** First name of the signed-in user (greeting), empty for visitors. */
+  protected readonly firstName = computed(() => this.auth.user()?.fullName.split(' ')[0] ?? '');
 
   protected readonly image = IMAGES.hero;
   protected readonly areas = AREAS;

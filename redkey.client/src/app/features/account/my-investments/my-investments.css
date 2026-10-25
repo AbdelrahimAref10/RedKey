@@ -1,0 +1,138 @@
+.page {
+  padding-block: 32px 64px;
+  background: var(--rk-bg);
+}
+
+h1 {
+  font-size: 26px;
+}
+
+.kpi.accent {
+  background: linear-gradient(135deg, var(--rk-black-700), var(--rk-black));
+  color: #fff;
+}
+
+.kpi.accent .kpi-label {
+  color: rgba(255, 255, 255, .8);
+}
+
+.kpi-value {
+  font-size: 22px;
+}
+
+.green {
+  color: var(--rk-success);
+}
+
+.red {
+  color: var(--rk-red);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.inv {
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--rk-white);
+  box-shadow: var(--rk-shadow-sm);
+}
+
+.media {
+  height: 180px;
+}
+
+.status {
+  position: absolute;
+  top: 12px;
+  inset-inline-start: 12px;
+  padding: 4px 12px;
+  border-radius: 99px;
+  background: var(--rk-success);
+  color: #fff;
+  font-weight: 600;
+  font-size: 12.5px;
+}
+
+.status.pending {
+  background: var(--rk-warn);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  flex: 1;
+}
+
+.title {
+  font-family: var(--rk-font-display);
+  font-size: 17px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  text-align: center;
+  border-block: 1px solid var(--rk-line-soft);
+  padding-block: 10px;
+  margin-block: 6px;
+}
+
+.stats div {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+.stats span {
+  color: var(--rk-muted);
+  font-size: 12px;
+}
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px;
+  margin-block-start: auto;
+}
+
+.link {
+  font-weight: 600;
+}
+
+.empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 56px 16px;
+  border-radius: 20px;
+  background: var(--rk-white);
+  color: var(--rk-red-300);
+  text-align: center;
+}
+
+.empty p {
+  color: var(--rk-muted);
+}

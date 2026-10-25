@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { COMPANY } from '../../../core/data/company';
 import { PropertyType } from '../../../core/data/models';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import { ToastService } from '../../../core/ui/toast.service';
@@ -17,9 +18,7 @@ export class SiteFooter {
   protected readonly i18n = inject(I18nService);
   private readonly toast = inject(ToastService);
 
-  /** Route prefix of the current layout: '' (landing) or '/customer'. */
-  readonly base = input('');
-
+  protected readonly company = COMPANY;
   protected readonly year = new Date().getFullYear();
   protected readonly types: readonly PropertyType[] = ['apartment', 'villa', 'townhouse', 'chalet'];
   protected readonly email = signal('');

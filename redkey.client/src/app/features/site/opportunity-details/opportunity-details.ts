@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, numberAttr
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
+import { LoginRequired } from '../../../core/auth/login-required.service';
 import { findOpportunity } from '../../../core/data/site.data';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import { LocPipe } from '../../../core/i18n/loc.pipe';
@@ -19,9 +20,9 @@ import { Icon } from '../../../shared/components/icon/icon';
 export class OpportunityDetails {
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
+  private readonly loginRequired = inject(LoginRequired);
   protected readonly i18n = inject(I18nService);
 
-  readonly base = input('');
   readonly id = input(0, { transform: numberAttribute });
 
   protected readonly opportunity = computed(() => findOpportunity(this.id()));
@@ -41,11 +42,12 @@ export class OpportunityDetails {
   }
 
   protected submit(): void {
+    if (!this.loginRequired.check()) return;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     this.toast.show(this.i18n.t().common.sentLocally);
-    void this.router.navigateByUrl(this.base() + '/request-sent');
+    void this.router.navigateByUrl('/request-sent');
   }
 }

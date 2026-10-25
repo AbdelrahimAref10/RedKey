@@ -48,7 +48,7 @@
 
     <div class="grid-cards">
       @for (property of results(); track property.id; let i = $index) {
-        <app-property-card [property]="property" [base]="base()" [priority]="i < 3" />
+        <app-property-card [property]="property" [priority]="i < 3" />
       } @empty {
         <div class="empty">
           <app-icon name="search" [size]="36" />

@@ -5,7 +5,11 @@
   <div class="overlay"></div>
 
   <div class="container content">
-    <span class="eyebrow light">{{ h.eyebrow }}</span>
+    @if (firstName(); as name) {
+      <span class="eyebrow light">{{ h.welcome }} {{ name }} 👋</span>
+    } @else {
+      <span class="eyebrow light">{{ h.eyebrow }}</span>
+    }
     <h1>{{ h.title }}</h1>
     <p>{{ h.subtitle }}</p>
 

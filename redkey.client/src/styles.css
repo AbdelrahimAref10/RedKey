@@ -13,6 +13,11 @@
   --rk-red-100: #F7E4E7;
   --rk-red-50: #FBF2F4;
 
+  /* Dark surfaces: top bar, hero overlay, footer, banners */
+  --rk-black: #121014;
+  --rk-black-800: #1C1920;
+  --rk-black-700: #2A2630;
+
   --rk-ink: #17141B;
   --rk-text: #4A4550;
   --rk-muted: #6A6470;
@@ -91,7 +96,10 @@ input, select, textarea { font: inherit; color: inherit; }
 .nowrap { white-space: nowrap; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
 
-.grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+/* Unit / property cards: always 3 per row on desktop, 2 on tablets, 1 on phones. */
+.grid-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+@media (max-width: 1000px) { .grid-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .grid-cards { grid-template-columns: minmax(0, 1fr); } }
 
 .section { padding-block: 72px; }
 .section-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 24px; margin-block-end: 32px; }

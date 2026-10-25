@@ -11,8 +11,8 @@
   margin-inline: auto;
 }
 
-/* Inside the customer website (no dashboard padding). */
-:host-context(app-customer-layout) .wrap {
+/* Inside the website layout (no dashboard padding). */
+:host-context(app-landing-layout) .wrap {
   padding: 32px 24px 64px;
 }
 

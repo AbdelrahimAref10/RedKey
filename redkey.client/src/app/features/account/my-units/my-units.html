@@ -1,0 +1,57 @@
+@let t = i18n.t();
+@let m = t.customer.myUnits;
+@let lang = i18n.lang();
+<section class="page">
+  <div class="container stack">
+    <div>
+      <h1>{{ m.title }}</h1>
+      <p class="muted">{{ m.subtitle }}</p>
+    </div>
+
+    @for (item of items; track item.property.id; let i = $index) {
+      <article class="unit">
+        <div class="img-frame media">
+          <img [ngSrc]="item.property.images[0]" fill [priority]="i === 0" [alt]="item.property.title | loc: lang" />
+          <span class="kind" [class.rented]="item.unit.kind === 'rented'">
+            {{ item.unit.kind === 'owned' ? m.owned : m.rented }}
+          </span>
+        </div>
+
+        <div class="body">
+          <span class="code">{{ t.propertyTypes[item.property.type] }} · {{ item.property.code }}</span>
+          <h2>{{ item.property.title | loc: lang }}</h2>
+          <span class="muted place"><app-icon name="pin" [size]="15" />{{ item.property.compound | loc: lang }} · {{ item.property.city | loc: lang }}</span>
+
+          @let u = item.unit;
+          @if (u.kind === 'owned') {
+            <div class="progress-row">
+              <span>{{ m.paid }}: <b>{{ u.paid | money: lang }}</b> {{ m.of }} {{ u.total | money: lang }}</span>
+              <span class="muted small">{{ m.installments }} {{ u.installmentsPaid }}/{{ u.installmentsTotal }}</span>
+            </div>
+            <div class="bar"><span [style.width.%]="(u.paid / u.total) * 100"></span></div>
+            <div class="facts">
+              <div><span>{{ m.nextPayment }}</span><b>{{ u.nextPayment | loc: lang }} · {{ u.nextAmount | money: lang }}</b></div>
+              <div><span>{{ m.delivery }}</span><b>{{ item.property.delivery | loc: lang }}</b></div>
+            </div>
+        } @else {
+            <div class="facts">
+              <div><span>{{ m.monthlyRent }}</span><b>{{ u.monthlyRent | money: lang }}</b></div>
+              <div><span>{{ m.nextPayment }}</span><b>{{ u.nextPayment | loc: lang }}</b></div>
+              <div><span>{{ m.contractEnds }}</span><b>{{ u.contractEnds | loc: lang }}</b></div>
+            </div>
+          }
+
+          <a class="btn btn-soft btn-sm details" [routerLink]="['/properties', item.property.id]">
+            {{ m.viewUnit }}<app-icon name="arrowEnd" [size]="16" [flip]="true" />
+          </a>
+        </div>
+      </article>
+    } @empty {
+      <div class="empty">
+        <app-icon name="home" [size]="40" />
+        <p>{{ m.empty }}</p>
+        <a class="btn btn-primary" routerLink="/properties">{{ m.browse }}</a>
+      </div>
+    }
+  </div>
+</section>

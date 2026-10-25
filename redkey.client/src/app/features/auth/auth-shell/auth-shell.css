@@ -28,7 +28,7 @@
   gap: 10px;
   padding: 36px;
   color: #fff;
-  background: linear-gradient(180deg, rgba(163, 18, 42, .1) 20%, rgba(94, 10, 24, .9) 100%);
+  background: linear-gradient(180deg, rgba(18, 16, 20, .05) 20%, rgba(18, 16, 20, .9) 100%);
 }
 
 .side-overlay h2 {

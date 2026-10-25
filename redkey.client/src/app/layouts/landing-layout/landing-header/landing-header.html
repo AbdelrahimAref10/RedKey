@@ -1,7 +1,8 @@
 @let t = i18n.t();
 <div class="topbar">
   <div class="container topbar-in">
-    <span class="info"><app-icon name="phone" [size]="15" /><span class="ltr">{{ t.topbar.phone }}</span></span>
+    <a class="info" [href]="company.phoneLink"><app-icon name="phone" [size]="15" /><span class="ltr">{{ t.topbar.phone }}</span></a>
+    <span class="info"><app-icon name="pin" [size]="15" />{{ t.topbar.address }}</span>
     <span class="info"><app-icon name="mail" [size]="15" />{{ t.topbar.email }}</span>
     <span class="info hide-md"><app-icon name="clock" [size]="15" />{{ t.topbar.hours }}</span>
     <span class="spacer"></span>
@@ -20,8 +21,9 @@
       @for (link of links; track link.key) {
         <a
           [routerLink]="link.path"
+          [queryParams]="link.query"
           routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: link.exact }">{{ t.nav[link.key] }}</a>
+          [routerLinkActiveOptions]="link.match">{{ t.nav[link.key] }}</a>
       }
       <div class="nav-mobile-actions">
         <app-language-switcher />
@@ -29,7 +31,10 @@
     </nav>
 
     <div class="actions">
-      @if (auth.isAuthenticated()) {
+      @if (isCustomer()) {
+        <app-notification-menu [items]="notifications" />
+        <app-user-menu [links]="menuLinks()" [roleLabel]="t.roles.customer" />
+      } @else if (auth.isAuthenticated()) {
         <a class="btn btn-primary btn-sm" [routerLink]="auth.homeUrl()">
           <app-icon name="grid" [size]="16" />{{ t.nav.dashboard }}
         </a>

@@ -3,7 +3,7 @@
 }
 
 .topbar {
-  background: var(--rk-red);
+  background: var(--rk-black);
   color: rgba(255, 255, 255, .92);
   font-size: 13px;
 }
@@ -19,6 +19,10 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+}
+
+a.info {
+  color: inherit;
 }
 
 .soc {

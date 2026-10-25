@@ -42,8 +42,8 @@
       </form>
 
       <aside class="contacts">
-        <div class="card info"><span class="ic"><app-icon name="phone" [size]="20" /></span><div><span class="muted small">{{ c.hotline }}</span><b class="ltr">{{ t.topbar.phone }}</b></div></div>
-        <div class="card info"><span class="ic"><app-icon name="message" [size]="20" /></span><div><span class="muted small">{{ c.whatsapp }}</span><b class="ltr">{{ t.topbar.phone }}</b></div></div>
+        <a class="card info" [href]="company.phoneLink"><span class="ic"><app-icon name="phone" [size]="20" /></span><div><span class="muted small">{{ c.hotline }}</span><b class="ltr">{{ t.topbar.phone }}</b></div></a>
+        <a class="card info" [href]="company.whatsappLink" target="_blank" rel="noopener"><span class="ic"><app-icon name="message" [size]="20" /></span><div><span class="muted small">{{ c.whatsapp }}</span><b class="ltr">{{ t.topbar.phone }}</b></div></a>
         <div class="card info"><span class="ic"><app-icon name="mail" [size]="20" /></span><div><span class="muted small">{{ t.common.email }}</span><b>{{ t.topbar.email }}</b></div></div>
         <div class="card info"><span class="ic"><app-icon name="pin" [size]="20" /></span><div><span class="muted small">{{ c.office }}</span><b>{{ t.topbar.address }}</b></div></div>
       </aside>

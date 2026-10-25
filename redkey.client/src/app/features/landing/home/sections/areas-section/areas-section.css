@@ -29,7 +29,7 @@
 .shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 40%, rgba(63, 6, 16, .85) 100%);
+  background: linear-gradient(180deg, transparent 40%, rgba(18, 16, 20, .85) 100%);
 }
 
 .info {

@@ -33,7 +33,7 @@ export class FavoritesService {
 function readStored(): ReadonlySet<number> {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return new Set(raw ? (JSON.parse(raw) as number[]) : [1042, 997]);
+    return new Set(raw ? (JSON.parse(raw) as number[]) : []);
   } catch {
     return new Set();
   }

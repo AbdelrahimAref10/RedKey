@@ -12,6 +12,4 @@ import { Icon } from '../../../shared/components/icon/icon';
 })
 export class RequestSent {
   protected readonly i18n = inject(I18nService);
-
-  readonly base = input('');
 }

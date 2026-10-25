@@ -2,7 +2,7 @@
   display: block;
 }
 
-.card {
+.p-card {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -15,21 +15,21 @@
   transition: transform .2s ease, box-shadow .2s ease;
 }
 
-.card:hover {
+.p-card:hover {
   transform: translateY(-3px);
   box-shadow: var(--rk-shadow);
   color: var(--rk-ink);
 }
 
 .media {
-  height: 210px;
+  height: 240px;
 }
 
 .media img {
   transition: transform .4s ease;
 }
 
-.card:hover .media img {
+.p-card:hover .media img {
   transform: scale(1.04);
 }
 
@@ -149,7 +149,7 @@
   color: var(--rk-red);
 }
 
-.card:hover .go {
+.p-card:hover .go {
   background: var(--rk-red);
   color: #fff;
 }

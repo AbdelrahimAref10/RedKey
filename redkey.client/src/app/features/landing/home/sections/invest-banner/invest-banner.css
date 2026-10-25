@@ -15,7 +15,7 @@
   color: #fff;
   background:
     radial-gradient(circle at 85% 20%, rgba(255, 255, 255, .14), transparent 40%),
-    linear-gradient(135deg, var(--rk-red) 0%, var(--rk-red-800) 100%);
+    linear-gradient(135deg, var(--rk-black-700) 0%, var(--rk-black) 100%);
 }
 
 .text {

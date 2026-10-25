@@ -5,8 +5,8 @@
     <h1>{{ d.title }}</h1>
     <p>{{ d.text }}</p>
     <div class="actions">
-      <a class="btn btn-primary btn-lg" [routerLink]="base() || '/'">{{ d.home }}</a>
-      <a class="btn btn-outline btn-lg" [routerLink]="base() + '/properties'">{{ d.browse }}</a>
+      <a class="btn btn-primary btn-lg" routerLink="/">{{ d.home }}</a>
+      <a class="btn btn-outline btn-lg" routerLink="/properties">{{ d.browse }}</a>
     </div>
   </div>
 </section>

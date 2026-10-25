@@ -64,14 +64,15 @@ export const en: Translations = {
     callUs: 'Call us'
   },
   topbar: {
-    phone: '+20 100 000 0000',
+    phone: '01113313311',
     email: 'info@redkey.com',
-    address: 'Fifth Settlement, New Cairo',
+    address: 'Hurghada - Makadi',
     hours: 'Sat – Thu · 10 AM – 8 PM'
   },
   landing: {
     hero: {
       eyebrow: 'Buy · Rent · Invest',
+      welcome: 'Welcome',
       title: 'Find your next home or investment with RedKey',
       subtitle: 'Units for sale and rent in Egypt’s top compounds, fractional investment opportunities and a team that answers right away.',
       tabBuy: 'Buy',
@@ -226,6 +227,7 @@ export const en: Translations = {
   },
   auth: {
     sideTitle: 'Your key to your dream home',
+    loginFirst: 'Please sign in first to continue',
     sideText: 'Follow your requests, favorite units and investment opportunities in one place.',
     login: {
       title: 'Welcome back',
@@ -298,6 +300,8 @@ export const en: Translations = {
     hello: 'Hi',
     profile: 'Profile',
     favorites: 'Favorites',
+    myUnits: 'My units',
+    myInvestments: 'My investments',
     logout: 'Sign out',
     myAccount: 'My account',
     notifications: 'Notifications',
@@ -326,12 +330,38 @@ export const en: Translations = {
     accountType: 'Account type'
   },
   customer: {
-    home: {
-      welcome: 'Welcome',
-      title: 'Find your next home or investment with RedKey',
-      subtitle: 'Units for sale and rent in Egypt’s top compounds, and a team that answers on WhatsApp.',
-      selected: 'Selected units',
-      allUnits: 'All units'
+    myUnits: {
+      title: 'My units',
+      subtitle: 'Units you bought or rented through RedKey.',
+      owned: 'Owned',
+      rented: 'Rented',
+      paid: 'Paid',
+      of: 'of',
+      installments: 'Installments',
+      nextPayment: 'Next payment',
+      contractEnds: 'Contract ends',
+      monthlyRent: 'Monthly rent',
+      delivery: 'Delivery',
+      viewUnit: 'Unit details',
+      empty: 'You have no units yet.',
+      browse: 'Browse properties'
+    },
+    myInvestments: {
+      title: 'My investments',
+      subtitle: 'Your shares in investment opportunities and the returns you received.',
+      totalInvested: 'Total invested',
+      totalReturns: 'Returns received',
+      shares: 'Shares',
+      avgYield: 'Average yield',
+      invested: 'Invested',
+      received: 'Returns',
+      since: 'Since',
+      active: 'Active',
+      pending: 'Finalising paperwork',
+      nextDistribution: 'Next distribution',
+      viewOpportunity: 'Opportunity details',
+      empty: 'You have no investments yet.',
+      browse: 'See opportunities'
     },
     favorites: {
       title: 'Favorites',

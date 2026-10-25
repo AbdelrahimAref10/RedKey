@@ -20,7 +20,7 @@
 
     <div class="grid">
       @for (o of opportunities; track o.id; let i = $index) {
-        <a class="opp" [routerLink]="[base() + '/invest', o.id]">
+        <a class="opp" [routerLink]="['/invest', o.id]">
           <div class="img-frame media">
             <img [ngSrc]="o.image" fill [priority]="i < 2" [alt]="o.title | loc: lang" />
             <span class="yield">{{ o.yield }}%</span>

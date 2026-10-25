@@ -77,6 +77,14 @@
   padding: 16px 18px;
 }
 
+a.info {
+  color: var(--rk-ink);
+}
+
+a.info:hover {
+  box-shadow: var(--rk-shadow);
+}
+
 .info div {
   display: flex;
   flex-direction: column;

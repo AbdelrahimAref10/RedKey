@@ -5,7 +5,7 @@
   <div class="container">
     @if (opportunity(); as o) {
       <nav class="breadcrumb">
-        <a [routerLink]="base() + '/invest'">{{ t.nav.invest }}</a>
+        <a routerLink="/invest">{{ t.nav.invest }}</a>
         <span>›</span>
         <span>{{ o.title | loc: lang }}</span>
       </nav>
@@ -53,7 +53,7 @@
       <div class="card missing">
         <app-icon name="info" [size]="34" />
         <p>{{ op.notFound }}</p>
-        <a class="btn btn-primary" [routerLink]="base() + '/invest'">{{ t.nav.invest }}</a>
+        <a class="btn btn-primary" routerLink="/invest">{{ t.nav.invest }}</a>
       </div>
     }
   </div>

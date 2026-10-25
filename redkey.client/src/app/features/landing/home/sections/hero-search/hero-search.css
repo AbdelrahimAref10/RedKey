@@ -18,11 +18,11 @@
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(90deg, rgba(63, 6, 16, .82) 0%, rgba(94, 10, 24, .55) 45%, rgba(23, 20, 27, .15) 100%);
+    linear-gradient(90deg, rgba(18, 16, 20, .85) 0%, rgba(18, 16, 20, .55) 45%, rgba(18, 16, 20, .12) 100%);
 }
 
 :host-context([dir='rtl']) .overlay {
-  background: linear-gradient(270deg, rgba(63, 6, 16, .82) 0%, rgba(94, 10, 24, .55) 45%, rgba(23, 20, 27, .15) 100%);
+  background: linear-gradient(270deg, rgba(18, 16, 20, .85) 0%, rgba(18, 16, 20, .55) 45%, rgba(18, 16, 20, .12) 100%);
 }
 
 .content {

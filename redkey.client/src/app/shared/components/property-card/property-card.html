@@ -1,7 +1,7 @@
 @let p = property();
 @let t = i18n.t();
 @let lang = i18n.lang();
-<a class="card" [routerLink]="link()">
+<a class="p-card" [routerLink]="link()">
   <div class="img-frame media">
     <img [ngSrc]="p.images[0]" fill [priority]="priority()" [alt]="p.title | loc: lang" />
     <span class="tag" [class.rent]="p.purpose === 'rent'">{{ p.purpose === 'sale' ? t.common.sale : t.common.rent }}</span>

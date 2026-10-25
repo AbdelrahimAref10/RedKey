@@ -1,0 +1,27 @@
+@RedKey.Server_HostAddress = https://localhost:7036
+
+POST {{RedKey.Server_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "identifier": "admin@redkey.com",
+  "password": "RedKey@2026"
+}
+
+###
+
+POST {{RedKey.Server_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "role": 1,
+  "fullName": "Karim Wageh",
+  "email": "broker@redkey.com",
+  "phoneNumber": "01012345678",
+  "password": "Broker@2026",
+  "confirmPassword": "Broker@2026",
+  "brokerType": 1,
+  "city": "Cairo"
+}
+
+###

@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/Backend/">
+    <Project Path="RedKey.Application/RedKey.Application.csproj" />
+    <Project Path="RedKey.Domain/RedKey.Domain.csproj" />
+    <Project Path="RedKey.Infrastructure/RedKey.Infrastructure.csproj" />
+    <Project Path="RedKey.Persistence/RedKey.Persistence.csproj" />
+    <Project Path="RedKey.Server/RedKey.Server.csproj" />
+  </Folder>
+  <Folder Name="/Frontend/">
+    <Project Path="redkey.client/RedKey.client.esproj">
+      <Build />
+      <Deploy />
+    </Project>
+  </Folder>
+</Solution>

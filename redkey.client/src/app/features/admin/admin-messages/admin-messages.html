@@ -1,0 +1,127 @@
+@let info = pageInfo();
+<div class="page-head">
+  <div>
+    <h1>{{ 'messages.title' | translate }}</h1>
+    <p>{{ 'messages.subtitle' | translate }}</p>
+  </div>
+</div>
+
+<div class="mail" [class.reading]="!!id()">
+  <!-- Inbox -->
+  <aside class="inbox card">
+    <div class="inbox-head">
+      <div class="filters" role="tablist">
+        <button type="button" role="tab" class="chip" [class.active]="!unreadOnly()" (click)="setUnreadOnly(false)">
+          {{ 'common.all' | translate }}
+        </button>
+        <button type="button" role="tab" class="chip" [class.active]="unreadOnly()" (click)="setUnreadOnly(true)">
+          {{ 'messages.unread' | translate }}
+          @if (unreadCount() > 0) { <span class="chip-count">{{ unreadCount() }}</span> }
+        </button>
+      </div>
+      <label class="search">
+        <app-icon name="search" [size]="16" />
+        <input type="search" [placeholder]="'messages.search' | translate" [attr.aria-label]="'messages.search' | translate"
+          (input)="onSearch($any($event.target).value)" />
+      </label>
+    </div>
+
+    <div class="threads" [class.loading]="listLoading()">
+      @for (m of rows(); track m.id) {
+        <a class="thread" [routerLink]="['/admin/messages', m.id]" [class.unread]="!m.isRead" [class.selected]="m.id === id()">
+          <span class="avatar">{{ initials(m.name) }}</span>
+          <span class="thread-body">
+            <span class="thread-top">
+              <b class="name">{{ m.name }}</b>
+              <small class="time">{{ time(m) }}</small>
+            </span>
+            <span class="subject">{{ m.subjectName }}</span>
+            <span class="preview">{{ m.preview }}</span>
+          </span>
+          @if (!m.isRead) { <span class="dot" aria-hidden="true"></span> }
+        </a>
+      } @empty {
+        @if (!listLoading()) {
+          <div class="threads-empty">
+            <app-icon name="inbox" [size]="28" />
+            <p>{{ (unreadOnly() ? 'messages.noUnread' : 'messages.empty') | translate }}</p>
+          </div>
+        }
+      }
+    </div>
+
+    @if (info && (info.totalPages ?? 0) > 1) {
+      <div class="inbox-pager">
+        <app-pagination [page]="info.page" [totalPages]="info.totalPages ?? 0" (pageChange)="page.set($event)" />
+      </div>
+    }
+  </aside>
+
+  <!-- Reading pane -->
+  <section class="pane card">
+    @if (message.value(); as m) {
+      <div class="pane-toolbar">
+        <a class="icon-btn back" routerLink="/admin/messages" [title]="'messages.back' | translate" [attr.aria-label]="'messages.back' | translate">
+          <app-icon name="arrowEnd" [size]="16" />
+        </a>
+        <span class="subject-chip"><app-icon name="message" [size]="14" />{{ m.subjectName }}</span>
+        <span class="spacer"></span>
+        <button type="button" class="icon-btn" [title]="'messages.copyPhone' | translate" [attr.aria-label]="'messages.copyPhone' | translate" (click)="copyPhone(m)">
+          <app-icon [name]="copied() ? 'check' : 'link'" [size]="16" />
+        </button>
+        <button type="button" class="icon-btn danger" [title]="'lookupsAdmin.delete' | translate" [attr.aria-label]="'lookupsAdmin.delete' | translate" (click)="remove(m.id)">
+          <app-icon name="trash" [size]="16" />
+        </button>
+      </div>
+
+      <header class="sender">
+        <span class="avatar big">{{ initials(m.name) }}</span>
+        <div class="sender-info">
+          <h2>{{ m.name }}</h2>
+          <div class="meta">
+            <span class="meta-item phone" dir="ltr">
+              <img [src]="flagUrl(m.countryIso)" [alt]="countryName(m.countryIso)" width="20" height="15" />
+              {{ phone(m) }}
+            </span>
+            @if (m.senderEmail) {
+              <a class="meta-item" [href]="'mailto:' + m.senderEmail"><app-icon name="mail" [size]="14" />{{ m.senderEmail }}</a>
+            }
+          </div>
+          <span class="received"><app-icon name="calendar" [size]="13" />{{ receivedAt() }}</span>
+        </div>
+      </header>
+
+      <div class="actions">
+        <a class="btn btn-whatsapp" [href]="whatsappLink()" target="_blank" rel="noopener">
+          <svg class="wa" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.57-.48-.5-.67-.5h-.57c-.2 0-.52.08-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.48.71.31 1.26.49 1.7.63.71.23 1.36.2 1.87.12.57-.08 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35zM12.05 21.5h-.01a9.43 9.43 0 0 1-4.8-1.32l-.35-.2-3.57.93.95-3.48-.22-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.24-9.44 9.45-9.44 2.52 0 4.9.99 6.68 2.77a9.38 9.38 0 0 1 2.76 6.68c0 5.2-4.24 9.44-9.45 9.44zm8.04-17.48A11.3 11.3 0 0 0 12.05.7C5.78.7.68 5.8.68 12.06c0 2 .52 3.96 1.52 5.68L.58 23.3l5.7-1.5a11.35 11.35 0 0 0 5.77 1.47c6.27 0 11.37-5.1 11.37-11.37 0-3.04-1.18-5.9-3.33-8.05z"/></svg>
+          {{ 'messages.replyWhatsapp' | translate }}
+        </a>
+        <a class="btn btn-outline" [href]="'tel:+' + m.dialCode + m.phoneNumber">
+          <app-icon name="phone" [size]="17" />{{ 'messages.call' | translate }}
+        </a>
+      </div>
+
+      <article class="letter">
+        <span class="letter-label">{{ 'messages.messageLabel' | translate }}</span>
+        <p class="body">{{ m.message }}</p>
+      </article>
+
+      <p class="pane-foot muted small">
+        <app-icon name="shield" [size]="14" />{{ 'messages.foot' | translate }}
+      </p>
+    } @else if (message.isLoading()) {
+      <div class="pane-empty"><span class="spinner" aria-hidden="true"></span></div>
+    } @else if (id()) {
+      <div class="pane-empty">
+        <app-icon name="info" [size]="30" />
+        <p>{{ 'messages.notFound' | translate }}</p>
+      </div>
+    } @else {
+      <div class="pane-empty">
+        <span class="empty-art"><app-icon name="mail" [size]="34" /></span>
+        <b>{{ 'messages.pickTitle' | translate }}</b>
+        <p class="muted">{{ 'messages.pickText' | translate }}</p>
+      </div>
+    }
+  </section>
+</div>

@@ -1,12 +1,11 @@
-@let d = i18n.t().site.done;
 <section class="page">
   <div class="box">
     <div class="ring"><span><app-icon name="check" [size]="34" [stroke]="2.6" /></span></div>
-    <h1>{{ d.title }}</h1>
-    <p>{{ d.text }}</p>
+    <h1>{{ 'site.done.title' | translate }}</h1>
+    <p>{{ 'site.done.text' | translate }}</p>
     <div class="actions">
-      <a class="btn btn-primary btn-lg" routerLink="/">{{ d.home }}</a>
-      <a class="btn btn-outline btn-lg" routerLink="/properties">{{ d.browse }}</a>
+      <a class="btn btn-primary btn-lg" routerLink="/">{{ 'site.done.home' | translate }}</a>
+      <a class="btn btn-outline btn-lg" routerLink="/properties">{{ 'site.done.browse' | translate }}</a>
     </div>
   </div>
 </section>

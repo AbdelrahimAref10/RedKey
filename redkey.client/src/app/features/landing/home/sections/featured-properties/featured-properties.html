@@ -1,28 +1,32 @@
-@let t = i18n.t();
 <section class="section featured">
   <div class="container">
     <div class="section-head">
       <div>
-        <span class="eyebrow">{{ t.landing.featured.eyebrow }}</span>
-        <h2 class="section-title">{{ t.landing.featured.title }}</h2>
-        <p class="section-sub">{{ t.landing.featured.subtitle }}</p>
+        <span class="eyebrow">{{ 'landing.featured.eyebrow' | translate }}</span>
+        <h2 class="section-title">{{ 'landing.featured.title' | translate }}</h2>
+        <p class="section-sub">{{ 'landing.featured.subtitle' | translate }}</p>
       </div>
       <div class="chips">
-        <button type="button" class="chip" [class.active]="filter() === 'all'" (click)="filter.set('all')">{{ t.common.all }}</button>
-        <button type="button" class="chip" [class.active]="filter() === 'sale'" (click)="filter.set('sale')">{{ t.common.sale }}</button>
-        <button type="button" class="chip" [class.active]="filter() === 'rent'" (click)="filter.set('rent')">{{ t.common.rent }}</button>
+        <button type="button" class="chip" [class.active]="purpose() === null" (click)="purpose.set(null)">{{ 'common.all' | translate }}</button>
+        @for (p of purposes(); track p.value) {
+          <button type="button" class="chip" [class.active]="purpose() === p.value" (click)="purpose.set(p.value)">{{ p.name }}</button>
+        }
       </div>
     </div>
 
-    <div class="grid-cards">
-      @for (property of items(); track property.id) {
-        <app-property-card [property]="property" />
+    <div class="grid-cards" [class.loading]="units.isLoading()">
+      @for (unit of items(); track unit.id) {
+        <app-property-card [unit]="unit" />
+      } @empty {
+        @if (!units.isLoading()) {
+          <p class="empty">{{ 'units.empty' | translate }}</p>
+        }
       }
     </div>
 
     <div class="more">
       <a class="btn btn-outline btn-lg" routerLink="/properties">
-        {{ t.landing.featured.viewAll }}<app-icon name="arrowEnd" [size]="18" [flip]="true" />
+        {{ 'landing.featured.viewAll' | translate }}<app-icon name="arrowEnd" [size]="18" [flip]="true" />
       </a>
     </div>
   </div>

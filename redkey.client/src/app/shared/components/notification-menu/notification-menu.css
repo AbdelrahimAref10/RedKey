@@ -65,11 +65,25 @@
   font-weight: 600;
 }
 
+.list {
+  max-height: min(420px, 70vh);
+  overflow-y: auto;
+}
+
 .item {
   display: flex;
   gap: 10px;
+  width: 100%;
   padding: 10px;
+  border: 0;
   border-radius: 12px;
+  background: none;
+  text-align: start;
+  color: var(--rk-ink);
+}
+
+.item:hover {
+  background: var(--rk-bg);
 }
 
 .item.unread {

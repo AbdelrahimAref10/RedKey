@@ -3,35 +3,7 @@ import { Loc } from '../../core/i18n/i18n.models';
 
 /** Demo data until the admin endpoints exist. */
 
-export type RequestType = 'visit' | 'invest' | 'contact';
-export type RequestStatus = 0 | 1 | 2; // new → contacted → closed
-export type UnitStatus = 'published' | 'hidden' | 'sold';
-
-export interface RequestRow {
-  id: number;
-  name: Loc;
-  phone: string;
-  type: RequestType;
-  details: Loc;
-  time: Loc;
-  status: RequestStatus;
-}
-
 const L = (ar: string, en: string): Loc => ({ ar, en });
-
-export const REQUESTS: readonly RequestRow[] = [
-  { id: 1, name: L('محمد عبد الله', 'Mohamed Abdallah'), phone: '010 1122 3344', type: 'visit', details: L('RK-1042 · تاج سيتي · بعد الضهر', 'RK-1042 · Taj City · Afternoon'), time: L('من 5 دقايق', '5 min ago'), status: 0 },
-  { id: 2, name: L('ليلى حسام', 'Laila Hossam'), phone: '011 2233 4455', type: 'invest', details: L('برج تايم · 20 – 100 ألف', 'Time Tower · 20K – 100K'), time: L('من 20 دقيقة', '20 min ago'), status: 0 },
-  { id: 3, name: L('نهى سمير', 'Noha Samir'), phone: '012 3344 5566', type: 'visit', details: L('RK-1108 · ميفيدا · الصبح', 'RK-1108 · Mivida · Morning'), time: L('من ساعة', '1 hour ago'), status: 1 },
-  { id: 4, name: L('عمر طارق', 'Omar Tarek'), phone: '010 4455 6677', type: 'contact', details: L('عايز أعرض وحدتي في زايد', 'Wants to list a unit in Zayed'), time: L('النهارده', 'Today'), status: 1 },
-  { id: 5, name: L('هشام كمال', 'Hesham Kamal'), phone: '011 5566 7788', type: 'invest', details: L('شاليهات الساحل · أكتر من 100 ألف', 'Coast chalets · 100K+'), time: L('امبارح', 'Yesterday'), status: 1 },
-  { id: 6, name: L('منى حسن', 'Mona Hassan'), phone: '012 6677 8899', type: 'visit', details: L('RK-1003 · ذا سكوير · بالليل', 'RK-1003 · The Square · Evening'), time: L('امبارح', 'Yesterday'), status: 2 }
-];
-
-export const UNIT_STATUS: Readonly<Record<number, UnitStatus>> = { 1003: 'sold', 988: 'hidden' };
-export const UNIT_REQUESTS: Readonly<Record<number, number>> = {
-  1042: 14, 1108: 6, 1003: 9, 997: 11, 1120: 7, 1140: 4, 1152: 3, 1131: 5, 988: 2, 1160: 1, 1171: 3, 1180: 6
-};
 
 export interface FlowRow {
   id: string;

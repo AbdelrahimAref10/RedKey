@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { STATUS_BADGE } from '../../../core/data/status';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import { LocPipe } from '../../../core/i18n/loc.pipe';
@@ -8,7 +9,7 @@ import { BROKER_CLIENTS } from '../broker.data';
 
 @Component({
   selector: 'app-broker-clients',
-  imports: [RouterLink, Icon, LocPipe],
+  imports: [TranslatePipe, RouterLink, Icon, LocPipe],
   templateUrl: './broker-clients.html',
   styleUrl: './broker-clients.css',
   changeDetection: ChangeDetectionStrategy.OnPush

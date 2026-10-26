@@ -46,7 +46,8 @@ internal sealed class JwtTokenGenerator : IJwtTokenGenerator
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Name, user.FullName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-                new Claim(JwtClaimTypes.Role, RoleNames.From(user.Role))
+                new Claim(JwtClaimTypes.Role, RoleNames.From(user.Role)),
+                new Claim(JwtClaimTypes.Language, user.PreferredLanguage)
             ])
         };
 

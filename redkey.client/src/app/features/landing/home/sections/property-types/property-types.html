@@ -1,21 +1,27 @@
-@let t = i18n.t();
-<section class="section types">
-  <div class="container">
-    <div class="section-head center">
-      <div>
-        <span class="eyebrow">{{ t.landing.categories.eyebrow }}</span>
-        <h2 class="section-title">{{ t.landing.categories.title }}</h2>
+@if (items().length) {
+  <section class="section types">
+    <div class="container">
+      <div class="section-head center">
+        <div>
+          <span class="eyebrow">{{ 'landing.categories.eyebrow' | translate }}</span>
+          <h2 class="section-title">{{ 'landing.categories.title' | translate }}</h2>
+        </div>
+      </div>
+
+      <div class="grid">
+        @for (item of items(); track item.id) {
+          <a class="type" routerLink="/properties" [queryParams]="{ type: item.id }">
+            <span class="icon">
+              @if (item.iconUrl) {
+                <span class="mask" [style.mask-image]="'url(' + item.iconUrl + ')'" [style.-webkit-mask-image]="'url(' + item.iconUrl + ')'"></span>
+              } @else {
+                <app-icon name="building" [size]="28" [stroke]="1.7" />
+              }
+            </span>
+            <b>{{ item.name }}</b>
+          </a>
+        }
       </div>
     </div>
-
-    <div class="grid">
-      @for (item of items; track item.type) {
-        <a class="type" routerLink="/properties" [queryParams]="{ type: item.type }">
-          <span class="icon"><app-icon [name]="item.icon" [size]="28" [stroke]="1.7" /></span>
-          <b>{{ t.propertyTypes[item.type] }}</b>
-          <small>{{ item.count }} {{ t.landing.categories.units }}</small>
-        </a>
-      }
-    </div>
-  </div>
-</section>
+  </section>
+}

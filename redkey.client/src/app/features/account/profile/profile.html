@@ -1,10 +1,8 @@
-@let t = i18n.t();
-@let p = t.profile;
 <div class="wrap">
   <div class="page-head">
     <div>
-      <h1>{{ p.title }}</h1>
-      <p>{{ p.subtitle }}</p>
+      <h1>{{ 'profile.title' | translate }}</h1>
+      <p>{{ 'profile.subtitle' | translate }}</p>
     </div>
   </div>
 
@@ -18,75 +16,75 @@
         @if (user()?.phoneNumber) {
           <span><app-icon name="phone" [size]="16" /><span class="ltr">{{ user()?.phoneNumber }}</span></span>
         }
-        <span><app-icon name="globe" [size]="16" />{{ p.language }}: {{ i18n.lang() === 'ar' ? 'العربية' : 'English' }}</span>
+        <span><app-icon name="globe" [size]="16" />{{ 'profile.language' | translate }}: {{ i18n.lang() === 'ar' ? 'العربية' : 'English' }}</span>
       </div>
     </aside>
 
     <div class="main">
       <form class="card" [formGroup]="form" (ngSubmit)="save()" novalidate>
         <div class="card-head">
-          <h2 class="card-title">{{ p.personal }}</h2>
+          <h2 class="card-title">{{ 'profile.personal' | translate }}</h2>
           @if (!editing()) {
-            <button type="button" class="btn btn-soft btn-sm" (click)="startEdit()"><app-icon name="edit" [size]="16" />{{ p.edit }}</button>
+            <button type="button" class="btn btn-soft btn-sm" (click)="startEdit()"><app-icon name="edit" [size]="16" />{{ 'profile.edit' | translate }}</button>
           }
         </div>
 
         <div class="form-grid">
           <div class="field">
-            <label for="fullName">{{ p.fullName }}</label>
+            <label for="fullName">{{ 'profile.fullName' | translate }}</label>
             <input id="fullName" class="input" formControlName="fullName" [class.is-invalid]="invalid('fullName')" />
-            @if (invalid('fullName')) { <span class="field-error">{{ t.auth.validation.required }}</span> }
+            @if (invalid('fullName')) { <span class="field-error">{{ 'auth.validation.required' | translate }}</span> }
           </div>
           <div class="field">
-            <label for="email">{{ p.email }}</label>
+            <label for="email">{{ 'profile.email' | translate }}</label>
             <input id="email" class="input" type="email" dir="ltr" formControlName="email" [class.is-invalid]="invalid('email')" />
-            @if (invalid('email')) { <span class="field-error">{{ t.auth.validation.email }}</span> }
+            @if (invalid('email')) { <span class="field-error">{{ 'auth.validation.email' | translate }}</span> }
           </div>
           <div class="field">
-            <label for="phone">{{ p.phone }}</label>
+            <label for="phone">{{ 'profile.phone' | translate }}</label>
             <input id="phone" class="input" type="tel" dir="ltr" formControlName="phoneNumber" [class.is-invalid]="invalid('phoneNumber')" />
-            @if (invalid('phoneNumber')) { <span class="field-error">{{ t.auth.validation.phone }}</span> }
+            @if (invalid('phoneNumber')) { <span class="field-error">{{ 'auth.validation.phone' | translate }}</span> }
           </div>
           <div class="field">
-            <label for="city">{{ p.city }}</label>
+            <label for="city">{{ 'profile.city' | translate }}</label>
             <input id="city" class="input" formControlName="city" />
           </div>
           <div class="field">
-            <label for="address">{{ p.address }}</label>
+            <label for="address">{{ 'profile.address' | translate }}</label>
             <input id="address" class="input" formControlName="address" />
           </div>
           <div class="field">
-            <label for="birthDate">{{ p.birthDate }}</label>
+            <label for="birthDate">{{ 'profile.birthDate' | translate }}</label>
             <input id="birthDate" class="input" type="date" formControlName="birthDate" />
           </div>
         </div>
 
         @if (editing()) {
           <div class="actions">
-            <button type="submit" class="btn btn-primary">{{ p.save }}</button>
-            <button type="button" class="btn btn-outline" (click)="cancel()">{{ p.cancel }}</button>
+            <button type="submit" class="btn btn-primary">{{ 'profile.save' | translate }}</button>
+            <button type="button" class="btn btn-outline" (click)="cancel()">{{ 'profile.cancel' | translate }}</button>
           </div>
         }
       </form>
 
       <form class="card" [formGroup]="passwordForm" (ngSubmit)="changePassword()" novalidate>
-        <h2 class="card-title">{{ p.security }}</h2>
+        <h2 class="card-title">{{ 'profile.security' | translate }}</h2>
         <div class="form-grid sec">
           <div class="field">
-            <label for="current">{{ p.currentPassword }}</label>
+            <label for="current">{{ 'profile.currentPassword' | translate }}</label>
             <input id="current" class="input" type="password" dir="ltr" formControlName="current" autocomplete="current-password" />
           </div>
           <div class="field">
-            <label for="next">{{ p.newPassword }}</label>
+            <label for="next">{{ 'profile.newPassword' | translate }}</label>
             <input id="next" class="input" type="password" dir="ltr" formControlName="next" autocomplete="new-password"
               [class.is-invalid]="passwordForm.controls.next.invalid && passwordForm.controls.next.touched" />
             @if (passwordForm.controls.next.invalid && passwordForm.controls.next.touched) {
-              <span class="field-error">{{ t.auth.validation.passwordWeak }}</span>
+              <span class="field-error">{{ 'auth.validation.passwordWeak' | translate }}</span>
             }
           </div>
         </div>
         <div class="actions">
-          <button type="submit" class="btn btn-outline"><app-icon name="shield" [size]="16" />{{ p.changePassword }}</button>
+          <button type="submit" class="btn btn-outline"><app-icon name="shield" [size]="16" />{{ 'profile.changePassword' | translate }}</button>
         </div>
       </form>
     </div>

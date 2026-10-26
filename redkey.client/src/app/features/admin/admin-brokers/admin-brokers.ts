@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { BrokerFlowStatus, STATUS_BADGE } from '../../../core/data/status';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import { LocPipe } from '../../../core/i18n/loc.pipe';
@@ -9,7 +10,7 @@ type Tab = 'join' | 'brokers' | 'clients' | 'units';
 
 @Component({
   selector: 'app-admin-brokers',
-  imports: [Icon, LocPipe],
+  imports: [TranslatePipe, Icon, LocPipe],
   templateUrl: './admin-brokers.html',
   styleUrl: './admin-brokers.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -29,14 +30,13 @@ export class AdminBrokers {
   protected readonly units = computed(() => this.apply(BROKER_UNITS_ADMIN));
 
   protected readonly tabs = computed(() => {
-    const b = this.i18n.t().admin.brokers;
     const waiting = this.join().filter(r => r.canAct).length;
     const reviewing = this.units().filter(r => r.canAct).length;
     return [
-      { id: 'join' as Tab, label: b.tabJoin, count: waiting },
-      { id: 'brokers' as Tab, label: b.tabBrokers, count: 0 },
-      { id: 'clients' as Tab, label: b.tabClients, count: 0 },
-      { id: 'units' as Tab, label: b.tabUnits, count: reviewing }
+      { id: 'join' as Tab, label: this.i18n.instant('admin.brokers.tabJoin'), count: waiting },
+      { id: 'brokers' as Tab, label: this.i18n.instant('admin.brokers.tabBrokers'), count: 0 },
+      { id: 'clients' as Tab, label: this.i18n.instant('admin.brokers.tabClients'), count: 0 },
+      { id: 'units' as Tab, label: this.i18n.instant('admin.brokers.tabUnits'), count: reviewing }
     ];
   });
 

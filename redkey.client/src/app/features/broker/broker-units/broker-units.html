@@ -1,39 +1,47 @@
-@let t = i18n.t();
-@let u = t.broker.units;
 @let lang = i18n.lang();
+@let result = units.value();
 <div class="page-head">
   <div>
-    <h1>{{ u.title }}</h1>
-    <p>{{ u.subtitle }}</p>
+    <h1>{{ 'broker.units.title' | translate }}</h1>
+    <p>{{ 'broker.units.subtitle' | translate }}</p>
   </div>
   <div class="chips">
-    <button type="button" class="chip" [class.active]="filter() === 'all'" (click)="filter.set('all')">{{ t.common.all }}</button>
-    <button type="button" class="chip" [class.active]="filter() === 'sale'" (click)="filter.set('sale')">{{ t.common.sale }}</button>
-    <button type="button" class="chip" [class.active]="filter() === 'rent'" (click)="filter.set('rent')">{{ t.common.rent }}</button>
+    <button type="button" class="chip" [class.active]="purpose() === null" (click)="setPurpose(null)">{{ 'common.all' | translate }}</button>
+    @for (p of purposes(); track p.value) {
+      <button type="button" class="chip" [class.active]="purpose() === p.value" (click)="setPurpose(p.value)">{{ p.name }}</button>
+    }
   </div>
 </div>
 
-<div class="grid">
-  @for (unit of units(); track unit.id; let i = $index) {
+<div class="grid" [class.loading]="units.isLoading()">
+  @for (unit of result?.items ?? []; track unit.id; let i = $index) {
     <article class="unit">
       <div class="img-frame media">
-        <img [ngSrc]="unit.images[0]" fill [priority]="i < 3" [alt]="unit.title | loc: lang" />
-        <span class="commission">{{ u.commission }} {{ unit.commission }}%</span>
+        <img [ngSrc]="unit.coverImageUrl" fill [priority]="i < 3" [alt]="unit.title" />
+        <span class="commission">{{ 'broker.units.commission' | translate }} {{ unit.brokerCommission }}%</span>
       </div>
       <div class="body">
-        <span class="type">{{ t.propertyTypes[unit.type] }} · {{ unit.code }}</span>
-        <b class="title">{{ unit.title | loc: lang }}</b>
-        <span class="muted small">{{ unit.compound | loc: lang }} · {{ unit.city | loc: lang }} · {{ unit.size }} {{ t.common.sqm }}</span>
-        <b class="price">{{ unit.price | money: lang : unit.purpose === 'rent' }}</b>
+        <span class="type">{{ unit.unitTypeName }} · {{ unit.code }}</span>
+        <b class="title">{{ unit.title }}</b>
+        <span class="muted small">{{ unit.compound }} · {{ unit.areaName }} · {{ unit.cityName }} · {{ unit.size }} {{ 'common.sqm' | translate }}</span>
+        <b class="price">{{ unit.price | money: lang }} · <span class="muted small">{{ unit.purposeName }}</span></b>
       </div>
       <div class="actions">
         <a class="btn btn-primary btn-sm" routerLink="/broker/clients/new" [queryParams]="{ unit: unit.id }">
-          <app-icon name="users" [size]="16" />{{ u.registerClient }}
+          <app-icon name="users" [size]="16" />{{ 'broker.units.registerClient' | translate }}
         </a>
         <button type="button" class="btn btn-outline btn-sm" (click)="share(unit.id)">
-          <app-icon name="link" [size]="16" />{{ u.share }}
+          <app-icon name="link" [size]="16" />{{ 'broker.units.share' | translate }}
         </button>
       </div>
     </article>
+  } @empty {
+    @if (!units.isLoading()) {
+      <p class="empty">{{ 'units.empty' | translate }}</p>
+    }
   }
 </div>
+
+@if (result) {
+  <app-pagination [page]="result.page" [totalPages]="result.totalPages ?? 0" (pageChange)="goToPage($event)" />
+}

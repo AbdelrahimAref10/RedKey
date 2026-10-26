@@ -1,0 +1,33 @@
+@let j = journal.value();
+<div class="backdrop" (click)="close.emit()" aria-hidden="true"></div>
+<aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="unit-journal-title">
+  <header class="head">
+    <span class="head-icon"><app-icon name="book" [size]="20" /></span>
+    <div>
+      <h2 id="unit-journal-title">{{ 'accounting.unitJournal' | translate }}</h2>
+      <span class="muted small" dir="ltr">{{ unitCode() }}</span>
+    </div>
+    <button type="button" class="icon-btn" [title]="'common.close' | translate" [attr.aria-label]="'common.close' | translate" (click)="close.emit()">
+      <app-icon name="close" [size]="16" />
+    </button>
+  </header>
+
+  <div class="summary">
+    <span>{{ 'accounting.unitNetRevenue' | translate }}</span>
+    <b>{{ (j?.netRevenue ?? 0) | money: i18n.lang() }}</b>
+    <small class="muted">{{ 'accounting.entriesCount' | translate: { count: j?.entries?.length ?? 0 } }}</small>
+  </div>
+
+  <div class="body" [class.loading]="journal.isLoading()">
+    @for (e of j?.entries ?? []; track e.id) {
+      <app-journal-entry-card [entry]="e" [showUnit]="false" />
+    } @empty {
+      @if (!journal.isLoading()) {
+        <div class="empty">
+          <app-icon name="book" [size]="28" />
+          <p>{{ 'accounting.unitNoEntries' | translate }}</p>
+        </div>
+      }
+    }
+  </div>
+</aside>

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 import { UserRole } from '../../../core/api/redkey-api.generated';
 import { AuthService } from '../../../core/auth/auth.service';
 import { I18nService } from '../../../core/i18n/i18n.service';
@@ -9,7 +10,7 @@ import { Icon } from '../../../shared/components/icon/icon';
 /** Profile page shared by the customer, broker and admin layouts (front-end only for now). */
 @Component({
   selector: 'app-profile',
-  imports: [ReactiveFormsModule, Icon],
+  imports: [TranslatePipe, ReactiveFormsModule, Icon],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -33,11 +34,10 @@ export class Profile {
   );
 
   protected readonly roleLabel = computed(() => {
-    const roles = this.i18n.t().roles;
     switch (this.user()?.role) {
-      case UserRole.SuperAdmin: return roles.superAdmin;
-      case UserRole.Broker: return roles.broker;
-      default: return roles.customer;
+      case UserRole.SuperAdmin: return this.i18n.instant('roles.superAdmin');
+      case UserRole.Broker: return this.i18n.instant('roles.broker');
+      default: return this.i18n.instant('roles.customer');
     }
   });
 
@@ -75,7 +75,7 @@ export class Profile {
     }
     const v = this.form.getRawValue();
     this.auth.updateUser({ fullName: v.fullName.trim(), email: v.email.trim(), phoneNumber: v.phoneNumber.trim() || undefined });
-    this.toast.show(this.i18n.t().common.savedLocally);
+    this.toast.show(this.i18n.instant('common.savedLocally'));
     this.editing.set(false);
     this.form.disable();
   }
@@ -86,7 +86,7 @@ export class Profile {
       return;
     }
     this.passwordForm.reset();
-    this.toast.show(this.i18n.t().common.savedLocally);
+    this.toast.show(this.i18n.instant('common.savedLocally'));
   }
 
   protected invalid(name: 'fullName' | 'email' | 'phoneNumber'): boolean {

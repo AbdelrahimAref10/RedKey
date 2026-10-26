@@ -1,21 +1,20 @@
-@let b = i18n.t().landing.broker;
 <section class="wrap">
   <div class="container">
     <div class="box">
       <div class="icon"><app-icon name="briefcase" [size]="34" [stroke]="1.7" /></div>
       <div class="text">
-        <span class="eyebrow">{{ b.eyebrow }}</span>
-        <h2>{{ b.title }}</h2>
-        <p>{{ b.text }}</p>
+        <span class="eyebrow">{{ 'landing.broker.eyebrow' | translate }}</span>
+        <h2>{{ 'landing.broker.title' | translate }}</h2>
+        <p>{{ 'landing.broker.text' | translate }}</p>
         <ul>
-          @for (point of b.points; track $index) {
+          @for (point of ('landing.broker.points' | translate); track $index) {
             <li><app-icon name="checkCircle" [size]="18" />{{ point }}</li>
           }
         </ul>
       </div>
-      <a class="btn btn-primary btn-lg" routerLink="/register" [queryParams]="{ role: 'broker' }">
-        {{ b.cta }}<app-icon name="arrowEnd" [size]="18" [flip]="true" />
-      </a>
+      <button type="button" class="btn btn-primary btn-lg" (click)="join()">
+        {{ 'landing.broker.cta' | translate }}<app-icon name="arrowEnd" [size]="18" [flip]="true" />
+      </button>
     </div>
   </div>
 </section>

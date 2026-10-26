@@ -133,6 +133,25 @@ input, select, textarea { font: inherit; color: inherit; }
 .btn-ghost:hover:not(:disabled) { background: var(--rk-red-50); color: var(--rk-red); }
 .btn-sm { height: 36px; padding-inline: 14px; font-size: 13.5px; border-radius: 10px; }
 .btn-xs { height: 28px; padding-inline: 10px; font-size: 12px; border-radius: 8px; }
+
+/* Square icon-only buttons (table row actions: edit / delete ...). Always give them aria-label + title. */
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--rk-line);
+  border-radius: 10px;
+  background: var(--rk-white);
+  color: var(--rk-text);
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.icon-btn:hover:not(:disabled) { border-color: var(--rk-ink); color: var(--rk-ink); }
+.icon-btn.danger:hover:not(:disabled) { border-color: var(--rk-red-200); background: var(--rk-red-50); color: var(--rk-red); }
+.icon-btn:disabled { opacity: .5; cursor: not-allowed; }
+.icon-btn:focus-visible { outline: 2px solid var(--rk-red); outline-offset: 2px; }
 .btn-lg { height: 54px; padding-inline: 28px; font-size: 16px; border-radius: 14px; }
 .btn-block { width: 100%; }
 .btn-icon { width: 42px; height: 42px; padding: 0; border-radius: 12px; }
@@ -227,3 +246,7 @@ input, select, textarea { font: inherit; color: inherit; }
 
 /* Directional icons (arrows / chevrons) mirror in RTL. */
 [dir='rtl'] app-icon.flip svg { transform: scaleX(-1); }
+
+/* Lists reloading from the API keep their size and fade a little (no layout jump). */
+.loading { opacity: .55; transition: opacity .15s ease; pointer-events: none; }
+.empty { grid-column: 1 / -1; padding: 40px 16px; text-align: center; color: var(--rk-muted); }

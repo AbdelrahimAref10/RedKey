@@ -1,0 +1,130 @@
+@let result = list.value();
+@let tx = texts();
+<div class="page-head">
+  <div>
+    <h1>{{ tx + '.title' | translate }}</h1>
+    <p>{{ tx + '.subtitle' | translate }}</p>
+  </div>
+  @if (!formOpen()) {
+    <button type="button" class="btn btn-primary" (click)="openNew()">
+      <app-icon name="plus" [size]="16" />{{ tx + '.add' | translate }}
+    </button>
+  }
+</div>
+
+@if (formOpen()) {
+  <form class="card editor" [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <h2 class="editor-title">{{ (editingId() ? 'lookupsAdmin.editTitle' : tx + '.add') | translate }}</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label for="nameAr">{{ 'lookupsAdmin.nameAr' | translate }}</label>
+        <input id="nameAr" class="input" dir="rtl" formControlName="nameAr"
+          [class.is-invalid]="form.controls.nameAr.invalid && form.controls.nameAr.touched" />
+      </div>
+      <div class="field">
+        <label for="nameEn">{{ 'lookupsAdmin.nameEn' | translate }}</label>
+        <input id="nameEn" class="input" dir="ltr" formControlName="nameEn"
+          [class.is-invalid]="form.controls.nameEn.invalid && form.controls.nameEn.touched" />
+      </div>
+      <div class="field">
+        <label for="sortOrder">{{ 'lookupsAdmin.sortOrder' | translate }}</label>
+        <input id="sortOrder" class="input" type="number" formControlName="sortOrder" />
+      </div>
+      @if (editingId()) {
+        <label class="check align-end">
+          <input type="checkbox" formControlName="isActive" />{{ 'lookupsAdmin.active' | translate }}
+        </label>
+      }
+      @if (withIcon()) {
+        <div class="field span-all">
+          <span class="field-label">{{ 'lookupsAdmin.icon' | translate }}</span>
+          <div class="icon-row">
+            <label class="icon-pick">
+              @if (icon(); as src) {
+                <span class="mask" [style.mask-image]="'url(' + src + ')'" [style.-webkit-mask-image]="'url(' + src + ')'"></span>
+              } @else {
+                <app-icon name="upload" [size]="22" />
+              }
+              <input type="file" class="sr-only" accept="image/svg+xml,image/png" (change)="pickIcon($event)" />
+            </label>
+            <span class="hint">{{ 'lookupsAdmin.iconHint' | translate }}</span>
+            @if (icon()) {
+              <button type="button" class="btn btn-ghost btn-xs" (click)="icon.set(null)">{{ 'unitForm.remove' | translate }}</button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+    <div class="row">
+      <button type="submit" class="btn btn-primary" [disabled]="saving()">{{ 'lookupsAdmin.save' | translate }}</button>
+      <button type="button" class="btn btn-outline" (click)="cancel()">{{ 'lookupsAdmin.cancel' | translate }}</button>
+    </div>
+  </form>
+}
+
+<div class="table-wrap" [class.loading]="list.isLoading()">
+  <table class="table">
+    <thead>
+      <tr>
+        @if (withIcon()) { <th>{{ 'lookupsAdmin.icon' | translate }}</th> }
+        <th>{{ 'lookupsAdmin.nameAr' | translate }}</th>
+        <th>{{ 'lookupsAdmin.nameEn' | translate }}</th>
+        @if (isCities()) { <th>{{ 'lookupsAdmin.cities.areas' | translate }}</th> }
+        <th>{{ 'lookupsAdmin.sortOrder' | translate }}</th>
+        <th>{{ 'common.status' | translate }}</th>
+        <th class="end">{{ 'common.actions' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of result?.items ?? []; track row.id) {
+        <tr [class.selectable]="isCities()" [class.selected]="row.id === selectedId()" (click)="select(row)">
+          @if (withIcon()) {
+            <td>
+              <span class="icon-cell">
+                @if (row.iconUrl) {
+                  <span class="mask" [style.mask-image]="'url(' + row.iconUrl + ')'" [style.-webkit-mask-image]="'url(' + row.iconUrl + ')'"></span>
+                }
+              </span>
+            </td>
+          }
+          <td>
+            <b class="name">
+              @if (isCities()) { <app-icon name="pin" [size]="16" /> }
+              {{ row.nameAr }}
+            </b>
+          </td>
+          <td dir="ltr" class="start">{{ row.nameEn }}</td>
+          @if (isCities()) {
+            <td><span class="count">{{ row.areasCount ?? 0 }}</span></td>
+          }
+          <td>{{ row.sortOrder }}</td>
+          <td><span class="badge" [class.badge-green]="row.isActive" [class.badge-gray]="!row.isActive">{{ row.isActive ? ('lookupsAdmin.active' | translate) : ('lookupsAdmin.inactive' | translate) }}</span></td>
+          <td>
+            <div class="actions">
+              @if (isCities()) {
+                <button type="button" class="icon-btn" [class.on]="row.id === selectedId()" [title]="'lookupsAdmin.cities.manageAreas' | translate"
+                  [attr.aria-label]="'lookupsAdmin.cities.manageAreas' | translate" (click)="select(row)">
+                  <app-icon name="layers" [size]="16" />
+                </button>
+              }
+              <button type="button" class="icon-btn" [title]="'lookupsAdmin.edit' | translate" [attr.aria-label]="'lookupsAdmin.edit' | translate" (click)="edit(row, $event)">
+                <app-icon name="edit" [size]="16" />
+              </button>
+              <button type="button" class="icon-btn danger" [title]="'lookupsAdmin.delete' | translate" [attr.aria-label]="'lookupsAdmin.delete' | translate" (click)="remove(row, $event)">
+                <app-icon name="trash" [size]="16" />
+              </button>
+            </div>
+          </td>
+        </tr>
+      } @empty {
+        @if (!list.isLoading()) {
+          <tr><td colspan="7" class="muted center">{{ 'lookupsAdmin.empty' | translate }}</td></tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (result) {
+  <app-pagination [page]="result.page" [totalPages]="result.totalPages ?? 0" (pageChange)="page.set($event)" />
+}

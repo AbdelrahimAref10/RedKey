@@ -1,52 +1,75 @@
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { Purpose } from '../../../core/data/models';
-import { PROPERTIES } from '../../../core/data/properties.data';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, linkedSignal, numberAttribute } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { Params, Router, RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
+import { AdminUnitsClient } from '../../../core/api/redkey-api.generated';
+import { AuthService } from '../../../core/auth/auth.service';
 import { I18nService } from '../../../core/i18n/i18n.service';
-import { LocPipe } from '../../../core/i18n/loc.pipe';
 import { MoneyPipe } from '../../../core/pipes/money.pipe';
-import { UNIT_REQUESTS, UNIT_STATUS, UnitStatus } from '../admin.data';
+import { Icon } from '../../../shared/components/icon/icon';
+import { Pagination } from '../../../shared/components/pagination/pagination';
 
-const STATUS_BADGE: Readonly<Record<UnitStatus, string>> = {
-  published: 'badge-green',
-  hidden: 'badge-gray',
-  sold: 'badge-gold'
+const optionalNumber = (value: unknown): number | null => {
+  const n = Number(value);
+  return value == null || value === '' || Number.isNaN(n) ? null : n;
 };
 
-const ROWS = PROPERTIES.map(p => ({
-  property: p,
-  status: UNIT_STATUS[p.id] ?? ('published' as UnitStatus),
-  requests: UNIT_REQUESTS[p.id] ?? 0
-}));
-
+/** Every unit (admin + broker ones) with its creator and review status, 10 per page. */
 @Component({
   selector: 'app-admin-units',
-  imports: [NgOptimizedImage, RouterLink, LocPipe, MoneyPipe],
+  imports: [TranslatePipe, NgOptimizedImage, RouterLink, MoneyPipe, Icon, Pagination],
   templateUrl: './admin-units.html',
   styleUrl: './admin-units.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminUnits {
+  private readonly router = inject(Router);
+  private readonly client = inject(AdminUnitsClient);
+  private readonly auth = inject(AuthService);
   protected readonly i18n = inject(I18nService);
 
-  protected readonly badge = STATUS_BADGE;
-  protected readonly total = ROWS.length;
-  protected readonly tab = signal<Purpose | 'all'>('all');
-  protected readonly query = signal('');
+  // Query params.
+  readonly purpose = input(null, { transform: optionalNumber });
+  readonly status = input(null, { transform: optionalNumber });
+  readonly search = input<string | undefined>();
+  readonly page = input(1, { transform: (v: unknown) => Math.max(1, numberAttribute(v, 1)) });
 
-  protected readonly rows = computed(() => {
-    const tab = this.tab();
-    const q = this.query().trim().toLowerCase();
-    return ROWS.filter(
-      ({ property: p }) =>
-        (tab === 'all' || p.purpose === tab) &&
-        (!q ||
-          p.code.toLowerCase().includes(q) ||
-          p.compound.ar.includes(q) ||
-          p.compound.en.toLowerCase().includes(q) ||
-          p.city.ar.includes(q) ||
-          p.city.en.toLowerCase().includes(q))
-    );
+  protected readonly searchText = linkedSignal(() => this.search() ?? '');
+  private searchTimer: ReturnType<typeof setTimeout> | undefined;
+
+  // Admin requests use the session language (token), so they reload when it changes.
+  private readonly lookups = rxResource({ params: () => this.auth.language(), stream: () => this.client.getFormLookups() });
+  protected readonly purposes = computed(() => this.lookups.value()?.enums.unitPurposes ?? []);
+  protected readonly statuses = computed(() => this.lookups.value()?.enums.unitStatuses ?? []);
+
+  protected readonly units = rxResource({
+    params: () => ({
+      lang: this.auth.language(),
+      purpose: this.purpose(),
+      status: this.status(),
+      search: this.search() || null,
+      page: this.page()
+    }),
+    stream: ({ params }) =>
+      this.client.getUnits(params.status, params.purpose, null, null, null, null, params.search, null, params.page, null, null)
   });
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => clearTimeout(this.searchTimer));
+  }
+
+  protected setFilter(params: Params): void {
+    void this.router.navigate([], { queryParams: { ...params, page: null }, queryParamsHandling: 'merge' });
+  }
+
+  protected onSearch(value: string): void {
+    this.searchText.set(value);
+    clearTimeout(this.searchTimer);
+    this.searchTimer = setTimeout(() => this.setFilter({ search: value.trim() || null }), 400);
+  }
+
+  protected goToPage(page: number): void {
+    void this.router.navigate([], { queryParams: { page }, queryParamsHandling: 'merge' });
+  }
 }

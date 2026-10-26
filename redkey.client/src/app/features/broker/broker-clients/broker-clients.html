@@ -1,26 +1,24 @@
-@let t = i18n.t();
-@let c = t.broker.clients;
 @let lang = i18n.lang();
 <div class="page-head">
   <div>
-    <h1>{{ c.title }}</h1>
-    <p>{{ c.subtitle }}</p>
+    <h1>{{ 'broker.clients.title' | translate }}</h1>
+    <p>{{ 'broker.clients.subtitle' | translate }}</p>
   </div>
-  <a class="btn btn-primary" routerLink="/broker/clients/new">{{ c.new }}</a>
+  <a class="btn btn-primary" routerLink="/broker/clients/new">{{ 'broker.clients.new' | translate }}</a>
 </div>
 
-<div class="alert alert-info"><app-icon name="shield" [size]="18" />{{ c.note }}</div>
+<div class="alert alert-info"><app-icon name="shield" [size]="18" />{{ 'broker.clients.note' | translate }}</div>
 
 <div class="table-wrap">
   <table class="table">
     <thead>
       <tr>
-        <th>{{ c.client }}</th>
-        <th>{{ t.common.phone }}</th>
-        <th>{{ c.unit }}</th>
-        <th>{{ c.reservation }}</th>
-        <th>{{ t.common.status }}</th>
-        <th>{{ c.commission }}</th>
+        <th>{{ 'broker.clients.client' | translate }}</th>
+        <th>{{ 'common.phone' | translate }}</th>
+        <th>{{ 'broker.clients.unit' | translate }}</th>
+        <th>{{ 'broker.clients.reservation' | translate }}</th>
+        <th>{{ 'common.status' | translate }}</th>
+        <th>{{ 'broker.clients.commission' | translate }}</th>
       </tr>
     </thead>
     <tbody>
@@ -30,7 +28,7 @@
           <td class="ltr muted">{{ row.phone }}</td>
           <td>{{ row.unit | loc: lang }}</td>
           <td>{{ row.reservation | loc: lang }}</td>
-          <td><span class="badge" [class]="badge[row.status]">{{ t.admin.brokers.st[row.status] }}</span></td>
+          <td><span class="badge" [class]="badge[row.status]">{{ ('admin.brokers.st.' + row.status) | translate }}</span></td>
           <td>{{ row.commission | loc: lang }}</td>
         </tr>
       }

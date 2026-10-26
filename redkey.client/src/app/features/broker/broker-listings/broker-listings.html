@@ -1,24 +1,59 @@
-@let t = i18n.t();
-@let l = t.broker.listings;
 @let lang = i18n.lang();
+@let result = units.value();
 <div class="page-head">
   <div>
-    <h1>{{ l.title }}</h1>
-    <p>{{ l.subtitle }}</p>
+    <h1>{{ 'broker.listings.title' | translate }}</h1>
+    <p>{{ 'broker.listings.subtitle' | translate }}</p>
   </div>
-  <a class="btn btn-primary" routerLink="/broker/listings/new">{{ l.add }}</a>
+  <div class="row">
+    <a class="btn btn-whatsapp" [href]="whatsapp" target="_blank" rel="noopener"><app-icon name="message" [size]="16" />{{ 'unitForm.whatsappRedkey' | translate }}</a>
+    <a class="btn btn-primary" routerLink="/broker/listings/new">{{ 'broker.listings.add' | translate }}</a>
+  </div>
 </div>
 
-<div class="list">
-  @for (row of listings; track row.id) {
+<div class="toolbar">
+  <div class="chips">
+    <button type="button" class="chip" [class.active]="purpose() === null" (click)="setFilter({ purpose: null })">{{ 'common.all' | translate }}</button>
+    @for (p of purposes(); track p.value) {
+      <button type="button" class="chip" [class.active]="purpose() === p.value" (click)="setFilter({ purpose: p.value })">{{ p.name }}</button>
+    }
+  </div>
+  <select class="select status" (change)="setFilter({ status: $any($event.target).value || null })" [attr.aria-label]="'common.status' | translate">
+    <option value="" [selected]="status() === null">{{ 'units.allStatuses' | translate }}</option>
+    @for (s of statuses(); track s.value) {
+      <option [value]="s.value" [selected]="s.value === status()">{{ s.name }}</option>
+    }
+  </select>
+</div>
+
+<div class="list" [class.loading]="units.isLoading()">
+  @for (row of result?.items ?? []; track row.id) {
     <article class="card item">
-      <span class="ic"><app-icon name="home" [size]="22" /></span>
+      <div class="img-frame thumb"><img [ngSrc]="row.coverImageUrl" fill alt="" /></div>
       <div class="info">
-        <b>{{ row.title | loc: lang }}</b>
-        <span class="muted small">{{ row.price | money: lang }} · {{ l.uploaded }} {{ row.uploadedAt | loc: lang }}</span>
-        <span class="small docs"><app-icon name="file" [size]="14" />{{ row.documents | loc: lang }}</span>
+        <b>{{ row.title }}</b>
+        <span class="muted small">{{ row.code }} · {{ row.purposeName }} · {{ row.compound }} · {{ row.areaName }} · {{ row.cityName }}</span>
+        <span class="small price">{{ row.price | money: lang }}</span>
+        @if (row.reviewNote) {
+          <span class="note"><app-icon name="info" [size]="14" />{{ row.reviewNote }}</span>
+        }
       </div>
-      <span class="badge" [class]="badge[row.status]">{{ t.admin.brokers.st[row.status] }}</span>
+      <div class="side">
+        <span class="badge" [class.badge-green]="row.status === 2" [class.badge-gold]="row.status === 1" [class.badge-red]="(row.status ?? 0) > 2">{{ row.statusName }}</span>
+        <a class="icon-btn" [routerLink]="['/broker/listings', row.id]" [title]="'common.edit' | translate" [attr.aria-label]="'common.edit' | translate"><app-icon name="edit" [size]="16" /></a>
+      </div>
     </article>
+  } @empty {
+    @if (!units.isLoading()) {
+      <div class="card empty-box">
+        <app-icon name="home" [size]="36" />
+        <p>{{ 'units.empty' | translate }}</p>
+        <a class="btn btn-primary" routerLink="/broker/listings/new">{{ 'broker.listings.add' | translate }}</a>
+      </div>
+    }
   }
 </div>
+
+@if (result) {
+  <app-pagination [page]="result.page" [totalPages]="result.totalPages ?? 0" (pageChange)="goToPage($event)" />
+}

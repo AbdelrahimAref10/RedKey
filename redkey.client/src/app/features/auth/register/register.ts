@@ -17,6 +17,7 @@ import {
   Validators
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 import { apiErrorCode } from '../../../core/api/api-error';
 import { BrokerType, UserRole } from '../../../core/api/redkey-api.generated';
@@ -36,7 +37,7 @@ function passwordsMatch(group: AbstractControl): ValidationErrors | null {
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, RouterLink, Icon, AuthShell],
+  imports: [TranslatePipe, ReactiveFormsModule, RouterLink, Icon, AuthShell],
   templateUrl: './register.html',
   styleUrl: './register.css',
   changeDetection: ChangeDetectionStrategy.OnPush

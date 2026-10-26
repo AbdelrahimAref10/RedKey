@@ -12,4 +12,7 @@ public interface IIdentityService
 
     /// <summary>Validates the credentials of a user identified by email or phone number.</summary>
     Task<Result<AuthenticatedUser>> SignInAsync(string identifier, string password, CancellationToken cancellationToken = default);
+
+    /// <summary>Saves the session language (ar / en) and returns the refreshed user.</summary>
+    Task<Result<AuthenticatedUser>> SetPreferredLanguageAsync(Guid userId, string language, CancellationToken cancellationToken = default);
 }

@@ -1,0 +1,44 @@
+@let e = entry();
+<article class="entry" [class.reversal]="!!e.reversalOfNumber" [class.reversed]="e.isReversed">
+  <header class="head">
+    <span class="number" dir="ltr">{{ e.number }}</span>
+    <span class="source">{{ e.sourceTypeName }}</span>
+    @if (e.reversalOfNumber) {
+      <span class="tag tag-rev"><app-icon name="close" [size]="12" />{{ 'accounting.reversalOf' | translate }} <span dir="ltr">{{ e.reversalOfNumber }}</span></span>
+    }
+    @if (e.isReversed) {
+      <span class="tag tag-cancel">{{ 'accounting.reversed' | translate }}</span>
+    }
+    @if (showUnit() && e.unitCode) {
+      <span class="unit" dir="ltr">{{ e.unitCode }}</span>
+    }
+    <span class="date muted small">{{ date() }}</span>
+  </header>
+  <p class="desc">{{ e.description }}</p>
+
+  <table class="lines">
+    <thead>
+      <tr>
+        <th>{{ 'accounting.account' | translate }}</th>
+        <th class="num">{{ 'accounting.debit' | translate }}</th>
+        <th class="num">{{ 'accounting.credit' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (l of e.lines; track $index) {
+        <tr [class.credit-row]="l.credit > 0">
+          <td><span class="code" dir="ltr">{{ l.accountCode }}</span>{{ l.accountName }}</td>
+          <td class="num">{{ format(l.debit) }}</td>
+          <td class="num">{{ format(l.credit) }}</td>
+        </tr>
+      }
+    </tbody>
+    <tfoot>
+      <tr>
+        <td>{{ 'accounting.total' | translate }}</td>
+        <td class="num">{{ format(e.total) }}</td>
+        <td class="num">{{ format(e.total) }}</td>
+      </tr>
+    </tfoot>
+  </table>
+</article>

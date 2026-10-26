@@ -1,0 +1,37 @@
+@let current = selected();
+<div class="field-box" dir="ltr">
+  <button type="button" class="country" [disabled]="disabled()" (click)="toggle()"
+    [attr.aria-label]="'phone.country' | translate" aria-haspopup="listbox" [attr.aria-expanded]="open()">
+    @if (current) {
+      <img class="flag" [src]="flagUrl(current.iso)" [alt]="current.name" width="24" height="18" />
+      <span class="dial">+{{ current.dial }}</span>
+    }
+    <app-icon class="chev" name="chevronDown" [size]="14" />
+  </button>
+  <input type="tel" inputmode="tel" autocomplete="tel-national" class="number" [id]="inputId()"
+    [value]="number()" [disabled]="disabled()" [placeholder]="'phone.placeholder' | translate"
+    [attr.aria-label]="'common.phone' | translate" (input)="onNumber($event)" (blur)="onBlur()" />
+</div>
+
+@if (open()) {
+  <div class="panel" role="dialog" [attr.aria-label]="'phone.country' | translate">
+    <div class="search">
+      <app-icon name="search" [size]="16" />
+      <input #searchBox type="search" [placeholder]="'phone.search' | translate" [attr.aria-label]="'phone.search' | translate"
+        (input)="onSearch($any($event.target).value)" (keydown)="onSearchKey($event)" />
+    </div>
+    <ul #list class="list" role="listbox" [attr.aria-label]="'phone.country' | translate">
+      @for (c of filtered(); track c.iso; let i = $index) {
+        <li role="option" [attr.aria-selected]="c.iso === iso()" [class.active]="i === active()" [class.selected]="c.iso === iso()"
+          (click)="pick(c)" (mouseenter)="active.set(i)">
+          <img class="flag" [src]="flagUrl(c.iso)" alt="" width="24" height="18" loading="lazy" />
+          <span class="name">{{ c.name }}</span>
+          <span class="code" dir="ltr">+{{ c.dial }}</span>
+          @if (c.iso === iso()) { <app-icon class="tick" name="check" [size]="15" /> }
+        </li>
+      } @empty {
+        <li class="empty">{{ 'phone.noResults' | translate }}</li>
+      }
+    </ul>
+  </div>
+}

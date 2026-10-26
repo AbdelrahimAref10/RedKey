@@ -1,10 +1,9 @@
-@let t = i18n.t();
 <div class="topbar">
   <div class="container topbar-in">
-    <a class="info" [href]="company.phoneLink"><app-icon name="phone" [size]="15" /><span class="ltr">{{ t.topbar.phone }}</span></a>
-    <span class="info"><app-icon name="pin" [size]="15" />{{ t.topbar.address }}</span>
-    <span class="info"><app-icon name="mail" [size]="15" />{{ t.topbar.email }}</span>
-    <span class="info hide-md"><app-icon name="clock" [size]="15" />{{ t.topbar.hours }}</span>
+    <a class="info" [href]="company.phoneLink"><app-icon name="phone" [size]="15" /><span class="ltr">{{ 'topbar.phone' | translate }}</span></a>
+    <span class="info"><app-icon name="pin" [size]="15" />{{ 'topbar.address' | translate }}</span>
+    <span class="info"><app-icon name="mail" [size]="15" />{{ 'topbar.email' | translate }}</span>
+    <span class="info hide-md"><app-icon name="clock" [size]="15" />{{ 'topbar.hours' | translate }}</span>
     <span class="spacer"></span>
     <a href="#" class="soc" aria-label="Facebook"><app-icon name="facebook" [size]="15" /></a>
     <a href="#" class="soc" aria-label="Instagram"><app-icon name="instagram" [size]="15" /></a>
@@ -23,7 +22,7 @@
           [routerLink]="link.path"
           [queryParams]="link.query"
           routerLinkActive="active"
-          [routerLinkActiveOptions]="link.match">{{ t.nav[link.key] }}</a>
+          [routerLinkActiveOptions]="link.match">{{ ('nav.' + link.key) | translate }}</a>
       }
       <div class="nav-mobile-actions">
         <app-language-switcher />
@@ -32,24 +31,28 @@
 
     <div class="actions">
       @if (isCustomer()) {
-        <app-notification-menu [items]="notifications" />
-        <app-user-menu [links]="menuLinks()" [roleLabel]="t.roles.customer" />
+        <app-notification-menu
+          [items]="live.menuItems()"
+          [unread]="live.unread()"
+          (opened)="live.open($event.id)"
+          (markAllRead)="live.markAllRead()" />
+        <app-user-menu [links]="menuLinks()" [roleLabel]="'roles.customer' | translate" />
       } @else if (auth.isAuthenticated()) {
         <a class="btn btn-primary btn-sm" [routerLink]="auth.homeUrl()">
-          <app-icon name="grid" [size]="16" />{{ t.nav.dashboard }}
+          <app-icon name="grid" [size]="16" />{{ 'nav.dashboard' | translate }}
         </a>
       } @else {
         <a class="btn btn-ghost btn-sm hide-sm" routerLink="/login">
-          <app-icon name="user" [size]="16" />{{ t.nav.login }}
+          <app-icon name="user" [size]="16" />{{ 'nav.login' | translate }}
         </a>
-        <a class="btn btn-primary btn-sm" routerLink="/register">{{ t.nav.register }}</a>
+        <a class="btn btn-primary btn-sm" routerLink="/register">{{ 'nav.register' | translate }}</a>
       }
       <button
         type="button"
         class="burger"
         (click)="menuOpen.set(!menuOpen())"
         [attr.aria-expanded]="menuOpen()"
-        [attr.aria-label]="t.common.menu">
+        [attr.aria-label]="'common.menu' | translate">
         <app-icon [name]="menuOpen() ? 'close' : 'menu'" [size]="22" />
       </button>
     </div>

@@ -1,0 +1,101 @@
+@let lang = i18n.lang();
+@let o = overview.value();
+<div class="page-head">
+  <div>
+    <h1>{{ 'accounting.title' | translate }}</h1>
+    <p>{{ 'accounting.subtitle' | translate }}</p>
+  </div>
+  @if (o) {
+    <span class="balanced" [class.bad]="!o.isBalanced">
+      <app-icon [name]="o.isBalanced ? 'checkCircle' : 'info'" [size]="16" />
+      {{ (o.isBalanced ? 'accounting.balanced' : 'accounting.notBalanced') | translate }}
+    </span>
+  }
+</div>
+
+<div class="kpis" [class.loading]="overview.isLoading()">
+  @for (a of o?.cashAccounts ?? []; track a.id) {
+    <div class="kpi" [class.accent]="$first">
+      <span class="kpi-label"><app-icon [name]="a.code === '1100' ? 'wallet' : 'building'" [size]="16" />{{ a.name }}</span>
+      <b class="kpi-value">{{ a.balance | money: lang }}</b>
+      <span class="kpi-delta">{{ 'accounting.balance' | translate }}</span>
+    </div>
+  }
+  <div class="kpi">
+    <span class="kpi-label"><app-icon name="trending" [size]="16" />{{ 'accounting.monthRevenue' | translate }}</span>
+    <b class="kpi-value">{{ (o?.revenue ?? 0) | money: lang }}</b>
+    <span class="kpi-delta">{{ 'accounting.monthExpenses' | translate }}: {{ (o?.expenses ?? 0) | money: lang }}</span>
+  </div>
+  <div class="kpi">
+    <span class="kpi-label"><app-icon name="award" [size]="16" />{{ 'accounting.netProfit' | translate }}</span>
+    <b class="kpi-value" [class.neg]="(o?.netProfit ?? 0) < 0">{{ (o?.netProfit ?? 0) | money: lang }}</b>
+    <span class="kpi-delta">{{ 'accounting.thisMonth' | translate }}</span>
+  </div>
+</div>
+
+<div class="tabs" role="tablist">
+  <button type="button" role="tab" class="tab" [class.active]="tab() === 'treasury'" (click)="tab.set('treasury')">
+    <app-icon name="wallet" [size]="15" />{{ 'accounting.treasury' | translate }}
+  </button>
+  <button type="button" role="tab" class="tab" [class.active]="tab() === 'journal'" (click)="tab.set('journal')">
+    <app-icon name="book" [size]="15" />{{ 'accounting.journal' | translate }}
+  </button>
+</div>
+
+@if (tab() === 'treasury') {
+  <div class="chips">
+    <button type="button" class="chip" [class.active]="cashAccount() === null" (click)="setAccount(null)">{{ 'common.all' | translate }}</button>
+    @for (a of o?.cashAccounts ?? []; track a.id) {
+      <button type="button" class="chip" [class.active]="cashAccount() === a.id" (click)="setAccount(a.id)">{{ a.name }}</button>
+    }
+  </div>
+
+  @let t = treasury.value();
+  <div class="table-wrap" [class.loading]="treasury.isLoading()">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{ 'accounting.date' | translate }}</th>
+          <th>{{ 'accounting.entryNo' | translate }}</th>
+          <th>{{ 'accounting.description' | translate }}</th>
+          <th>{{ 'accounting.account' | translate }}</th>
+          <th class="num">{{ 'accounting.in' | translate }}</th>
+          <th class="num">{{ 'accounting.out' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (m of t?.items ?? []; track m.lineId) {
+          <tr>
+            <td class="muted nowrap">{{ date(m.entryDateUtc) }}</td>
+            <td class="nowrap" dir="ltr"><b>{{ m.entryNumber }}</b></td>
+            <td>{{ m.description }}</td>
+            <td>{{ m.accountName }}</td>
+            <td class="num in">{{ m.in ? (m.in | money: lang) : '' }}</td>
+            <td class="num out">{{ m.out ? (m.out | money: lang) : '' }}</td>
+          </tr>
+        } @empty {
+          @if (!treasury.isLoading()) {
+            <tr><td colspan="6" class="empty-row muted">{{ 'accounting.noMovements' | translate }}</td></tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+  @if (t && (t.totalPages ?? 0) > 1) {
+    <app-pagination [page]="t.page" [totalPages]="t.totalPages ?? 0" (pageChange)="treasuryPage.set($event)" />
+  }
+} @else {
+  @let j = journal.value();
+  <div class="entries" [class.loading]="journal.isLoading()">
+    @for (e of j?.items ?? []; track e.id) {
+      <app-journal-entry-card [entry]="e" />
+    } @empty {
+      @if (!journal.isLoading()) {
+        <p class="card empty-row muted">{{ 'accounting.noEntries' | translate }}</p>
+      }
+    }
+  </div>
+  @if (j && (j.totalPages ?? 0) > 1) {
+    <app-pagination [page]="j.page" [totalPages]="j.totalPages ?? 0" (pageChange)="journalPage.set($event)" />
+  }
+}

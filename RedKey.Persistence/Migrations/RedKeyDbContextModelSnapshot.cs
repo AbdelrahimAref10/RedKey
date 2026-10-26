@@ -22,6 +22,12 @@ namespace RedKey.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.HasSequence<int>("RK_JournalNumberSequence")
+                .StartsAt(100001L);
+
+            modelBuilder.HasSequence<int>("RK_UnitCodeSequence")
+                .StartsAt(1000L);
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
@@ -125,6 +131,286 @@ namespace RedKey.Persistence.Migrations
                     b.ToTable("RK_UserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("RedKey.Domain.Entities.Accounting.Account", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsCash")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSystem")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("NameAr")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NameEn")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<byte>("Type")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("RK_Accounts", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "1100",
+                            IsActive = true,
+                            IsCash = true,
+                            IsSystem = true,
+                            NameAr = "الخزنة النقدية",
+                            NameEn = "Cash box",
+                            Type = (byte)1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "1200",
+                            IsActive = true,
+                            IsCash = true,
+                            IsSystem = true,
+                            NameAr = "البنك",
+                            NameEn = "Bank",
+                            Type = (byte)1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Code = "1300",
+                            IsActive = true,
+                            IsCash = false,
+                            IsSystem = true,
+                            NameAr = "مستحقات على العملاء",
+                            NameEn = "Customer receivables",
+                            Type = (byte)1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Code = "2100",
+                            IsActive = true,
+                            IsCash = false,
+                            IsSystem = true,
+                            NameAr = "عمولات وسطاء مستحقة",
+                            NameEn = "Broker commissions payable",
+                            Type = (byte)2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Code = "4100",
+                            IsActive = true,
+                            IsCash = false,
+                            IsSystem = true,
+                            NameAr = "إيراد رسوم المعاينة",
+                            NameEn = "Viewing fee revenue",
+                            Type = (byte)4
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Code = "4200",
+                            IsActive = true,
+                            IsCash = false,
+                            IsSystem = true,
+                            NameAr = "إيراد عمولة بيع",
+                            NameEn = "Sale commission revenue",
+                            Type = (byte)4
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Code = "4300",
+                            IsActive = true,
+                            IsCash = false,
+                            IsSystem = true,
+                            NameAr = "إيراد عمولة إيجار",
+                            NameEn = "Rent commission revenue",
+                            Type = (byte)4
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Code = "5100",
+                            IsActive = true,
+                            IsCash = false,
+                            IsSystem = true,
+                            NameAr = "مصروف عمولات الوسطاء",
+                            NameEn = "Broker commission expense",
+                            Type = (byte)5
+                        });
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.Accounting.JournalEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DescriptionAr")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("DescriptionEn")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<DateTime>("EntryDateUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsReversed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
+                        .HasDefaultValueSql("CONCAT('JE-', NEXT VALUE FOR RK_JournalNumberSequence)");
+
+                    b.Property<Guid?>("ReversalOfId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SourceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte>("SourceType")
+                        .HasColumnType("tinyint");
+
+                    b.Property<Guid?>("UnitId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EntryDateUtc");
+
+                    b.HasIndex("Number")
+                        .IsUnique();
+
+                    b.HasIndex("UnitId");
+
+                    b.HasIndex("SourceType", "SourceId")
+                        .IsUnique()
+                        .HasFilter("[ReversalOfId] IS NULL AND [IsReversed] = 0");
+
+                    b.ToTable("RK_JournalEntries", (string)null);
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.Accounting.JournalLine", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Credit")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Debit")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("EntryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Memo")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EntryId");
+
+                    b.HasIndex("AccountId", "EntryId");
+
+                    b.ToTable("RK_JournalLines", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_RK_JournalLines_Amounts", "[Debit] >= 0 AND [Credit] >= 0");
+
+                            t.HasCheckConstraint("CK_RK_JournalLines_OneSide", "([Debit] > 0 AND [Credit] = 0) OR ([Credit] > 0 AND [Debit] = 0)");
+                        });
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.Area", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("NameAr")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NameEn")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CityId", "IsActive", "SortOrder");
+
+                    b.ToTable("RK_Areas", (string)null);
+                });
+
             modelBuilder.Entity("RedKey.Domain.Entities.Broker", b =>
                 {
                     b.Property<Guid>("Id")
@@ -191,6 +477,109 @@ namespace RedKey.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("RK_Brokers", (string)null);
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("NameAr")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NameEn")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsActive", "SortOrder");
+
+                    b.ToTable("RK_Cities", (string)null);
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.ContactMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CountryIso")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .IsUnicode(false)
+                        .HasColumnType("char(2)")
+                        .IsFixedLength();
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DialCode")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(4)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(15)");
+
+                    b.Property<DateTime?>("ReadAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("SenderUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte>("Subject")
+                        .HasColumnType("tinyint");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAtUtc");
+
+                    b.HasIndex("SenderUserId");
+
+                    b.HasIndex("IsRead", "CreatedAtUtc");
+
+                    b.ToTable("RK_ContactMessages", (string)null);
                 });
 
             modelBuilder.Entity("RedKey.Domain.Entities.Customer", b =>
@@ -364,6 +753,411 @@ namespace RedKey.Persistence.Migrations
                     b.ToTable("RK_Users", (string)null);
                 });
 
+            modelBuilder.Entity("RedKey.Domain.Entities.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("BodyAr")
+                        .IsRequired()
+                        .HasMaxLength(1500)
+                        .HasColumnType("nvarchar(1500)");
+
+                    b.Property<string>("BodyEn")
+                        .IsRequired()
+                        .HasMaxLength(1500)
+                        .HasColumnType("nvarchar(1500)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("EntityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LinkUrl")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<DateTime?>("ReadAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("RecipientUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TitleAr")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("TitleEn")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<byte>("Type")
+                        .HasColumnType("tinyint");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipientUserId", "IsRead", "CreatedAtUtc");
+
+                    b.ToTable("RK_Notifications", (string)null);
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.UnitType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("IconUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("NameAr")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NameEn")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsActive", "SortOrder");
+
+                    b.ToTable("RK_UnitTypes", (string)null);
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.Units.PropertyUnit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AreaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Bathrooms")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Bedrooms")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("BrokerCommission")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasDefaultValueSql("CONCAT('RK-', NEXT VALUE FOR RK_UnitCodeSequence)");
+
+                    b.Property<string>("CompoundAr")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("CompoundEn")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("CoverImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CreatedByRole")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte>("Finishing")
+                        .HasColumnType("tinyint");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<byte>("Purpose")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("ReviewNote")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime?>("ReviewedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("ReviewedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Size")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("TitleAr")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("TitleEn")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("UnitTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("ViewingFee")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AreaId");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("UnitTypeId");
+
+                    b.HasIndex("Status", "Purpose", "UnitTypeId", "CityId", "AreaId");
+
+                    b.ToTable("RK_Units", (string)null);
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.Units.UnitDetails", b =>
+                {
+                    b.Property<Guid>("UnitId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DeliveryAr")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("DeliveryEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("DescriptionAr")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<string>("DescriptionEn")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.HasKey("UnitId");
+
+                    b.ToTable("RK_UnitDetails", (string)null);
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.Units.UnitFeature", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("NameAr")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NameEn")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UnitId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UnitId", "SortOrder");
+
+                    b.ToTable("RK_UnitFeatures", (string)null);
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.Units.UnitImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UnitId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UnitId", "SortOrder");
+
+                    b.ToTable("RK_UnitImages", (string)null);
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.Units.UnitPaymentPlan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("LabelAr")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("LabelEn")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UnitId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ValueAr")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("ValueEn")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UnitId", "SortOrder");
+
+                    b.ToTable("RK_UnitPaymentPlans", (string)null);
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.ViewingRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CompletedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CustomerUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("JournalEntryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<byte>("PreferredTime")
+                        .HasColumnType("tinyint");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.Property<Guid>("UnitId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("ViewingFee")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerUserId");
+
+                    b.HasIndex("UnitId");
+
+                    b.HasIndex("Status", "CreatedAtUtc");
+
+                    b.ToTable("RK_ViewingRequests", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("RedKey.Domain.Entities.Identity.ApplicationRole", null)
@@ -415,6 +1209,34 @@ namespace RedKey.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RedKey.Domain.Entities.Accounting.JournalLine", b =>
+                {
+                    b.HasOne("RedKey.Domain.Entities.Accounting.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("RedKey.Domain.Entities.Accounting.JournalEntry", null)
+                        .WithMany("Lines")
+                        .HasForeignKey("EntryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.Area", b =>
+                {
+                    b.HasOne("RedKey.Domain.Entities.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("City");
+                });
+
             modelBuilder.Entity("RedKey.Domain.Entities.Broker", b =>
                 {
                     b.HasOne("RedKey.Domain.Entities.Identity.ApplicationUser", "User")
@@ -424,6 +1246,17 @@ namespace RedKey.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.ContactMessage", b =>
+                {
+                    b.HasOne("RedKey.Domain.Entities.Identity.ApplicationUser", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("RedKey.Domain.Entities.Customer", b =>
@@ -437,11 +1270,129 @@ namespace RedKey.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("RedKey.Domain.Entities.Notification", b =>
+                {
+                    b.HasOne("RedKey.Domain.Entities.Identity.ApplicationUser", "Recipient")
+                        .WithMany()
+                        .HasForeignKey("RecipientUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recipient");
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.Units.PropertyUnit", b =>
+                {
+                    b.HasOne("RedKey.Domain.Entities.Area", "Area")
+                        .WithMany()
+                        .HasForeignKey("AreaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("RedKey.Domain.Entities.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("RedKey.Domain.Entities.Identity.ApplicationUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("RedKey.Domain.Entities.UnitType", "UnitType")
+                        .WithMany()
+                        .HasForeignKey("UnitTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Area");
+
+                    b.Navigation("City");
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("UnitType");
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.Units.UnitDetails", b =>
+                {
+                    b.HasOne("RedKey.Domain.Entities.Units.PropertyUnit", null)
+                        .WithOne("Details")
+                        .HasForeignKey("RedKey.Domain.Entities.Units.UnitDetails", "UnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.Units.UnitFeature", b =>
+                {
+                    b.HasOne("RedKey.Domain.Entities.Units.PropertyUnit", null)
+                        .WithMany("Features")
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.Units.UnitImage", b =>
+                {
+                    b.HasOne("RedKey.Domain.Entities.Units.PropertyUnit", null)
+                        .WithMany("Images")
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.Units.UnitPaymentPlan", b =>
+                {
+                    b.HasOne("RedKey.Domain.Entities.Units.PropertyUnit", null)
+                        .WithMany("PaymentPlans")
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.ViewingRequest", b =>
+                {
+                    b.HasOne("RedKey.Domain.Entities.Identity.ApplicationUser", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("RedKey.Domain.Entities.Units.PropertyUnit", "Unit")
+                        .WithMany()
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Unit");
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.Accounting.JournalEntry", b =>
+                {
+                    b.Navigation("Lines");
+                });
+
             modelBuilder.Entity("RedKey.Domain.Entities.Identity.ApplicationUser", b =>
                 {
                     b.Navigation("Broker");
 
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.Units.PropertyUnit", b =>
+                {
+                    b.Navigation("Details")
+                        .IsRequired();
+
+                    b.Navigation("Features");
+
+                    b.Navigation("Images");
+
+                    b.Navigation("PaymentPlans");
                 });
 #pragma warning restore 612, 618
         }

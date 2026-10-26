@@ -1,36 +1,37 @@
-@let t = i18n.t();
 <button
   type="button"
   class="bell"
   (click)="toggle()"
   [attr.aria-expanded]="open()"
   aria-haspopup="true"
-  [attr.aria-label]="t.account.notifications">
+  [attr.aria-label]="'account.notifications' | translate">
   <app-icon name="bell" [size]="20" />
   @if (unread() > 0) {
-    <span class="count">{{ unread() }}</span>
+    <span class="count">{{ unread() > 99 ? '99+' : unread() }}</span>
   }
 </button>
 
 @if (open()) {
   <div class="panel" role="menu">
     <div class="panel-head">
-      <b>{{ t.account.notifications }}</b>
+      <b>{{ 'account.notifications' | translate }}</b>
       @if (unread() > 0) {
-        <button type="button" class="link" (click)="markAllRead()">{{ t.account.markAllRead }}</button>
+        <button type="button" class="link" (click)="markAllRead.emit()">{{ 'account.markAllRead' | translate }}</button>
       }
     </div>
-    @for (n of list(); track n.id) {
-      <div class="item" [class.unread]="!n.read">
-        <span class="item-icon"><app-icon [name]="n.icon" [size]="18" /></span>
-        <div class="item-body">
-          <b>{{ n.title | loc: i18n.lang() }}</b>
-          <span>{{ n.body | loc: i18n.lang() }}</span>
-          <small>{{ n.time | loc: i18n.lang() }}</small>
-        </div>
-      </div>
-    } @empty {
-      <p class="empty">{{ t.account.noNotifications }}</p>
-    }
+    <div class="list">
+      @for (n of items(); track n.id) {
+        <button type="button" class="item" role="menuitem" [class.unread]="!n.read" (click)="select(n)">
+          <span class="item-icon"><app-icon [name]="n.icon" [size]="18" /></span>
+          <span class="item-body">
+            <b>{{ n.title }}</b>
+            <span>{{ n.body }}</span>
+            <small>{{ n.time }}</small>
+          </span>
+        </button>
+      } @empty {
+        <p class="empty">{{ 'account.noNotifications' | translate }}</p>
+      }
+    </div>
   </div>
 }

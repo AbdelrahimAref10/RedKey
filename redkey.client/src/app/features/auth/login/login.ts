@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 import { apiErrorCode } from '../../../core/api/api-error';
 import { AuthService, ROLE_HOME } from '../../../core/auth/auth.service';
@@ -11,7 +12,7 @@ import { AuthShell } from '../auth-shell/auth-shell';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink, Icon, AuthShell],
+  imports: [TranslatePipe, ReactiveFormsModule, RouterLink, Icon, AuthShell],
   templateUrl: './login.html',
   styleUrl: './login.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -60,6 +61,7 @@ export class Login {
       )
       .subscribe({
         next: response => {
+          this.auth.syncLanguage(this.i18n.lang());
           const home = ROLE_HOME[response.user.role];
           const returnUrl = this.returnUrl();
           void this.router.navigateByUrl(returnUrl?.startsWith(home) ? returnUrl : home);

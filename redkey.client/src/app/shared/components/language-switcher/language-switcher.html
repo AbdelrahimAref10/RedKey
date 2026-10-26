@@ -1,4 +1,4 @@
-<button type="button" class="switch-btn" (click)="i18n.toggle()" [attr.aria-label]="i18n.t().common.switchLang">
+<button type="button" class="switch-btn" (click)="toggle()" [attr.aria-label]="'common.switchLang' | translate">
   <app-icon name="globe" [size]="18" />
-  <span>{{ compact() ? i18n.t().common.switchLangShort : i18n.t().common.switchLang }}</span>
+  <span>{{ compact() ? ('common.switchLangShort' | translate) : ('common.switchLang' | translate) }}</span>
 </button>

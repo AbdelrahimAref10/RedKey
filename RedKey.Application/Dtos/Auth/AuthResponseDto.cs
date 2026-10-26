@@ -16,4 +16,5 @@ public sealed class AuthUserDto
     public required string Email { get; init; }
     public string? PhoneNumber { get; init; }
     public required UserRole Role { get; init; }
+    public required string PreferredLanguage { get; init; }
 }

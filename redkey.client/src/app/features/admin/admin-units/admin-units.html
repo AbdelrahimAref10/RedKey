@@ -1,59 +1,88 @@
-@let t = i18n.t();
-@let u = t.admin.units;
 @let lang = i18n.lang();
+@let result = units.value();
 <div class="page-head">
   <div>
-    <h1>{{ u.title }}</h1>
-    <p>{{ total }} {{ u.count }}</p>
+    <h1>{{ 'admin.units.title' | translate }}</h1>
+    @if (result) {
+      <p>{{ result.totalCount }} {{ 'admin.units.count' | translate }}</p>
+    }
   </div>
-  <a class="btn btn-primary" routerLink="/admin/units/new">{{ t.admin.dashboard.addUnit }}</a>
+  <a class="btn btn-primary" routerLink="/admin/units/new">{{ 'admin.dashboard.addUnit' | translate }}</a>
+</div>
+
+<div class="tabs" role="tablist">
+  <button type="button" role="tab" class="tab" [class.active]="purpose() === null" (click)="setFilter({ purpose: null })">{{ 'common.all' | translate }}</button>
+  @for (p of purposes(); track p.value) {
+    <button type="button" role="tab" class="tab" [class.active]="purpose() === p.value" (click)="setFilter({ purpose: p.value })">{{ p.name }}</button>
+  }
 </div>
 
 <div class="toolbar">
   <input
     class="input search"
-    [placeholder]="u.searchPlaceholder"
-    [attr.aria-label]="u.searchPlaceholder"
-    [value]="query()"
-    (input)="query.set($any($event.target).value)" />
-  <div class="chips">
-    <button type="button" class="chip" [class.active]="tab() === 'all'" (click)="tab.set('all')">{{ t.common.all }}</button>
-    <button type="button" class="chip" [class.active]="tab() === 'sale'" (click)="tab.set('sale')">{{ t.common.sale }}</button>
-    <button type="button" class="chip" [class.active]="tab() === 'rent'" (click)="tab.set('rent')">{{ t.common.rent }}</button>
-  </div>
+    [placeholder]="'admin.units.searchPlaceholder' | translate"
+    [attr.aria-label]="'admin.units.searchPlaceholder' | translate"
+    [value]="searchText()"
+    (input)="onSearch($any($event.target).value)" />
+  <select class="select status" (change)="setFilter({ status: $any($event.target).value || null })" [attr.aria-label]="'common.status' | translate">
+    <option value="" [selected]="status() === null">{{ 'units.allStatuses' | translate }}</option>
+    @for (s of statuses(); track s.value) {
+      <option [value]="s.value" [selected]="s.value === status()">{{ s.name }}</option>
+    }
+  </select>
 </div>
 
-<div class="table-wrap">
+@if (units.error()) {
+  <div class="alert alert-error"><app-icon name="info" [size]="18" />{{ 'units.loadError' | translate }}
+    <button type="button" class="btn btn-soft btn-xs" (click)="units.reload()">{{ 'units.retry' | translate }}</button>
+  </div>
+}
+
+<div class="table-wrap" [class.loading]="units.isLoading()">
   <table class="table">
     <thead>
       <tr>
-        <th>{{ u.unit }}</th>
-        <th>{{ u.purpose }}</th>
-        <th>{{ u.price }}</th>
-        <th>{{ u.requests }}</th>
-        <th>{{ t.common.status }}</th>
+        <th>{{ 'admin.units.unit' | translate }}</th>
+        <th>{{ 'admin.units.purpose' | translate }}</th>
+        <th>{{ 'admin.units.price' | translate }}</th>
+        <th>{{ 'unitForm.createdBy' | translate }}</th>
+        <th>{{ 'common.status' | translate }}</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
-      @for (row of rows(); track row.property.id) {
+      @for (row of result?.items ?? []; track row.id) {
         <tr>
           <td>
             <div class="unit">
-              <div class="img-frame thumb"><img [ngSrc]="row.property.images[0]" fill alt="" /></div>
+              <div class="img-frame thumb"><img [ngSrc]="row.coverImageUrl" fill alt="" /></div>
               <div>
-                <b>{{ row.property.title | loc: lang }}</b>
-                <span class="muted small">{{ row.property.code }} · {{ row.property.compound | loc: lang }}</span>
+                <b>{{ row.title }}</b>
+                <span class="muted small">{{ row.code }} · {{ row.compound }} · {{ row.areaName }} · {{ row.cityName }}</span>
               </div>
             </div>
           </td>
-          <td>{{ row.property.purpose === 'sale' ? t.common.sale : t.common.rent }}</td>
-          <td class="nowrap"><b>{{ row.property.price | money: lang : row.property.purpose === 'rent' }}</b></td>
-          <td>{{ row.requests }}</td>
-          <td><span class="badge" [class]="badge[row.status]">{{ u[row.status] }}</span></td>
-          <td><a class="btn btn-soft btn-xs" [routerLink]="['/admin/units', row.property.id, 'edit']">{{ t.common.edit }}</a></td>
+          <td>{{ row.purposeName }}</td>
+          <td class="nowrap"><b>{{ row.price | money: lang }}</b></td>
+          <td>
+            @if (row.createdBy; as by) {
+              <div class="by"><b>{{ by.fullName }}</b><span class="muted small">{{ by.roleName }}</span></div>
+            }
+          </td>
+          <td>
+            <span class="badge" [class.badge-green]="row.status === 2" [class.badge-gold]="row.status === 1" [class.badge-red]="(row.status ?? 0) > 2">{{ row.statusName }}</span>
+          </td>
+          <td><a class="icon-btn" [routerLink]="['/admin/units', row.id]" [title]="'common.edit' | translate" [attr.aria-label]="'common.edit' | translate"><app-icon name="edit" [size]="16" /></a></td>
         </tr>
+      } @empty {
+        @if (!units.isLoading()) {
+          <tr><td colspan="6" class="muted center">{{ 'units.empty' | translate }}</td></tr>
+        }
       }
     </tbody>
   </table>
 </div>
+
+@if (result) {
+  <app-pagination [page]="result.page" [totalPages]="result.totalPages ?? 0" (pageChange)="goToPage($event)" />
+}

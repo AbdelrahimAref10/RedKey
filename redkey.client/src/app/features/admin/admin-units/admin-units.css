@@ -13,13 +13,19 @@
   width: auto;
 }
 
+.status {
+  flex: 1 1 180px;
+  width: auto;
+}
+
 .unit {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.unit > div:last-child {
+.unit > div:last-child,
+.by {
   display: flex;
   flex-direction: column;
 }
@@ -29,4 +35,9 @@
   height: 46px;
   border-radius: 10px;
   flex: none;
+}
+
+.center {
+  text-align: center;
+  padding: 32px;
 }

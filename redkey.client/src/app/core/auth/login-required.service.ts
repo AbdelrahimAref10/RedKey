@@ -19,7 +19,7 @@ export class LoginRequired {
   check(): boolean {
     if (this.auth.isAuthenticated()) return true;
 
-    this.toast.show(this.i18n.t().auth.loginFirst, 'info');
+    this.toast.show(this.i18n.instant('auth.loginFirst'), 'info');
     void this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
     return false;
   }

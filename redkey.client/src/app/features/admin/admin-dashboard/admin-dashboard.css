@@ -74,3 +74,16 @@
   font-weight: 700;
   flex: none;
 }
+
+a.kpi-delta {
+  text-decoration: none;
+}
+
+a.kpi-delta:hover {
+  text-decoration: underline;
+}
+
+.center {
+  padding: 24px;
+  text-align: center;
+}

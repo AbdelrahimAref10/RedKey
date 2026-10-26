@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, computed, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth/auth.service';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import type { IconName } from '../icon/icons';
@@ -13,7 +14,7 @@ export interface UserMenuLink {
 
 @Component({
   selector: 'app-user-menu',
-  imports: [Icon, RouterLink],
+  imports: [TranslatePipe, Icon, RouterLink],
   templateUrl: './user-menu.html',
   styleUrl: './user-menu.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

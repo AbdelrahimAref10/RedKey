@@ -8,9 +8,16 @@ const PROXY_CONFIG = [
     context: [
       "/api",
       "/swagger",
+      "/uploads",
     ],
     target,
     secure: false
+  },
+  {
+    context: ["/hubs"],
+    target,
+    secure: false,
+    ws: true
   }
 ]
 

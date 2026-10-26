@@ -1,0 +1,22 @@
+@if (totalPages() > 1) {
+  <nav class="pager" [attr.aria-label]="'pagination.label' | translate">
+    <button type="button" class="nav" (click)="go(page() - 1)" [disabled]="page() === 1" [attr.aria-label]="'pagination.previous' | translate">
+      <app-icon name="chevronStart" [size]="18" [flip]="true" />
+    </button>
+    @for (p of pages(); track $index) {
+      @if (p === null) {
+        <span class="gap">…</span>
+      } @else {
+        <button
+          type="button"
+          class="num"
+          [class.active]="p === page()"
+          [attr.aria-current]="p === page() ? 'page' : null"
+          (click)="go(p)">{{ p }}</button>
+      }
+    }
+    <button type="button" class="nav" (click)="go(page() + 1)" [disabled]="page() === totalPages()" [attr.aria-label]="'pagination.next' | translate">
+      <app-icon name="chevronEnd" [size]="18" [flip]="true" />
+    </button>
+  </nav>
+}

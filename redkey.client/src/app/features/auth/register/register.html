@@ -1,10 +1,7 @@
-@let t = i18n.t();
-@let r = t.auth.register;
-@let v = t.auth.validation;
 <app-auth-shell>
   <div class="head">
-    <h1>{{ r.title }}</h1>
-    <p class="muted">{{ r.subtitle }}</p>
+    <h1>{{ 'auth.register.title' | translate }}</h1>
+    <p class="muted">{{ 'auth.register.subtitle' | translate }}</p>
   </div>
 
   <form class="stack" [formGroup]="form" (ngSubmit)="submit()" novalidate>
@@ -17,7 +14,7 @@
         [attr.aria-checked]="!isBroker()"
         (click)="setRole(UserRole.Customer)">
         <app-icon name="user" [size]="22" />
-        <span><b>{{ r.customer }}</b><small>{{ r.customerHint }}</small></span>
+        <span><b>{{ 'auth.register.customer' | translate }}</b><small>{{ 'auth.register.customerHint' | translate }}</small></span>
       </button>
       <button
         type="button"
@@ -27,7 +24,7 @@
         [attr.aria-checked]="isBroker()"
         (click)="setRole(UserRole.Broker)">
         <app-icon name="briefcase" [size]="22" />
-        <span><b>{{ r.broker }}</b><small>{{ r.brokerHint }}</small></span>
+        <span><b>{{ 'auth.register.broker' | translate }}</b><small>{{ 'auth.register.brokerHint' | translate }}</small></span>
       </button>
     </div>
 
@@ -37,107 +34,107 @@
 
     <div class="form-grid">
       <div class="field span-all">
-        <label for="fullName">{{ r.fullName }}</label>
+        <label for="fullName">{{ 'auth.register.fullName' | translate }}</label>
         <input id="fullName" class="input" formControlName="fullName" autocomplete="name"
-          [placeholder]="r.fullNamePlaceholder" [class.is-invalid]="invalid('fullName')" />
-        @if (invalid('fullName')) { <span class="field-error">{{ v.required }}</span> }
+          [placeholder]="'auth.register.fullNamePlaceholder' | translate" [class.is-invalid]="invalid('fullName')" />
+        @if (invalid('fullName')) { <span class="field-error">{{ 'auth.validation.required' | translate }}</span> }
       </div>
 
       <div class="field">
-        <label for="email">{{ t.common.email }}</label>
+        <label for="email">{{ 'common.email' | translate }}</label>
         <input id="email" class="input" type="email" dir="ltr" formControlName="email" autocomplete="email"
           [class.is-invalid]="invalid('email')" />
         @if (invalid('email')) {
-          <span class="field-error">{{ form.controls.email.hasError('required') ? v.required : v.email }}</span>
+          <span class="field-error">{{ form.controls.email.hasError('required') ? ('auth.validation.required' | translate) : ('auth.validation.email' | translate) }}</span>
         }
       </div>
 
       <div class="field">
-        <label for="phone">{{ r.phone }}</label>
+        <label for="phone">{{ 'auth.register.phone' | translate }}</label>
         <input id="phone" class="input" type="tel" dir="ltr" formControlName="phoneNumber" autocomplete="tel"
           placeholder="01xxxxxxxxx" [class.is-invalid]="invalid('phoneNumber')" />
         @if (invalid('phoneNumber')) {
-          <span class="field-error">{{ form.controls.phoneNumber.hasError('required') ? v.required : v.phone }}</span>
+          <span class="field-error">{{ form.controls.phoneNumber.hasError('required') ? ('auth.validation.required' | translate) : ('auth.validation.phone' | translate) }}</span>
         }
       </div>
 
       <div class="field">
-        <label for="password">{{ r.password }}</label>
+        <label for="password">{{ 'auth.register.password' | translate }}</label>
         <input id="password" class="input" type="password" dir="ltr" formControlName="password"
           autocomplete="new-password" [class.is-invalid]="invalid('password')" />
         @if (invalid('password')) {
-          <span class="field-error">{{ form.controls.password.hasError('required') ? v.required : v.passwordWeak }}</span>
+          <span class="field-error">{{ form.controls.password.hasError('required') ? ('auth.validation.required' | translate) : ('auth.validation.passwordWeak' | translate) }}</span>
         } @else {
-          <span class="hint">{{ r.passwordHint }}</span>
+          <span class="hint">{{ 'auth.register.passwordHint' | translate }}</span>
         }
       </div>
 
       <div class="field">
-        <label for="confirmPassword">{{ r.confirmPassword }}</label>
+        <label for="confirmPassword">{{ 'auth.register.confirmPassword' | translate }}</label>
         <input id="confirmPassword" class="input" type="password" dir="ltr" formControlName="confirmPassword"
           autocomplete="new-password" [class.is-invalid]="invalid('confirmPassword') || mismatch" />
         @if (invalid('confirmPassword')) {
-          <span class="field-error">{{ v.required }}</span>
+          <span class="field-error">{{ 'auth.validation.required' | translate }}</span>
         } @else if (mismatch) {
-          <span class="field-error">{{ v.passwordMismatch }}</span>
+          <span class="field-error">{{ 'auth.validation.passwordMismatch' | translate }}</span>
         }
       </div>
 
       <div class="field" [class.span-all]="!isBroker()">
-        <label for="city">{{ r.city }}</label>
+        <label for="city">{{ 'auth.register.city' | translate }}</label>
         <input id="city" class="input" formControlName="city" autocomplete="address-level2"
-          [placeholder]="r.cityPlaceholder" />
+          [placeholder]="'auth.register.cityPlaceholder' | translate" />
       </div>
 
       @if (isBroker()) {
         <div class="field">
-          <label for="nationalId">{{ r.nationalId }}</label>
+          <label for="nationalId">{{ 'auth.register.nationalId' | translate }}</label>
           <input id="nationalId" class="input" dir="ltr" formControlName="nationalId" inputmode="numeric"
-            [placeholder]="r.nationalIdPlaceholder" />
+            [placeholder]="'auth.register.nationalIdPlaceholder' | translate" />
         </div>
 
         <div class="field span-all">
-          <span class="field-label">{{ r.brokerType }}</span>
+          <span class="field-label">{{ 'auth.register.brokerType' | translate }}</span>
           <div class="seg">
             <label class="check">
-              <input type="radio" formControlName="brokerType" [value]="BrokerType.Independent" />{{ r.independent }}
+              <input type="radio" formControlName="brokerType" [value]="BrokerType.Independent" />{{ 'auth.register.independent' | translate }}
             </label>
             <label class="check">
-              <input type="radio" formControlName="brokerType" [value]="BrokerType.Company" />{{ r.company }}
+              <input type="radio" formControlName="brokerType" [value]="BrokerType.Company" />{{ 'auth.register.company' | translate }}
             </label>
           </div>
         </div>
 
         @if (isCompany()) {
           <div class="field span-all">
-            <label for="companyName">{{ r.companyName }}</label>
+            <label for="companyName">{{ 'auth.register.companyName' | translate }}</label>
             <input id="companyName" class="input" formControlName="companyName" autocomplete="organization"
               [class.is-invalid]="invalid('companyName')" />
-            @if (invalid('companyName')) { <span class="field-error">{{ v.required }}</span> }
+            @if (invalid('companyName')) { <span class="field-error">{{ 'auth.validation.required' | translate }}</span> }
           </div>
         }
 
-        <div class="alert alert-info span-all"><app-icon name="shield" [size]="18" />{{ r.brokerNote }}</div>
+        <div class="alert alert-info span-all"><app-icon name="shield" [size]="18" />{{ 'auth.register.brokerNote' | translate }}</div>
       }
     </div>
 
     <label class="check">
       <input type="checkbox" formControlName="terms" />
-      {{ r.terms }}
+      {{ 'auth.register.terms' | translate }}
     </label>
-    @if (invalid('terms')) { <span class="field-error">{{ v.terms }}</span> }
+    @if (invalid('terms')) { <span class="field-error">{{ 'auth.validation.terms' | translate }}</span> }
 
     <button type="submit" class="btn btn-primary btn-lg btn-block" [disabled]="loading()">
       @if (loading()) {
-        <span class="spinner"></span>{{ t.common.loading }}
+        <span class="spinner"></span>{{ 'common.loading' | translate }}
       } @else {
-        {{ r.submit }}
+        {{ 'auth.register.submit' | translate }}
       }
     </button>
 
     <p class="auth-switch">
-      {{ r.haveAccount }}
-      <a routerLink="/login">{{ r.login }}</a>
+      {{ 'auth.register.haveAccount' | translate }}
+      <a routerLink="/login">{{ 'auth.register.login' | translate }}</a>
     </p>
   </form>
 </app-auth-shell>

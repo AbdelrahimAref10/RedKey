@@ -1,12 +1,22 @@
-import { ChangeDetectionStrategy, Component, ElementRef, computed, inject, input, linkedSignal, signal } from '@angular/core';
-import { AppNotification } from '../../../core/data/models';
-import { LocPipe } from '../../../core/i18n/loc.pipe';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, output, signal } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { I18nService } from '../../../core/i18n/i18n.service';
+import type { IconName } from '../icon/icons';
 import { Icon } from '../icon/icon';
 
+export interface NotificationItem {
+  id: string;
+  title: string;
+  body: string;
+  time: string;
+  read: boolean;
+  icon: IconName;
+}
+
+/** Bell + dropdown. The owner decides where an item leads (`opened`) and how "read" is stored. */
 @Component({
   selector: 'app-notification-menu',
-  imports: [Icon, LocPipe],
+  imports: [TranslatePipe, Icon],
   templateUrl: './notification-menu.html',
   styleUrl: './notification-menu.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,19 +29,20 @@ export class NotificationMenu {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   protected readonly i18n = inject(I18nService);
 
-  readonly items = input.required<readonly AppNotification[]>();
+  readonly items = input.required<readonly NotificationItem[]>();
+  readonly unread = input.required<number>();
+  readonly opened = output<NotificationItem>();
+  readonly markAllRead = output<void>();
 
   protected readonly open = signal(false);
-  /** Local read state (front-end only). */
-  protected readonly list = linkedSignal(() => this.items());
-  protected readonly unread = computed(() => this.list().filter(n => !n.read).length);
 
   protected toggle(): void {
     this.open.update(v => !v);
   }
 
-  protected markAllRead(): void {
-    this.list.update(list => list.map(n => ({ ...n, read: true })));
+  protected select(item: NotificationItem): void {
+    this.open.set(false);
+    this.opened.emit(item);
   }
 
   protected onDocumentClick(event: MouseEvent): void {

@@ -157,6 +157,42 @@
   padding-block-start: 14px;
 }
 
+.fee {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--rk-warn-bg);
+  color: var(--rk-warn);
+  font-size: 13.5px;
+}
+
+.fee.free {
+  background: var(--rk-success-bg);
+  color: var(--rk-success);
+}
+
+.fee b {
+  color: var(--rk-ink);
+}
+
+.fee small {
+  display: block;
+  font-size: 12px;
+  opacity: .85;
+}
+
+.fee-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--rk-white);
+}
+
 .similar {
   margin-block-start: 48px;
   display: flex;
@@ -171,4 +207,15 @@
   gap: 12px;
   padding: 56px;
   color: var(--rk-muted);
+}
+
+.skeleton {
+  height: 440px;
+  border-radius: 22px;
+  background: linear-gradient(90deg, #EEECEF 25%, #F6F5F7 50%, #EEECEF 75%) 0 0 / 200% 100%;
+  animation: shimmer 1.2s linear infinite;
+}
+
+@keyframes shimmer {
+  to { background-position: -200% 0; }
 }

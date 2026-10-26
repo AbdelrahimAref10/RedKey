@@ -13,7 +13,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 16px;
 }
 
@@ -61,11 +61,18 @@
   transition: background-color .2s ease, color .2s ease;
 }
 
+/* The uploaded icon is used as a mask: it takes the text colour (red, white on hover). */
+.mask {
+  width: 30px;
+  height: 30px;
+  background: currentColor;
+  mask: center / contain no-repeat;
+  -webkit-mask: center / contain no-repeat;
+}
+
 .type:hover .icon {
   background: var(--rk-red);
   color: #fff;
 }
 
-small {
-  color: var(--rk-muted);
-}
+

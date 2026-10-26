@@ -1,7 +1,9 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
+import { Lang } from '../i18n/i18n.models';
 import {
+  AccountClient,
   AuthClient,
   AuthResponseDto,
   AuthUserDto,
@@ -28,6 +30,7 @@ export const ROLE_HOME: Readonly<Record<UserRole, string>> = {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly authClient = inject(AuthClient);
+  private readonly accountClient = inject(AccountClient);
   private readonly router = inject(Router);
 
   private readonly _session = signal<Session | null>(readStoredSession());
@@ -36,6 +39,8 @@ export class AuthService {
   readonly user = computed(() => this._session()?.user ?? null);
   readonly role = computed(() => this._session()?.user.role ?? null);
   readonly isAuthenticated = computed(() => this._session() !== null);
+  /** Session language saved on the server (admin / broker API responses use it). */
+  readonly language = computed<Lang>(() => (this._session()?.user.preferredLanguage === 'en' ? 'en' : 'ar'));
   readonly homeUrl = computed(() => {
     const role = this.role();
     return role === null ? '/' : ROLE_HOME[role];
@@ -47,6 +52,19 @@ export class AuthService {
 
   register(command: RegisterCommand): Observable<AuthResponseDto> {
     return this.authClient.register(command).pipe(tap(response => this.setSession(response)));
+  }
+
+  /**
+   * Admin / broker: the API answers in the language stored in their token, so a language switch
+   * saves it on the server and swaps the token. Customers send the language with every request instead.
+   */
+  syncLanguage(lang: Lang): void {
+    const role = this.role();
+    if (role === null || role === UserRole.Customer || this.language() === lang) return;
+    this.accountClient.updateLanguage({ language: lang }).subscribe({
+      next: response => this.setSession(response),
+      error: () => undefined
+    });
   }
 
   logout(redirect = true): void {

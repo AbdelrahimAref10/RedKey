@@ -1,0 +1,112 @@
+@let result = list.value();
+<section class="card panel">
+  <header class="panel-head">
+    <div class="title">
+      <span class="pin"><app-icon name="pin" [size]="20" /></span>
+      <div>
+        <h2>{{ 'lookupsAdmin.areas.title' | translate: { city: cityName() } }}</h2>
+        <p class="muted">{{ 'lookupsAdmin.areas.subtitle' | translate }}</p>
+      </div>
+    </div>
+    <button type="button" class="icon-btn" [title]="'common.close' | translate" [attr.aria-label]="'common.close' | translate" (click)="close.emit()">
+      <app-icon name="close" [size]="16" />
+    </button>
+  </header>
+
+  <!-- Add one or more areas -->
+  <div class="add-box">
+    <div class="add-head">
+      <b>{{ 'lookupsAdmin.areas.addTitle' | translate }}</b>
+      <span class="muted small">{{ 'lookupsAdmin.areas.addHint' | translate }}</span>
+    </div>
+
+    @for (row of newRows.controls; track row; let i = $index) {
+      <div class="new-row" [formGroup]="row">
+        <span class="index">{{ i + 1 }}</span>
+        <input class="input" dir="rtl" formControlName="nameAr" [placeholder]="'lookupsAdmin.nameAr' | translate"
+          [attr.aria-label]="'lookupsAdmin.nameAr' | translate"
+          [class.is-invalid]="row.controls.nameAr.invalid && row.controls.nameAr.touched" />
+        <input class="input" dir="ltr" formControlName="nameEn" [placeholder]="'lookupsAdmin.nameEn' | translate"
+          [attr.aria-label]="'lookupsAdmin.nameEn' | translate"
+          [class.is-invalid]="row.controls.nameEn.invalid && row.controls.nameEn.touched" />
+        <button type="button" class="icon-btn danger" [disabled]="newRows.length === 1"
+          [title]="'unitForm.remove' | translate" [attr.aria-label]="'unitForm.remove' | translate" (click)="removeRow(i)">
+          <app-icon name="trash" [size]="16" />
+        </button>
+      </div>
+    }
+
+    <div class="add-actions">
+      <button type="button" class="btn btn-soft btn-sm" (click)="addRow()">
+        <app-icon name="plus" [size]="15" />{{ 'lookupsAdmin.areas.anotherRow' | translate }}
+      </button>
+      <button type="button" class="btn btn-primary btn-sm" [disabled]="saving()" (click)="saveNew()">
+        <app-icon name="check" [size]="15" />{{ 'lookupsAdmin.areas.saveAll' | translate: { count: newRows.length } }}
+      </button>
+    </div>
+  </div>
+
+  <!-- The city areas -->
+  <div class="table-wrap" [class.loading]="list.isLoading()">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{ 'lookupsAdmin.nameAr' | translate }}</th>
+          <th>{{ 'lookupsAdmin.nameEn' | translate }}</th>
+          <th>{{ 'lookupsAdmin.sortOrder' | translate }}</th>
+          <th>{{ 'common.status' | translate }}</th>
+          <th class="end">{{ 'common.actions' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (area of result?.items ?? []; track area.id) {
+          @if (editingId() === area.id) {
+            <tr class="editing" [formGroup]="editForm">
+              <td><input class="input input-sm" dir="rtl" formControlName="nameAr" [attr.aria-label]="'lookupsAdmin.nameAr' | translate" [class.is-invalid]="editForm.controls.nameAr.invalid" /></td>
+              <td><input class="input input-sm" dir="ltr" formControlName="nameEn" [attr.aria-label]="'lookupsAdmin.nameEn' | translate" [class.is-invalid]="editForm.controls.nameEn.invalid" /></td>
+              <td><input class="input input-sm order" type="number" formControlName="sortOrder" [attr.aria-label]="'lookupsAdmin.sortOrder' | translate" /></td>
+              <td>
+                <label class="check"><input type="checkbox" formControlName="isActive" />{{ 'lookupsAdmin.active' | translate }}</label>
+              </td>
+              <td>
+                <div class="actions">
+                  <button type="button" class="icon-btn ok" [disabled]="saving()" [title]="'lookupsAdmin.save' | translate" [attr.aria-label]="'lookupsAdmin.save' | translate" (click)="saveEdit()">
+                    <app-icon name="check" [size]="16" />
+                  </button>
+                  <button type="button" class="icon-btn" [title]="'lookupsAdmin.cancel' | translate" [attr.aria-label]="'lookupsAdmin.cancel' | translate" (click)="cancelEdit()">
+                    <app-icon name="close" [size]="16" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @else {
+            <tr>
+              <td><b>{{ area.nameAr }}</b></td>
+              <td dir="ltr" class="start">{{ area.nameEn }}</td>
+              <td>{{ area.sortOrder }}</td>
+              <td><span class="badge" [class.badge-green]="area.isActive" [class.badge-gray]="!area.isActive">{{ area.isActive ? ('lookupsAdmin.active' | translate) : ('lookupsAdmin.inactive' | translate) }}</span></td>
+              <td>
+                <div class="actions">
+                  <button type="button" class="icon-btn" [title]="'lookupsAdmin.edit' | translate" [attr.aria-label]="'lookupsAdmin.edit' | translate" (click)="edit(area)">
+                    <app-icon name="edit" [size]="16" />
+                  </button>
+                  <button type="button" class="icon-btn danger" [title]="'lookupsAdmin.delete' | translate" [attr.aria-label]="'lookupsAdmin.delete' | translate" (click)="remove(area)">
+                    <app-icon name="trash" [size]="16" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        } @empty {
+          @if (!list.isLoading()) {
+            <tr><td colspan="5" class="muted center">{{ 'lookupsAdmin.areas.empty' | translate }}</td></tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (result && (result.totalPages ?? 0) > 1) {
+    <app-pagination [page]="result.page" [totalPages]="result.totalPages ?? 0" (pageChange)="page.set($event)" />
+  }
+</section>

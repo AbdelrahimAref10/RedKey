@@ -1,20 +1,21 @@
-@let f = i18n.t().customer.favorites;
 <section class="page">
   <div class="container stack">
     <div>
-      <h1>{{ f.title }} <span class="count">{{ favorites.count() }}</span></h1>
-      <p class="muted">{{ f.subtitle }}</p>
+      <h1>{{ 'customer.favorites.title' | translate }} <span class="count">{{ favorites.count() }}</span></h1>
+      <p class="muted">{{ 'customer.favorites.subtitle' | translate }}</p>
     </div>
 
-    <div class="grid-cards">
-      @for (property of favorites.properties(); track property.id) {
-        <app-property-card [property]="property" />
+    <div class="grid-cards" [class.loading]="loading()">
+      @for (unit of items(); track unit.id) {
+        <app-property-card [unit]="unit" />
       } @empty {
-        <div class="empty">
-          <app-icon name="heart" [size]="40" />
-          <p>{{ f.empty }}</p>
-          <a class="btn btn-primary" routerLink="/properties">{{ f.browse }}</a>
-        </div>
+        @if (!loading()) {
+          <div class="empty-box">
+            <app-icon name="heart" [size]="40" />
+            <p>{{ 'customer.favorites.empty' | translate }}</p>
+            <a class="btn btn-primary" routerLink="/properties">{{ 'customer.favorites.browse' | translate }}</a>
+          </div>
+        }
       }
     </div>
   </div>

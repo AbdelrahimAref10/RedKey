@@ -1,6 +1,7 @@
 import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { findOpportunity } from '../../../core/data/site.data';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import { LocPipe } from '../../../core/i18n/loc.pipe';
@@ -27,7 +28,7 @@ const SUMMARY = {
 
 @Component({
   selector: 'app-my-investments',
-  imports: [NgOptimizedImage, RouterLink, Icon, LocPipe, MoneyPipe],
+  imports: [TranslatePipe, NgOptimizedImage, RouterLink, Icon, LocPipe, MoneyPipe],
   templateUrl: './my-investments.html',
   styleUrl: './my-investments.css',
   changeDetection: ChangeDetectionStrategy.OnPush

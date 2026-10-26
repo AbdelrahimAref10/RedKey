@@ -1,26 +1,24 @@
-@let t = i18n.t();
-<section class="section areas">
-  <div class="container">
-    <div class="section-head">
-      <div>
-        <span class="eyebrow">{{ t.landing.areas.eyebrow }}</span>
-        <h2 class="section-title">{{ t.landing.areas.title }}</h2>
-        <p class="section-sub">{{ t.landing.areas.subtitle }}</p>
+@if (areas().length) {
+  <section class="section areas">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">{{ 'landing.areas.eyebrow' | translate }}</span>
+          <h2 class="section-title">{{ 'landing.areas.title' | translate }}</h2>
+          <p class="section-sub">{{ 'landing.areas.subtitle' | translate }}</p>
+        </div>
+      </div>
+
+      <div class="grid" [attr.data-count]="areas().length">
+        @for (area of areas(); track area.id; let first = $first) {
+          <a class="area img-frame" [class.big]="first" routerLink="/properties" [queryParams]="{ city: area.id }">
+            <img [ngSrc]="area.image" fill [alt]="area.name" />
+            <div class="shade"></div>
+            <div class="info"><b>{{ area.name }}</b></div>
+            <span class="go"><app-icon name="arrowEnd" [size]="18" [flip]="true" /></span>
+          </a>
+        }
       </div>
     </div>
-
-    <div class="grid">
-      @for (area of areas; track area.id; let first = $first) {
-        <a class="area img-frame" [class.big]="first" routerLink="/properties" [queryParams]="{ area: area.id }">
-          <img [ngSrc]="area.image" fill [alt]="area.name | loc: i18n.lang()" />
-          <div class="shade"></div>
-          <div class="info">
-            <b>{{ area.name | loc: i18n.lang() }}</b>
-            <span>{{ area.count }} {{ t.landing.areas.units }}</span>
-          </div>
-          <span class="go"><app-icon name="arrowEnd" [size]="18" [flip]="true" /></span>
-        </a>
-      }
-    </div>
-  </div>
-</section>
+  </section>
+}

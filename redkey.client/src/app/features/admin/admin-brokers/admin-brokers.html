@@ -1,10 +1,8 @@
-@let t = i18n.t();
-@let b = t.admin.brokers;
 @let lang = i18n.lang();
 <div class="page-head">
   <div>
-    <h1>{{ b.title }}</h1>
-    <p>{{ b.subtitle }}</p>
+    <h1>{{ 'admin.brokers.title' | translate }}</h1>
+    <p>{{ 'admin.brokers.subtitle' | translate }}</p>
   </div>
 </div>
 
@@ -21,7 +19,7 @@
   @switch (tab()) {
     @case ('join') {
       <table class="table">
-        <thead><tr><th>{{ b.name }}</th><th>{{ t.common.phone }}</th><th>{{ b.type }}</th><th>{{ b.idCard }}</th><th>{{ b.requestedAt }}</th><th>{{ t.common.status }}</th><th></th></tr></thead>
+        <thead><tr><th>{{ 'admin.brokers.name' | translate }}</th><th>{{ 'common.phone' | translate }}</th><th>{{ 'admin.brokers.type' | translate }}</th><th>{{ 'admin.brokers.idCard' | translate }}</th><th>{{ 'admin.brokers.requestedAt' | translate }}</th><th>{{ 'common.status' | translate }}</th><th></th></tr></thead>
         <tbody>
           @for (r of join(); track r.id) {
             <tr>
@@ -30,10 +28,10 @@
               <td>{{ r.type | loc: lang }}</td>
               <td>{{ r.idCard | loc: lang }}</td>
               <td>{{ r.requestedAt | loc: lang }}</td>
-              <td><span class="badge" [class]="badge[r.status]">{{ b.st[r.status] }}</span></td>
+              <td><span class="badge" [class]="badge[r.status]">{{ ('admin.brokers.st.' + r.status) | translate }}</span></td>
               <td>
                 @if (r.canAct && r.action) {
-                  <button type="button" class="btn btn-xs" [class.btn-dark]="r.action !== 'reject'" [class.btn-soft]="r.action === 'reject'" (click)="act(r)">{{ b[r.action] }}</button>
+                  <button type="button" class="btn btn-xs" [class.btn-dark]="r.action !== 'reject'" [class.btn-soft]="r.action === 'reject'" (click)="act(r)">{{ ('admin.brokers.' + r.action) | translate }}</button>
                 }
               </td>
             </tr>
@@ -43,7 +41,7 @@
     }
     @case ('brokers') {
       <table class="table">
-        <thead><tr><th>{{ b.broker }}</th><th>{{ b.code }}</th><th>{{ b.type }}</th><th>{{ b.reservedClients }}</th><th>{{ b.uploadedUnits }}</th><th>{{ b.sales }}</th><th>{{ t.common.status }}</th></tr></thead>
+        <thead><tr><th>{{ 'admin.brokers.broker' | translate }}</th><th>{{ 'admin.brokers.code' | translate }}</th><th>{{ 'admin.brokers.type' | translate }}</th><th>{{ 'admin.brokers.reservedClients' | translate }}</th><th>{{ 'admin.brokers.uploadedUnits' | translate }}</th><th>{{ 'admin.brokers.sales' | translate }}</th><th>{{ 'common.status' | translate }}</th></tr></thead>
         <tbody>
           @for (r of brokers; track r.code) {
             <tr>
@@ -53,7 +51,7 @@
               <td>{{ r.clients }}</td>
               <td>{{ r.units }}</td>
               <td>{{ r.sales }}</td>
-              <td><span class="badge" [class]="badge[r.status]">{{ b.st[r.status] }}</span></td>
+              <td><span class="badge" [class]="badge[r.status]">{{ ('admin.brokers.st.' + r.status) | translate }}</span></td>
             </tr>
           }
         </tbody>
@@ -61,7 +59,7 @@
     }
     @case ('clients') {
       <table class="table">
-        <thead><tr><th>{{ b.client }}</th><th>{{ b.broker }}</th><th>{{ b.unit }}</th><th>{{ b.reservedUntil }}</th><th>{{ t.common.status }}</th><th>{{ b.commission }}</th><th></th></tr></thead>
+        <thead><tr><th>{{ 'admin.brokers.client' | translate }}</th><th>{{ 'admin.brokers.broker' | translate }}</th><th>{{ 'admin.brokers.unit' | translate }}</th><th>{{ 'admin.brokers.reservedUntil' | translate }}</th><th>{{ 'common.status' | translate }}</th><th>{{ 'admin.brokers.commission' | translate }}</th><th></th></tr></thead>
         <tbody>
           @for (r of clients(); track r.id) {
             <tr>
@@ -69,11 +67,11 @@
               <td>{{ r.broker | loc: lang }}</td>
               <td>{{ r.unit | loc: lang }}</td>
               <td>{{ r.until | loc: lang }}</td>
-              <td><span class="badge" [class]="badge[r.status]">{{ b.st[r.status] }}</span></td>
+              <td><span class="badge" [class]="badge[r.status]">{{ ('admin.brokers.st.' + r.status) | translate }}</span></td>
               <td>{{ r.commission | loc: lang }}</td>
               <td>
                 @if (r.canAct && r.action) {
-                  <button type="button" class="btn btn-dark btn-xs" (click)="act(r)">{{ b[r.action] }}</button>
+                  <button type="button" class="btn btn-dark btn-xs" (click)="act(r)">{{ ('admin.brokers.' + r.action) | translate }}</button>
                 }
               </td>
             </tr>
@@ -83,7 +81,7 @@
     }
     @case ('units') {
       <table class="table">
-        <thead><tr><th>{{ b.apartment }}</th><th>{{ b.broker }}</th><th>{{ b.price }}</th><th>{{ b.documents }}</th><th>{{ t.common.status }}</th><th></th></tr></thead>
+        <thead><tr><th>{{ 'admin.brokers.apartment' | translate }}</th><th>{{ 'admin.brokers.broker' | translate }}</th><th>{{ 'admin.brokers.price' | translate }}</th><th>{{ 'admin.brokers.documents' | translate }}</th><th>{{ 'common.status' | translate }}</th><th></th></tr></thead>
         <tbody>
           @for (r of units(); track r.id) {
             <tr>
@@ -91,10 +89,10 @@
               <td>{{ r.broker | loc: lang }}</td>
               <td>{{ r.price | loc: lang }}</td>
               <td>{{ r.documents | loc: lang }}</td>
-              <td><span class="badge" [class]="badge[r.status]">{{ b.st[r.status] }}</span></td>
+              <td><span class="badge" [class]="badge[r.status]">{{ ('admin.brokers.st.' + r.status) | translate }}</span></td>
               <td>
                 @if (r.canAct && r.action) {
-                  <button type="button" class="btn btn-dark btn-xs" (click)="act(r)">{{ b[r.action] }}</button>
+                  <button type="button" class="btn btn-dark btn-xs" (click)="act(r)">{{ ('admin.brokers.' + r.action) | translate }}</button>
                 }
               </td>
             </tr>
@@ -105,4 +103,4 @@
   }
 </div>
 
-<div class="alert alert-info"><app-icon name="info" [size]="18" /><span><b>{{ b.rulesTitle }}</b> {{ b.rules }}</span></div>
+<div class="alert alert-info"><app-icon name="info" [size]="18" /><span><b>{{ 'admin.brokers.rulesTitle' | translate }}</b> {{ 'admin.brokers.rules' | translate }}</span></div>

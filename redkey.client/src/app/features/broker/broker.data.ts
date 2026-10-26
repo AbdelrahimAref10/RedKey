@@ -11,15 +11,6 @@ export interface BrokerClientRow {
   commission: Loc;
 }
 
-export interface BrokerListingRow {
-  id: number;
-  title: Loc;
-  price: number;
-  uploadedAt: Loc;
-  documents: Loc;
-  status: BrokerFlowStatus;
-}
-
 const NONE: Loc = { ar: '—', en: '—' };
 
 /** Demo data until the broker endpoints exist. */
@@ -59,17 +50,3 @@ export const BROKER_CLIENTS: readonly BrokerClientRow[] = [
   }
 ];
 
-export const BROKER_LISTINGS: readonly BrokerListingRow[] = [
-  {
-    id: 1, price: 8_400_000, status: 'pub',
-    title: { ar: 'دوبلكس · مدينتي B12', en: 'Duplex · Madinaty B12' },
-    uploadedAt: { ar: '20 أكتوبر', en: 'Oct 20' },
-    documents: { ar: 'كاملة', en: 'Complete' }
-  },
-  {
-    id: 2, price: 3_200_000, status: 'rev',
-    title: { ar: 'شقة 2 غرف · أكتوبر', en: '2-bed apartment · October' },
-    uploadedAt: { ar: 'امبارح', en: 'Yesterday' },
-    documents: { ar: 'صور ✓ · عقد ✓ · بطاقة المالك ✓', en: 'Photos ✓ · Contract ✓ · Owner ID ✓' }
-  }
-];

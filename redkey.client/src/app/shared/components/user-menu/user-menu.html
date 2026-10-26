@@ -1,8 +1,7 @@
-@let t = i18n.t();
 <button type="button" class="trigger" (click)="toggle()" [attr.aria-expanded]="open()" aria-haspopup="true">
   <span class="avatar">{{ initials() }}</span>
   <span class="who">
-    <small>{{ t.account.hello }}</small>
+    <small>{{ 'account.hello' | translate }}</small>
     <b>{{ firstName() }}</b>
   </span>
   <app-icon name="chevronDown" [size]="16" />
@@ -28,7 +27,7 @@
     }
     <button type="button" class="item danger" role="menuitem" (click)="logout()">
       <app-icon name="logout" [size]="18" [flip]="true" />
-      {{ t.account.logout }}
+      {{ 'account.logout' | translate }}
     </button>
   </div>
 }

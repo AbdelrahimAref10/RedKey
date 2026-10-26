@@ -2,6 +2,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { OPPORTUNITIES } from '../../../core/data/site.data';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import { LocPipe } from '../../../core/i18n/loc.pipe';
@@ -10,7 +11,7 @@ import { Icon } from '../../../shared/components/icon/icon';
 
 @Component({
   selector: 'app-admin-opportunities',
-  imports: [NgOptimizedImage, ReactiveFormsModule, RouterLink, Icon, LocPipe],
+  imports: [TranslatePipe, NgOptimizedImage, ReactiveFormsModule, RouterLink, Icon, LocPipe],
   templateUrl: './admin-opportunities.html',
   styleUrl: './admin-opportunities.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -39,6 +40,6 @@ export class AdminOpportunities {
     }
     this.form.reset();
     this.showForm.set(false);
-    this.toast.show(this.i18n.t().common.savedLocally);
+    this.toast.show(this.i18n.instant('common.savedLocally'));
   }
 }

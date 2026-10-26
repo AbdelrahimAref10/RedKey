@@ -2,6 +2,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, numberAttribute } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth/auth.service';
 import { LoginRequired } from '../../../core/auth/login-required.service';
 import { findOpportunity } from '../../../core/data/site.data';
@@ -12,7 +13,7 @@ import { Icon } from '../../../shared/components/icon/icon';
 
 @Component({
   selector: 'app-opportunity-details',
-  imports: [NgOptimizedImage, RouterLink, ReactiveFormsModule, Icon, LocPipe],
+  imports: [TranslatePipe, NgOptimizedImage, RouterLink, ReactiveFormsModule, Icon, LocPipe],
   templateUrl: './opportunity-details.html',
   styleUrl: './opportunity-details.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -47,7 +48,7 @@ export class OpportunityDetails {
       this.form.markAllAsTouched();
       return;
     }
-    this.toast.show(this.i18n.t().common.sentLocally);
+    this.toast.show(this.i18n.instant('common.sentLocally'));
     void this.router.navigateByUrl('/request-sent');
   }
 }

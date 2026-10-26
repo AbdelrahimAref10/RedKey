@@ -94,3 +94,18 @@
     grid-column: auto;
   }
 }
+
+/* Fewer than 4 areas: simple equal columns. */
+.grid[data-count='1'],
+.grid[data-count='2'],
+.grid[data-count='3'] {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-rows: 280px;
+}
+
+.grid[data-count='1'] .area.big,
+.grid[data-count='2'] .area.big,
+.grid[data-count='3'] .area.big {
+  grid-row: auto;
+  grid-column: auto;
+}

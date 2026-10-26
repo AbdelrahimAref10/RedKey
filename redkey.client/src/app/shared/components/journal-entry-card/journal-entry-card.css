@@ -1,0 +1,113 @@
+.entry {
+  overflow: hidden;
+  border: 1px solid var(--rk-line);
+  border-radius: 14px;
+  background: var(--rk-white);
+}
+
+.entry.reversal {
+  border-style: dashed;
+}
+
+.entry.reversed {
+  opacity: .75;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px 0;
+}
+
+.number {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.source,
+.unit,
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.source {
+  background: var(--rk-info-bg);
+  color: var(--rk-info);
+}
+
+.unit {
+  background: var(--rk-bg);
+  color: var(--rk-ink);
+}
+
+.tag-rev {
+  background: var(--rk-warn-bg);
+  color: var(--rk-warn);
+}
+
+.tag-cancel {
+  background: var(--rk-bg);
+  color: var(--rk-muted);
+  text-decoration: line-through;
+}
+
+.date {
+  margin-inline-start: auto;
+}
+
+.desc {
+  margin: 6px 14px 10px;
+  color: var(--rk-text);
+  font-size: 13.5px;
+}
+
+.lines {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.lines th {
+  padding: 8px 14px;
+  background: #FAF9FB;
+  color: var(--rk-muted);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: start;
+}
+
+.lines td {
+  padding: 9px 14px;
+  border-top: 1px solid var(--rk-line-soft);
+}
+
+/* Accounting layout: the credited account is indented under the debited one. */
+.credit-row td:first-child {
+  padding-inline-start: 34px;
+}
+
+.code {
+  margin-inline-end: 8px;
+  color: var(--rk-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.num {
+  width: 110px;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+tfoot td {
+  background: #FAF9FB;
+  font-weight: 700;
+}

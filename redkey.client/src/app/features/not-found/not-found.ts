@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { I18nService } from '../../core/i18n/i18n.service';
 
 @Component({
   selector: 'app-not-found',
-  imports: [RouterLink],
+  imports: [TranslatePipe, RouterLink],
   templateUrl: './not-found.html',
   styleUrl: './not-found.css',
   changeDetection: ChangeDetectionStrategy.OnPush

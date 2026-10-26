@@ -1,0 +1,5 @@
+<app-lookup-admin kind="cities" [selectedId]="city()?.id ?? null" [reloadKey]="reloadKey()" (selectRow)="city.set($event)" />
+
+@if (city(); as c) {
+  <app-areas-panel [city]="c" (changed)="reloadKey.set(reloadKey() + 1)" (close)="city.set(null)" />
+}

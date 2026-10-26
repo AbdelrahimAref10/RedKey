@@ -1,5 +1,3 @@
-@let t = i18n.t();
-@let l = t.site.listings;
 <section class="page">
   <div class="container stack">
     <div class="filters">
@@ -7,55 +5,78 @@
         <app-icon name="search" [size]="18" />
         <input
           class="search-input"
-          [placeholder]="l.searchPlaceholder"
-          [attr.aria-label]="l.searchPlaceholder"
-          [value]="query()"
-          (input)="query.set($any($event.target).value)" />
+          [placeholder]="'site.listings.searchPlaceholder' | translate"
+          [attr.aria-label]="'site.listings.searchPlaceholder' | translate"
+          [value]="searchText()"
+          (input)="onSearch($any($event.target).value)" />
       </label>
 
       <div class="chips">
-        <button type="button" class="chip" [class.active]="purposeFilter() === 'all'" (click)="purposeFilter.set('all')">{{ t.common.all }}</button>
-        <button type="button" class="chip" [class.active]="purposeFilter() === 'sale'" (click)="purposeFilter.set('sale')">{{ t.common.sale }}</button>
-        <button type="button" class="chip" [class.active]="purposeFilter() === 'rent'" (click)="purposeFilter.set('rent')">{{ t.common.rent }}</button>
+        <button type="button" class="chip" [class.active]="purpose() === null" (click)="setFilter({ purpose: null })">{{ 'common.all' | translate }}</button>
+        @for (p of purposes(); track p.value) {
+          <button type="button" class="chip" [class.active]="purpose() === p.value" (click)="setFilter({ purpose: p.value })">{{ p.name }}</button>
+        }
       </div>
 
-      <select class="select" [value]="typeFilter()" (change)="typeFilter.set($any($event.target).value)" [attr.aria-label]="t.landing.hero.type">
-        <option value="">{{ l.allTypes }}</option>
-        @for (type of types; track type) {
-          <option [value]="type" [selected]="type === typeFilter()">{{ t.propertyTypes[type] }}</option>
+      <select class="select" (change)="setFilter({ type: $any($event.target).value || null })" [attr.aria-label]="'landing.hero.type' | translate">
+        <option value="" [selected]="type() === null">{{ 'units.allTypes' | translate }}</option>
+        @for (item of unitTypes(); track item.id) {
+          <option [value]="item.id" [selected]="item.id === type()">{{ item.name }}</option>
         }
       </select>
 
-      <select class="select" [value]="areaFilter()" (change)="areaFilter.set($any($event.target).value)" [attr.aria-label]="t.landing.hero.location">
-        <option value="">{{ t.landing.hero.anyLocation }}</option>
-        @for (a of areas; track a.id) {
-          <option [value]="a.id" [selected]="a.id === areaFilter()">{{ a.name | loc: i18n.lang() }}</option>
+      <select class="select" (change)="setFilter({ city: $any($event.target).value || null, area: null })" [attr.aria-label]="'units.city' | translate">
+        <option value="" [selected]="city() === null">{{ 'units.allCities' | translate }}</option>
+        @for (c of cities(); track c.id) {
+          <option [value]="c.id" [selected]="c.id === city()">{{ c.name }}</option>
         }
       </select>
 
-      <select class="select" [value]="priceFilter()" (change)="priceFilter.set(+$any($event.target).value)" [attr.aria-label]="t.landing.hero.price">
-        <option value="0">{{ l.anyPrice }}</option>
-        <option value="5000000">{{ l.under5 }}</option>
-        <option value="10000000">{{ l.under10 }}</option>
-        <option value="20000000">{{ l.under20 }}</option>
+      <select class="select" (change)="setFilter({ area: $any($event.target).value || null })" [attr.aria-label]="'landing.hero.location' | translate">
+        <option value="" [selected]="area() === null">{{ 'units.allAreas' | translate }}</option>
+        @for (a of areas(); track a.id) {
+          <option [value]="a.id" [selected]="a.id === area()">{{ a.name }}</option>
+        }
+      </select>
+
+      <select class="select" (change)="setFilter({ maxPrice: $any($event.target).value || null })" [attr.aria-label]="'landing.hero.price' | translate">
+        <option value="" [selected]="maxPrice() === null">{{ 'site.listings.anyPrice' | translate }}</option>
+        <option value="5000000" [selected]="maxPrice() === 5000000">{{ 'site.listings.under5' | translate }}</option>
+        <option value="10000000" [selected]="maxPrice() === 10000000">{{ 'site.listings.under10' | translate }}</option>
+        <option value="20000000" [selected]="maxPrice() === 20000000">{{ 'site.listings.under20' | translate }}</option>
       </select>
     </div>
 
     <div class="head">
       <h1>{{ title() }}</h1>
-      <span class="muted">{{ results().length }} {{ l.results }}</span>
-    </div>
-
-    <div class="grid-cards">
-      @for (property of results(); track property.id; let i = $index) {
-        <app-property-card [property]="property" [priority]="i < 3" />
-      } @empty {
-        <div class="empty">
-          <app-icon name="search" [size]="36" />
-          <p>{{ l.empty }}</p>
-          <button type="button" class="btn btn-soft" (click)="reset()">{{ l.reset }}</button>
-        </div>
+      @if (result(); as r) {
+        <span class="muted">{{ r.totalCount }} {{ 'site.listings.results' | translate }}</span>
       }
     </div>
+
+    @if (units.error()) {
+      <div class="alert alert-error">
+        <app-icon name="info" [size]="18" />{{ 'units.loadError' | translate }}
+        <button type="button" class="btn btn-soft btn-xs" (click)="units.reload()">{{ 'units.retry' | translate }}</button>
+      </div>
+    }
+
+    <div class="grid-cards" [class.loading]="units.isLoading()">
+      @for (unit of result()?.items ?? []; track unit.id; let i = $index) {
+        <app-property-card [unit]="unit" [priority]="i < 3" />
+      } @empty {
+        @if (!units.isLoading() && !units.error()) {
+          <div class="empty-box">
+            <app-icon name="search" [size]="36" />
+            <p>{{ 'site.listings.empty' | translate }}</p>
+            <button type="button" class="btn btn-soft" (click)="reset()">{{ 'site.listings.reset' | translate }}</button>
+          </div>
+        }
+      }
+    </div>
+
+    @if (result(); as r) {
+      <app-pagination [page]="r.page" [totalPages]="r.totalPages ?? 0" (pageChange)="goToPage($event)" />
+    }
   </div>
 </section>

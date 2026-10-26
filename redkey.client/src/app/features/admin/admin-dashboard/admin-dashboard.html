@@ -1,57 +1,61 @@
-@let t = i18n.t();
-@let d = t.admin.dashboard;
 @let lang = i18n.lang();
 <div class="page-head">
   <div>
-    <h1>{{ d.greeting }} {{ firstName() }}</h1>
-    <p>{{ d.subtitle }}</p>
+    <h1>{{ 'admin.dashboard.greeting' | translate }} {{ firstName() }}</h1>
+    <p>{{ 'admin.dashboard.subtitle' | translate }}</p>
   </div>
-  <a class="btn btn-primary" routerLink="/admin/units/new">{{ d.addUnit }}</a>
+  <a class="btn btn-primary" routerLink="/admin/units/new">{{ 'admin.dashboard.addUnit' | translate }}</a>
 </div>
 
 <div class="kpis">
   <div class="kpi accent">
-    <span class="kpi-label"><app-icon name="building" [size]="16" />{{ d.kpiUnits }}</span>
-    <b class="kpi-value">214</b>
-    <span class="kpi-delta">+18 {{ d.thisMonth }}</span>
+    <span class="kpi-label"><app-icon name="building" [size]="16" />{{ 'admin.dashboard.kpiUnits' | translate }}</span>
+    @let counts = unitCounts.value();
+    <b class="kpi-value">{{ counts?.published?.totalCount ?? '—' }}</b>
+    <a class="kpi-delta" routerLink="/admin/units">{{ counts?.pending?.totalCount ?? 0 }} {{ 'admin.dashboard.pendingReview' | translate }}</a>
   </div>
   <div class="kpi">
-    <span class="kpi-label"><app-icon name="calendar" [size]="16" />{{ d.kpiVisits }}</span>
-    <b class="kpi-value">96</b>
-    <span class="kpi-delta red">12 {{ d.newLabel }}</span>
+    <span class="kpi-label"><app-icon name="calendar" [size]="16" />{{ 'admin.dashboard.kpiVisits' | translate }}</span>
+    @let s = summary.value();
+    <b class="kpi-value">{{ s?.total ?? '—' }}</b>
+    <a class="kpi-delta red" routerLink="/admin/requests">{{ s?.new ?? 0 }} {{ 'admin.dashboard.newLabel' | translate }}</a>
   </div>
   <div class="kpi">
-    <span class="kpi-label"><app-icon name="trending" [size]="16" />{{ d.kpiInvest }}</span>
+    <span class="kpi-label"><app-icon name="trending" [size]="16" />{{ 'admin.dashboard.kpiInvest' | translate }}</span>
     <b class="kpi-value">41</b>
-    <span class="kpi-delta gold">5 {{ d.newLabel }}</span>
+    <span class="kpi-delta gold">5 {{ 'admin.dashboard.newLabel' | translate }}</span>
   </div>
   <div class="kpi">
-    <span class="kpi-label"><app-icon name="mail" [size]="16" />{{ d.kpiMessages }}</span>
-    <b class="kpi-value">28</b>
-    <span class="kpi-delta gray">3 {{ d.newLabel }}</span>
+    <span class="kpi-label"><app-icon name="mail" [size]="16" />{{ 'admin.dashboard.kpiMessages' | translate }}</span>
+    <b class="kpi-value">{{ inbox.total() }}</b>
+    <a class="kpi-delta gray" routerLink="/admin/messages">{{ inbox.unread() }} {{ 'messages.unread' | translate }}</a>
   </div>
 </div>
 
 <div class="cols">
   <section class="card latest">
     <div class="card-head">
-      <h2 class="card-title">{{ d.latest }}</h2>
-      <a routerLink="/admin/requests" class="small">{{ d.allRequests }}</a>
+      <h2 class="card-title">{{ 'admin.dashboard.latest' | translate }}</h2>
+      <a routerLink="/admin/requests" class="small">{{ 'admin.dashboard.allRequests' | translate }}</a>
     </div>
     <div class="scroll">
       <table class="table">
         <thead>
-          <tr><th>{{ d.client }}</th><th>{{ d.type }}</th><th>{{ d.unit }}</th><th>{{ d.time }}</th><th>{{ t.common.status }}</th></tr>
+          <tr><th>{{ 'admin.dashboard.client' | translate }}</th><th>{{ 'admin.dashboard.unit' | translate }}</th><th>{{ 'admin.requests.preferredTime' | translate }}</th><th>{{ 'admin.dashboard.time' | translate }}</th><th>{{ 'common.status' | translate }}</th></tr>
         </thead>
         <tbody>
-          @for (r of rows; track r.id) {
+          @for (r of latest.value()?.items ?? []; track r.id) {
             <tr>
-              <td><b>{{ r.name | loc: lang }}</b></td>
-              <td>{{ typeLabel(t, r.type) }}</td>
-              <td>{{ r.details | loc: lang }}</td>
-              <td class="muted">{{ r.time | loc: lang }}</td>
-              <td><span class="badge" [class]="badge[r.status]">{{ statusLabel(t, r.status) }}</span></td>
+              <td><b>{{ r.name }}</b><br /><span class="muted small ltr">{{ r.phoneNumber }}</span></td>
+              <td><a [routerLink]="['/admin/requests']" [queryParams]="{ highlight: r.id }">{{ r.unitCode }} · {{ r.unitTitle }}</a></td>
+              <td>{{ r.preferredTimeName }}</td>
+              <td class="muted">{{ time(r.createdAtUtc) }}</td>
+              <td><span class="badge" [class]="'badge ' + (badge[r.status] ?? '')">{{ r.statusName }}</span></td>
             </tr>
+          } @empty {
+            @if (!latest.isLoading()) {
+              <tr><td colspan="5" class="muted center">{{ 'admin.requests.empty' | translate }}</td></tr>
+            }
           }
         </tbody>
       </table>
@@ -60,7 +64,7 @@
 
   <section class="card">
     <div class="card-head">
-      <h2 class="card-title">{{ d.pendingBrokers }}</h2>
+      <h2 class="card-title">{{ 'admin.dashboard.pendingBrokers' | translate }}</h2>
       <span class="badge badge-gold">{{ pending.length }}</span>
     </div>
     @for (b of pending; track b.id) {
@@ -70,7 +74,7 @@
           <b>{{ b.name | loc: lang }}</b>
           <span class="muted small">{{ b.type | loc: lang }} · {{ b.requestedAt | loc: lang }}</span>
         </div>
-        <a class="btn btn-soft btn-xs" routerLink="/admin/brokers">{{ d.review }}</a>
+        <a class="btn btn-soft btn-xs" routerLink="/admin/brokers">{{ 'admin.dashboard.review' | translate }}</a>
       </div>
     }
   </section>

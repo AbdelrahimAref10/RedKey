@@ -1,51 +1,108 @@
-@let t = i18n.t();
-@let r = t.admin.requests;
-@let lang = i18n.lang();
+@let res = result();
 <div class="page-head">
   <div>
-    <h1>{{ r.title }}</h1>
-    <p>{{ r.subtitle }}</p>
+    <h1>{{ 'admin.requests.title' | translate }}</h1>
+    <p>{{ 'admin.requests.subtitle' | translate }}</p>
   </div>
 </div>
 
-<div class="tabs" role="tablist">
-  @for (item of tabs; track item) {
-    <button type="button" role="tab" class="tab" [class.active]="tab() === item" (click)="tab.set(item)">
-      {{ item === 'all' ? t.common.all : typeLabel(t, item) }}
-      <span class="cnt">{{ count(item) }}</span>
+<div class="toolbar">
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" class="tab" [class.active]="status() === null" (click)="setStatusFilter(null)">
+      {{ 'common.all' | translate }}
+      @if (count(null) !== undefined) { <span class="cnt">{{ count(null) }}</span> }
     </button>
-  }
+    @for (s of statuses(); track s.value) {
+      <button type="button" role="tab" class="tab" [class.active]="status() === s.value" (click)="setStatusFilter(s.value)">
+        {{ s.name }}
+        @if (count(s.value) !== undefined) { <span class="cnt" [class.hot]="s.value === 1 && count(1)">{{ count(s.value) }}</span> }
+      </button>
+    }
+  </div>
+
+  <label class="search">
+    <app-icon name="search" [size]="16" />
+    <input type="search" class="input" [placeholder]="'admin.requests.search' | translate"
+      [attr.aria-label]="'admin.requests.search' | translate" (input)="onSearch($any($event.target).value)" />
+  </label>
 </div>
 
-<div class="table-wrap">
+<div class="table-wrap" [class.loading]="loading()">
   <table class="table">
     <thead>
       <tr>
-        <th>{{ r.client }}</th>
-        <th>{{ t.common.phone }}</th>
-        <th>{{ t.admin.dashboard.type }}</th>
-        <th>{{ r.details }}</th>
-        <th>{{ r.time }}</th>
-        <th>{{ t.common.status }}</th>
+        <th>{{ 'admin.requests.client' | translate }}</th>
+        <th>{{ 'common.phone' | translate }}</th>
+        <th>{{ 'admin.requests.unit' | translate }}</th>
+        <th>{{ 'admin.requests.fee' | translate }}</th>
+        <th>{{ 'admin.requests.preferredTime' | translate }}</th>
+        <th>{{ 'admin.requests.time' | translate }}</th>
+        <th>{{ 'common.status' | translate }}</th>
       </tr>
     </thead>
     <tbody>
       @for (row of rows(); track row.id) {
-        <tr>
-          <td><b>{{ row.name | loc: lang }}</b></td>
-          <td class="muted"><span class="ltr">{{ row.phone }}</span></td>
-          <td>{{ typeLabel(t, row.type) }}</td>
-          <td>{{ row.details | loc: lang }}</td>
-          <td class="muted">{{ row.time | loc: lang }}</td>
+        <tr [attr.id]="'request-' + row.id" [class.highlight]="row.id === highlight()">
+          <td><b>{{ row.name }}</b></td>
           <td>
-            <button type="button" class="badge status" [class]="badge[row.status]" (click)="next(row.id, row.status)">
-              {{ statusLabel(t, row.status) }}<app-icon name="chevronDown" [size]="13" />
+            <a class="ltr phone" [href]="'tel:' + row.phoneNumber">{{ row.phoneNumber }}</a>
+          </td>
+          <td>
+            <a class="unit" [routerLink]="['/admin/units', row.unitId]">
+              <b>{{ row.unitCode }}</b> · {{ row.unitTitle }}
+            </a>
+            <span class="muted small">{{ row.areaName }} · {{ row.cityName }}</span>
+          </td>
+          <td class="nowrap">
+            @if (row.viewingFee > 0) {
+              <b>{{ row.viewingFee | money: i18n.lang() }}</b>
+              @if (row.status === 4) { <span class="paid"><app-icon name="checkCircle" [size]="13" />{{ 'admin.requests.collected' | translate }}</span> }
+            } @else {
+              <span class="muted">{{ 'site.property.viewingFree' | translate }}</span>
+            }
+          </td>
+          <td>{{ row.preferredTimeName }}</td>
+          <td class="muted nowrap">{{ time(row) }}</td>
+          <td>
+            <button type="button" class="badge status" [class]="'badge status ' + (badge[row.status] ?? '')" [class.open]="menuFor() === row.id"
+              aria-haspopup="menu" [attr.aria-expanded]="menuFor() === row.id" (click)="toggleMenu(row, $event)">
+              {{ row.statusName }}<app-icon name="chevronDown" [size]="13" />
             </button>
           </td>
         </tr>
+      } @empty {
+        @if (!loading()) {
+          <tr><td colspan="7" class="empty-row muted">{{ 'admin.requests.empty' | translate }}</td></tr>
+        }
       }
     </tbody>
   </table>
 </div>
 
-<p class="muted small">{{ r.hint }}</p>
+<!-- Status menu: floats over the page, outside the table. -->
+@if (menuRow(); as row) {
+  @if (menuPos(); as pos) {
+    <div class="status-menu" role="menu" [class.up]="pos.up" [style.top.px]="pos.top" [style.left.px]="pos.left" (click)="$event.stopPropagation()">
+      <span class="menu-title">{{ 'admin.requests.changeStatus' | translate }}</span>
+      @for (s of statuses(); track s.value) {
+        <button type="button" role="menuitemradio" [attr.aria-checked]="s.value === row.status"
+          [class.on]="s.value === row.status" (click)="setStatus(row, s.value, s.name)">
+          <span class="dot" [class]="'dot ' + (badge[s.value] ?? '')"></span>{{ s.name }}
+          @if (s.value === row.status) { <app-icon name="check" [size]="14" /> }
+        </button>
+      }
+    </div>
+  }
+}
+
+@if (receiving(); as r) {
+  <app-receive-payment-dialog [open]="true" [amount]="r.row.viewingFee" [busy]="posting()"
+    [description]="r.row.unitCode + ' · ' + r.row.name"
+    (confirmed)="onReceived($event)" (cancelled)="receiving.set(null)" />
+}
+
+@if (res && (res.totalPages ?? 0) > 1) {
+  <app-pagination [page]="res.page" [totalPages]="res.totalPages ?? 0" (pageChange)="page.set($event)" />
+}
+
+<p class="muted small">{{ 'admin.requests.hint' | translate }}</p>

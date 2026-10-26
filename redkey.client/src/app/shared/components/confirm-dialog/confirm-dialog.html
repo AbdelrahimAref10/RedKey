@@ -1,0 +1,19 @@
+<dialog #dialog class="confirm" aria-labelledby="confirm-title" (cancel)="$event.preventDefault(); confirm.close(false)" (click)="backdropClick($event)">
+  @if (confirm.current(); as c) {
+    <div class="panel">
+      <span class="badge-icon" [class.danger]="c.tone === 'danger'">
+        <app-icon [name]="c.tone === 'danger' ? 'trash' : 'info'" [size]="22" />
+      </span>
+      <h2 id="confirm-title">{{ c.title ?? ('confirm.title' | translate) }}</h2>
+      @if (c.message) { <p>{{ c.message }}</p> }
+      <div class="actions">
+        <button type="button" class="btn" [class.btn-primary]="c.tone === 'danger'" [class.btn-dark]="c.tone !== 'danger'" (click)="confirm.close(true)">
+          {{ c.confirmText ?? ('confirm.ok' | translate) }}
+        </button>
+        <button type="button" class="btn btn-outline" autofocus (click)="confirm.close(false)">
+          {{ c.cancelText ?? ('confirm.cancel' | translate) }}
+        </button>
+      </div>
+    </div>
+  }
+</dialog>

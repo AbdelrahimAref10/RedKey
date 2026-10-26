@@ -1,0 +1,45 @@
+@let unread = inbox.unread();
+<button type="button" class="trigger" (click)="toggle()" [attr.aria-expanded]="open()" aria-haspopup="true"
+  [attr.aria-label]="'messages.title' | translate" [title]="'messages.title' | translate">
+  <app-icon name="message" [size]="20" />
+  @if (unread > 0) {
+    <span class="count">{{ unread > 99 ? '99+' : unread }}</span>
+  }
+</button>
+
+@if (open()) {
+  <div class="panel" role="menu">
+    <div class="panel-head">
+      <b>{{ 'messages.title' | translate }}</b>
+      @if (unread > 0) {
+        <span class="badge badge-red">{{ unread }} {{ 'messages.newCount' | translate }}</span>
+      }
+    </div>
+
+    <div class="list">
+      @for (m of inbox.latest(); track m.id) {
+        <button type="button" class="item" role="menuitem" [class.unread]="!m.isRead" (click)="select(m)">
+          <span class="avatar">{{ initials(m.name) }}</span>
+          <span class="item-body">
+            <span class="row">
+              <b class="name">{{ m.name }}</b>
+              <small class="time">{{ time(m.createdAtUtc) }}</small>
+            </span>
+            <span class="subject">{{ m.subjectName }}</span>
+            <span class="preview">{{ m.preview }}</span>
+          </span>
+          @if (!m.isRead) { <span class="dot" aria-hidden="true"></span> }
+        </button>
+      } @empty {
+        <div class="empty">
+          <app-icon name="message" [size]="26" />
+          <p>{{ 'messages.empty' | translate }}</p>
+        </div>
+      }
+    </div>
+
+    <a class="all" routerLink="/admin/messages" (click)="open.set(false)">
+      {{ 'messages.openInbox' | translate }}<app-icon name="arrowEnd" [size]="15" />
+    </a>
+  </div>
+}

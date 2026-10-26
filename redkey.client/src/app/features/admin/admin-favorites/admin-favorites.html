@@ -1,22 +1,20 @@
-@let t = i18n.t();
-@let f = t.admin.favorites;
 @let lang = i18n.lang();
 <div class="page-head">
   <div>
-    <h1>{{ f.title }}</h1>
-    <p>{{ f.subtitle }}</p>
+    <h1>{{ 'admin.favorites.title' | translate }}</h1>
+    <p>{{ 'admin.favorites.subtitle' | translate }}</p>
   </div>
 </div>
 
 <div class="tabs" role="tablist">
-  <button type="button" role="tab" class="tab" [class.active]="tab() === 'user'" (click)="tab.set('user')">{{ f.byUser }}</button>
-  <button type="button" role="tab" class="tab" [class.active]="tab() === 'unit'" (click)="tab.set('unit')">{{ f.byUnit }}</button>
+  <button type="button" role="tab" class="tab" [class.active]="tab() === 'user'" (click)="tab.set('user')">{{ 'admin.favorites.byUser' | translate }}</button>
+  <button type="button" role="tab" class="tab" [class.active]="tab() === 'unit'" (click)="tab.set('unit')">{{ 'admin.favorites.byUnit' | translate }}</button>
 </div>
 
 <div class="table-wrap">
   @if (tab() === 'user') {
     <table class="table">
-      <thead><tr><th>{{ f.client }}</th><th>{{ t.common.phone }}</th><th>{{ f.unit }}</th><th>{{ f.price }}</th><th>{{ f.when }}</th><th>{{ f.after }}</th><th></th></tr></thead>
+      <thead><tr><th>{{ 'admin.favorites.client' | translate }}</th><th>{{ 'common.phone' | translate }}</th><th>{{ 'admin.favorites.unit' | translate }}</th><th>{{ 'admin.favorites.price' | translate }}</th><th>{{ 'admin.favorites.when' | translate }}</th><th>{{ 'admin.favorites.after' | translate }}</th><th></th></tr></thead>
       <tbody>
         @for (r of byUser; track $index) {
           <tr>
@@ -26,14 +24,14 @@
             <td class="nowrap">{{ r.price | loc: lang }}</td>
             <td>{{ r.when | loc: lang }}</td>
             <td class="muted small">{{ r.after | loc: lang }}</td>
-            <td><a class="btn btn-soft btn-xs" [href]="'tel:' + r.phone.replaceAll(' ', '')"><app-icon name="phone" [size]="14" />{{ f.call }}</a></td>
+            <td><a class="btn btn-soft btn-xs" [href]="'tel:' + r.phone.replaceAll(' ', '')"><app-icon name="phone" [size]="14" />{{ 'admin.favorites.call' | translate }}</a></td>
           </tr>
         }
       </tbody>
     </table>
   } @else {
     <table class="table">
-      <thead><tr><th>{{ f.unitCol }}</th><th>{{ f.price }}</th><th>{{ f.count }}</th><th>{{ f.requested }}</th><th>{{ f.last }}</th></tr></thead>
+      <thead><tr><th>{{ 'admin.favorites.unitCol' | translate }}</th><th>{{ 'admin.favorites.price' | translate }}</th><th>{{ 'admin.favorites.count' | translate }}</th><th>{{ 'admin.favorites.requested' | translate }}</th><th>{{ 'admin.favorites.last' | translate }}</th></tr></thead>
       <tbody>
         @for (r of byUnit; track $index) {
           <tr>
@@ -49,4 +47,4 @@
   }
 </div>
 
-<div class="alert alert-info"><app-icon name="info" [size]="18" />{{ f.hint }}</div>
+<div class="alert alert-info"><app-icon name="info" [size]="18" />{{ 'admin.favorites.hint' | translate }}</div>

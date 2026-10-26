@@ -1,10 +1,23 @@
+import { IMAGES } from '../../core/data/images';
 import { Loc } from '../../core/i18n/i18n.models';
+
+/** What the card shows about the unit (demo data until the customer endpoints exist). */
+export interface MyUnitInfo {
+  unitId: string;
+  code: string;
+  image: string;
+  type: Loc;
+  title: Loc;
+  compound: Loc;
+  city: Loc;
+  delivery: Loc;
+}
 
 /** Demo data for the signed-in customer until the customer endpoints exist. */
 
 export interface OwnedUnit {
   kind: 'owned';
-  propertyId: number;
+  info: MyUnitInfo;
   paid: number;
   total: number;
   installmentsPaid: number;
@@ -15,7 +28,7 @@ export interface OwnedUnit {
 
 export interface RentedUnit {
   kind: 'rented';
-  propertyId: number;
+  info: MyUnitInfo;
   monthlyRent: number;
   contractEnds: Loc;
   nextPayment: Loc;
@@ -25,12 +38,26 @@ export type MyUnit = OwnedUnit | RentedUnit;
 
 export const MY_UNITS: readonly MyUnit[] = [
   {
-    kind: 'owned', propertyId: 1042,
+    kind: 'owned',
+    info: {
+      unitId: 'demo-owned', code: 'RK-1042', image: IMAGES.properties.apartmentLandscape,
+      type: { ar: 'شقة', en: 'Apartment' },
+      title: { ar: 'شقة 3 غرف بفيو لاندسكيب', en: '3-bedroom apartment with landscape view' },
+      compound: { ar: 'تاج سيتي', en: 'Taj City' }, city: { ar: 'مدينة نصر', en: 'Nasr City' },
+      delivery: { ar: 'استلام 2027', en: 'Delivery 2027' }
+    },
     paid: 1_690_000, total: 8_450_000, installmentsPaid: 12, installmentsTotal: 84,
     nextPayment: { ar: '1 ديسمبر', en: 'Dec 1' }, nextAmount: 95_565
   },
   {
-    kind: 'rented', propertyId: 1003,
+    kind: 'rented',
+    info: {
+      unitId: 'demo-rented', code: 'RK-1003', image: IMAGES.properties.apartmentFurnished,
+      type: { ar: 'شقة', en: 'Apartment' },
+      title: { ar: 'شقة مفروشة', en: 'Furnished apartment' },
+      compound: { ar: 'ذا سكوير', en: 'The Square' }, city: { ar: 'التجمع الخامس', en: 'Fifth Settlement' },
+      delivery: { ar: 'استلام فوري', en: 'Ready to move' }
+    },
     monthlyRent: 45_000,
     contractEnds: { ar: '30 سبتمبر 2027', en: 'Sep 30, 2027' },
     nextPayment: { ar: '1 يناير', en: 'Jan 1' }

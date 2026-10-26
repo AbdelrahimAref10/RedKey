@@ -1,5 +1,3 @@
-@let t = i18n.t();
-@let w = t.landing.why;
 <section class="section why">
   <div class="container split">
     <div class="media">
@@ -8,29 +6,29 @@
       </div>
       <div class="years">
         <b>10+</b>
-        <span>{{ w.years }}</span>
+        <span>{{ 'landing.why.years' | translate }}</span>
       </div>
     </div>
 
     <div class="text">
-      <span class="eyebrow">{{ w.eyebrow }}</span>
-      <h2 class="section-title">{{ w.title }}</h2>
-      <p class="section-sub">{{ w.text }}</p>
+      <span class="eyebrow">{{ 'landing.why.eyebrow' | translate }}</span>
+      <h2 class="section-title">{{ 'landing.why.title' | translate }}</h2>
+      <p class="section-sub">{{ 'landing.why.text' | translate }}</p>
 
       <ul class="points">
-        @for (point of w.points; track $index) {
+        @for (point of ('landing.why.points' | translate); track $index) {
           <li><span class="tick"><app-icon name="check" [size]="15" [stroke]="2.6" /></span>{{ point }}</li>
         }
       </ul>
 
       <div class="stats">
-        <div><b>1,200+</b><span>{{ w.statUnits }}</span></div>
-        <div><b>3,500+</b><span>{{ w.statClients }}</span></div>
-        <div><b>150+</b><span>{{ w.statBrokers }}</span></div>
-        <div><b>25</b><span>{{ w.statAreas }}</span></div>
+        <div><b>1,200+</b><span>{{ 'landing.why.statUnits' | translate }}</span></div>
+        <div><b>3,500+</b><span>{{ 'landing.why.statClients' | translate }}</span></div>
+        <div><b>150+</b><span>{{ 'landing.why.statBrokers' | translate }}</span></div>
+        <div><b>25</b><span>{{ 'landing.why.statAreas' | translate }}</span></div>
       </div>
 
-      <a class="btn btn-primary btn-lg" routerLink="/contact">{{ w.cta }}</a>
+      <a class="btn btn-primary btn-lg" routerLink="/contact">{{ 'landing.why.cta' | translate }}</a>
     </div>
   </div>
 </section>

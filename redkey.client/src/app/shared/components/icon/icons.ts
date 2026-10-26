@@ -19,6 +19,7 @@ export const ICONS = {
   logout: ['M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4', 'M16 17l5-5-5-5', 'M21 12H9'],
   chevronDown: ['m6 9 6 6 6-6'],
   chevronEnd: ['m9 18 6-6-6-6'],
+  chevronStart: ['m15 18-6-6 6-6'],
   arrowEnd: ['M5 12h14', 'm12 5 7 7-7 7'],
   menu: ['M3 12h18', 'M3 6h18', 'M3 18h18'],
   close: ['M18 6 6 18', 'm6 6 12 12'],
@@ -59,9 +60,12 @@ export const ICONS = {
   layers: ['m12 2 10 5-10 5L2 7z', 'm2 17 10 5 10-5', 'm2 12 10 5 10-5'],
   calendar: ['M19 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z', 'M16 2v4', 'M8 2v4', 'M3 10h18'],
   money: ['M12 1v22', 'M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'],
+  wallet: ['M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4', 'M4 6v12c0 1.1.9 2 2 2h14v-4', 'M18 12a2 2 0 0 0 0 4h4v-4z'],
+  book: ['M4 19.5A2.5 2.5 0 0 1 6.5 17H20', 'M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z'],
   award: [circle(12, 8, 7), 'M8.21 13.89 7 23l5-3 5 3-1.21-9.12'],
   link: ['M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71', 'M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71'],
-  info: [circle(12, 12, 10), 'M12 16v-4', 'M12 8h.01']
+  info: [circle(12, 12, 10), 'M12 16v-4', 'M12 8h.01'],
+  trash: ['M3 6h18', 'M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6', 'M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2', 'M10 11v6', 'M14 11v6']
 } as const satisfies Record<string, readonly string[]>;
 
 export type IconName = keyof typeof ICONS;

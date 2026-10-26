@@ -1,8 +1,7 @@
-@let t = i18n.t();
 <app-auth-shell>
   <div class="head">
-    <h1>{{ t.auth.login.title }}</h1>
-    <p class="muted">{{ t.auth.login.subtitle }}</p>
+    <h1>{{ 'auth.login.title' | translate }}</h1>
+    <p class="muted">{{ 'auth.login.subtitle' | translate }}</p>
   </div>
 
   <form class="stack" [formGroup]="form" (ngSubmit)="submit()" novalidate>
@@ -11,22 +10,22 @@
     }
 
     <div class="field">
-      <label for="identifier">{{ t.auth.login.identifier }}</label>
+      <label for="identifier">{{ 'auth.login.identifier' | translate }}</label>
       <input
         id="identifier"
         class="input ltr-input"
         formControlName="identifier"
         autocomplete="username"
         dir="ltr"
-        [placeholder]="t.auth.login.identifierPlaceholder"
+        [placeholder]="'auth.login.identifierPlaceholder' | translate"
         [class.is-invalid]="invalid('identifier')" />
       @if (invalid('identifier')) {
-        <span class="field-error">{{ t.auth.validation.required }}</span>
+        <span class="field-error">{{ 'auth.validation.required' | translate }}</span>
       }
     </div>
 
     <div class="field">
-      <label for="password">{{ t.auth.login.password }}</label>
+      <label for="password">{{ 'auth.login.password' | translate }}</label>
       <div class="pw">
         <input
           id="password"
@@ -40,26 +39,26 @@
           type="button"
           class="pw-toggle"
           (click)="showPassword.set(!showPassword())"
-          [attr.aria-label]="showPassword() ? t.auth.login.hidePassword : t.auth.login.showPassword">
+          [attr.aria-label]="showPassword() ? ('auth.login.hidePassword' | translate) : ('auth.login.showPassword' | translate)">
           <app-icon [name]="showPassword() ? 'eyeOff' : 'eye'" [size]="18" />
         </button>
       </div>
       @if (invalid('password')) {
-        <span class="field-error">{{ t.auth.validation.required }}</span>
+        <span class="field-error">{{ 'auth.validation.required' | translate }}</span>
       }
     </div>
 
     <button type="submit" class="btn btn-primary btn-lg btn-block" [disabled]="loading()">
       @if (loading()) {
-        <span class="spinner"></span>{{ t.common.loading }}
+        <span class="spinner"></span>{{ 'common.loading' | translate }}
       } @else {
-        {{ t.auth.login.submit }}
+        {{ 'auth.login.submit' | translate }}
       }
     </button>
 
     <p class="auth-switch">
-      {{ t.auth.login.noAccount }}
-      <a routerLink="/register">{{ t.auth.login.register }}</a>
+      {{ 'auth.login.noAccount' | translate }}
+      <a routerLink="/register">{{ 'auth.login.register' | translate }}</a>
     </p>
   </form>
 </app-auth-shell>

@@ -22,8 +22,10 @@ public static class PersistenceServiceCollectionExtensions
 
         services.AddDbContext<RedKeyDbContext>((provider, options) =>
             options
-                .UseSqlServer(connectionString, sql =>
-                    sql.MigrationsAssembly(typeof(RedKeyDbContext).Assembly.FullName))
+                .UseSqlServer(connectionString, sql => sql
+                    .MigrationsAssembly(typeof(RedKeyDbContext).Assembly.FullName)
+                    // Units load several collections (images, plans, features): avoid cartesian explosion.
+                    .UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
                 .AddInterceptors(provider.GetRequiredService<AuditableEntityInterceptor>()));
 
         services.AddScoped<IApplicationDbContext>(provider =>

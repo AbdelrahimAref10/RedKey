@@ -1,0 +1,33 @@
+@let lang = i18n.lang();
+<dialog #dialog class="receive" aria-labelledby="receive-title" (cancel)="$event.preventDefault(); cancelled.emit()" (click)="backdropClick($event)">
+  @if (open()) {
+    <div class="panel">
+      <span class="badge-icon"><app-icon name="money" [size]="24" /></span>
+      <h2 id="receive-title">{{ 'accounting.receive.title' | translate }}</h2>
+      <p class="amount">{{ amount() | money: lang }}</p>
+      @if (description()) { <p class="muted small desc">{{ description() }}</p> }
+
+      <span class="label">{{ 'accounting.receive.receivedIn' | translate }}</span>
+      <div class="options" role="radiogroup" [attr.aria-label]="'accounting.receive.receivedIn' | translate">
+        @for (a of accounts.value() ?? []; track a.id) {
+          <button type="button" role="radio" class="option" [class.on]="selected() === a.id" [attr.aria-checked]="selected() === a.id"
+            (click)="selected.set(a.id)">
+            <app-icon [name]="a.code === '1100' ? 'wallet' : 'building'" [size]="20" />
+            <span class="opt-name">{{ a.name }}</span>
+            <span class="opt-balance muted small">{{ 'accounting.balance' | translate }}: {{ a.balance | money: lang }}</span>
+            @if (selected() === a.id) { <app-icon class="tick" name="checkCircle" [size]="18" /> }
+          </button>
+        }
+      </div>
+
+      <p class="entry muted small"><app-icon name="info" [size]="14" />{{ 'accounting.receive.entryHint' | translate }}</p>
+
+      <div class="actions">
+        <button type="button" class="btn btn-primary" [disabled]="busy() || selected() === null" (click)="confirm()">
+          {{ 'accounting.receive.confirm' | translate }}
+        </button>
+        <button type="button" class="btn btn-outline" (click)="cancelled.emit()">{{ 'confirm.cancel' | translate }}</button>
+      </div>
+    </div>
+  }
+</dialog>

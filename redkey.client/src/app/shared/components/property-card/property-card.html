@@ -1,39 +1,49 @@
-@let p = property();
-@let t = i18n.t();
+@let u = unit();
 @let lang = i18n.lang();
-<a class="p-card" [routerLink]="link()">
+<a class="p-card" [routerLink]="href()">
   <div class="img-frame media">
-    <img [ngSrc]="p.images[0]" fill [priority]="priority()" [alt]="p.title | loc: lang" />
-    <span class="tag" [class.rent]="p.purpose === 'rent'">{{ p.purpose === 'sale' ? t.common.sale : t.common.rent }}</span>
-    @if (p.featured) {
-      <span class="featured"><app-icon name="star" [size]="13" [filled]="true" />{{ t.common.featured }}</span>
+    <img [ngSrc]="u.coverImageUrl" fill [priority]="priority()" [alt]="u.title" />
+    <span class="tag">{{ u.purposeName }}</span>
+    @if (u.isFeatured) {
+      <span class="featured"><app-icon name="star" [size]="13" [filled]="true" />{{ 'common.featured' | translate }}</span>
     }
-    <button
-      type="button"
-      class="fav"
-      [class.on]="isFavorite()"
-      (click)="toggleFavorite($event)"
-      [attr.aria-pressed]="isFavorite()"
-      [attr.aria-label]="isFavorite() ? t.common.removeFavorite : t.common.addFavorite">
-      <app-icon name="heart" [size]="18" [filled]="isFavorite()" />
-    </button>
+    @if (u.brokerCommission != null) {
+      <span class="commission">{{ 'broker.units.commission' | translate }} {{ u.brokerCommission }}%</span>
+    }
+    @if (showFavorite()) {
+      <button
+        type="button"
+        class="fav"
+        [class.on]="isFavorite()"
+        (click)="toggleFavorite($event)"
+        [attr.aria-pressed]="isFavorite()"
+        [attr.aria-label]="isFavorite() ? ('common.removeFavorite' | translate) : ('common.addFavorite' | translate)">
+        <app-icon name="heart" [size]="18" [filled]="isFavorite()" />
+      </button>
+    }
   </div>
 
   <div class="body">
-    <span class="type">{{ t.propertyTypes[p.type] }} · {{ p.code }}</span>
-    <h3 class="title">{{ p.title | loc: lang }}</h3>
-    <span class="place"><app-icon name="pin" [size]="15" />{{ p.compound | loc: lang }} · {{ p.city | loc: lang }}</span>
+    <span class="type">{{ u.unitTypeName }} · {{ u.code }}</span>
+    <h3 class="title">{{ u.title }}</h3>
+    <span class="place"><app-icon name="pin" [size]="15" />{{ u.compound }} · {{ u.areaName }} · {{ u.cityName }}</span>
     <div class="specs">
-      @if (p.beds > 0) {
-        <span><app-icon name="bed" [size]="16" />{{ p.beds }} {{ t.common.beds }}</span>
+      @if (u.bedrooms > 0) {
+        <span><app-icon name="bed" [size]="16" />{{ u.bedrooms }} {{ 'common.beds' | translate }}</span>
       }
-      <span><app-icon name="bath" [size]="16" />{{ p.baths }} {{ t.common.baths }}</span>
-      <span><app-icon name="area" [size]="16" />{{ p.size }} {{ t.common.sqm }}</span>
+      @if (u.bathrooms > 0) {
+        <span><app-icon name="bath" [size]="16" />{{ u.bathrooms }} {{ 'common.baths' | translate }}</span>
+      }
+      <span><app-icon name="area" [size]="16" />{{ u.size }} {{ 'common.sqm' | translate }}</span>
     </div>
   </div>
 
   <div class="foot">
-    <b class="price">{{ p.price | money: lang : p.purpose === 'rent' }}</b>
-    <span class="go"><app-icon name="arrowEnd" [size]="18" [flip]="true" /></span>
+    <b class="price">{{ u.price | money: lang }}</b>
+    @if (u.statusName) {
+      <span class="badge badge-gray">{{ u.statusName }}</span>
+    } @else {
+      <span class="go"><app-icon name="arrowEnd" [size]="18" [flip]="true" /></span>
+    }
   </div>
 </a>

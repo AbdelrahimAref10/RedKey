@@ -1,0 +1,328 @@
+@let lk = lookups.value();
+@let current = unit.value();
+
+<div class="page-head">
+  <div>
+    <nav class="breadcrumb">
+      <a [routerLink]="listUrl()">{{ isAdmin() ? ('admin.units.title' | translate) : ('broker.nav.listings' | translate) }}</a>
+      <span>›</span>
+      <span>{{ current ? current.code : ('unitForm.newTitle' | translate) }}</span>
+    </nav>
+    <h1>{{ id() ? ('unitForm.editTitle' | translate) : ('unitForm.newTitle' | translate) }}</h1>
+  </div>
+  <div class="row">
+    @if (id() && isAdmin()) {
+      <button type="button" class="btn btn-outline" (click)="journalOpen.set(true)">
+        <app-icon name="book" [size]="16" />{{ 'accounting.entriesButton' | translate }}
+      </button>
+    }
+    @if (id()) {
+      <button type="button" class="btn btn-ghost" (click)="remove()"><app-icon name="close" [size]="16" />{{ 'unitForm.delete' | translate }}</button>
+    }
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="saving() || !lk">
+      @if (saving()) { <span class="spinner"></span>{{ 'unitForm.saving' | translate }} }
+      @else { {{ isAdmin() ? ('unitForm.saveAndPublish' | translate) : ('unitForm.submitForReview' | translate) }} }
+    </button>
+  </div>
+</div>
+
+@if (current) {
+  <section class="card status-card">
+    <div class="status-row">
+      <span>{{ 'unitForm.status' | translate }}: <span class="badge" [class.badge-green]="current.status === 2" [class.badge-gold]="current.status === 1" [class.badge-red]="current.status > 2">{{ current.statusName }}</span></span>
+      @if (current.createdBy; as by) {
+        <span class="muted">{{ 'unitForm.createdBy' | translate }}: <b>{{ by.fullName }}</b> · {{ by.roleName }}</span>
+      }
+    </div>
+    @if (current.reviewNote) {
+      <div class="alert alert-warn"><app-icon name="info" [size]="18" /><span><b>{{ 'unitForm.reviewNote' | translate }}:</b> {{ current.reviewNote }}</span></div>
+    }
+    @if (!isAdmin()) {
+      <a class="btn btn-whatsapp btn-sm wa" [href]="whatsappLink()" target="_blank" rel="noopener">
+        <app-icon name="message" [size]="16" />{{ 'unitForm.whatsappRedkey' | translate }}
+      </a>
+    }
+  </section>
+
+  @if (isAdmin() && lk) {
+    <form class="card review" [formGroup]="reviewForm" (ngSubmit)="review()" novalidate>
+      <h2 class="card-title">{{ 'unitForm.review' | translate }}</h2>
+      <div class="review-grid">
+        <div class="field">
+          <label for="decision">{{ 'unitForm.decision' | translate }}</label>
+          <select id="decision" class="select" formControlName="decision">
+            <option [ngValue]="null" disabled>{{ 'unitForm.choose' | translate }}</option>
+            @for (d of lk.enums.reviewDecisions; track d.value) {
+              <option [ngValue]="d.value">{{ d.name }}</option>
+            }
+          </select>
+        </div>
+        <div class="field grow">
+          <label for="note">{{ 'unitForm.note' | translate }}</label>
+          <input id="note" class="input" formControlName="note" [placeholder]="'unitForm.noteHint' | translate" />
+        </div>
+        <button type="submit" class="btn btn-dark" [disabled]="reviewing()">{{ 'unitForm.sendReview' | translate }}</button>
+      </div>
+    </form>
+  }
+}
+
+@if (!isAdmin()) {
+  <div class="alert alert-info"><app-icon name="shield" [size]="18" />{{ 'unitForm.brokerHint' | translate }}</div>
+}
+
+@if (lk && (!lk.unitTypes.length || !lk.cities.length || !lk.areas.length)) {
+  <div class="alert alert-warn"><app-icon name="info" [size]="18" />{{ 'unitForm.noLookups' | translate }}</div>
+}
+
+@if (error(); as message) {
+  <div class="alert alert-error" role="alert"><app-icon name="info" [size]="18" />{{ message }}</div>
+}
+
+<form class="stack-form" [formGroup]="form" (ngSubmit)="save()" novalidate>
+  <section class="card">
+    <h2 class="card-title">{{ 'unitForm.basics' | translate }}</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label for="unitTypeId">{{ 'unitForm.unitType' | translate }}</label>
+        <select id="unitTypeId" class="select" formControlName="unitTypeId" [class.is-invalid]="invalid('unitTypeId')">
+          <option [ngValue]="null" disabled>{{ 'unitForm.choose' | translate }}</option>
+          @for (type of lk?.unitTypes ?? []; track type.id) {
+            <option [ngValue]="type.id">{{ type.name }}</option>
+          }
+        </select>
+      </div>
+      <div class="field">
+        <label for="cityId">{{ 'unitForm.city' | translate }}</label>
+        <select id="cityId" class="select" formControlName="cityId" [class.is-invalid]="invalid('cityId')" (change)="form.controls.areaId.setValue(null)">
+          <option [ngValue]="null" disabled>{{ 'unitForm.choose' | translate }}</option>
+          @for (city of lk?.cities ?? []; track city.id) {
+            <option [ngValue]="city.id">{{ city.name }}</option>
+          }
+        </select>
+      </div>
+      <div class="field">
+        <label for="areaId">{{ 'unitForm.area' | translate }}</label>
+        <select id="areaId" class="select" formControlName="areaId" [class.is-invalid]="invalid('areaId')">
+          <option [ngValue]="null" disabled>{{ (form.controls.cityId.value === null ? 'unitForm.pickCityFirst' : 'unitForm.choose') | translate }}</option>
+          @for (area of cityAreas(); track area.id) {
+            <option [ngValue]="area.id">{{ area.name }}</option>
+          }
+        </select>
+      </div>
+      <div class="field">
+        <label for="purpose">{{ 'unitForm.purpose' | translate }}</label>
+        <select id="purpose" class="select" formControlName="purpose" [class.is-invalid]="invalid('purpose')">
+          <option [ngValue]="null" disabled>{{ 'unitForm.choose' | translate }}</option>
+          @for (p of lk?.enums?.unitPurposes ?? []; track p.value) {
+            <option [ngValue]="p.value">{{ p.name }}</option>
+          }
+        </select>
+      </div>
+      <div class="field">
+        <label for="finishing">{{ 'unitForm.finishing' | translate }}</label>
+        <select id="finishing" class="select" formControlName="finishing" [class.is-invalid]="invalid('finishing')">
+          <option [ngValue]="null" disabled>{{ 'unitForm.choose' | translate }}</option>
+          @for (item of lk?.enums?.finishingTypes ?? []; track item.value) {
+            <option [ngValue]="item.value">{{ item.name }}</option>
+          }
+        </select>
+      </div>
+      <div class="field">
+        <label for="price">{{ 'unitForm.price' | translate }}</label>
+        <input id="price" class="input" type="number" min="0" formControlName="price" [class.is-invalid]="invalid('price')" />
+        <span class="hint">{{ 'unitForm.priceHint' | translate }}</span>
+      </div>
+      <div class="field">
+        <label for="size">{{ 'unitForm.size' | translate }}</label>
+        <input id="size" class="input" type="number" min="0" formControlName="size" [class.is-invalid]="invalid('size')" />
+      </div>
+      <div class="field">
+        <label for="bedrooms">{{ 'unitForm.bedrooms' | translate }}</label>
+        <input id="bedrooms" class="input" type="number" min="0" formControlName="bedrooms" />
+      </div>
+      <div class="field">
+        <label for="bathrooms">{{ 'unitForm.bathrooms' | translate }}</label>
+        <input id="bathrooms" class="input" type="number" min="0" formControlName="bathrooms" />
+      </div>
+      <div class="field">
+        <label for="commission">{{ 'unitForm.commission' | translate }}</label>
+        <input id="commission" class="input" type="number" min="0" max="100" step="0.5" formControlName="brokerCommission" />
+      </div>
+      @if (isAdmin()) {
+        <div class="field">
+          <label for="viewingFee">{{ 'unitForm.viewingFee' | translate }}</label>
+          <input id="viewingFee" class="input" type="number" min="0" step="50" formControlName="viewingFee" [class.is-invalid]="invalid('viewingFee')" />
+          <span class="hint">{{ 'unitForm.viewingFeeHint' | translate }}</span>
+        </div>
+        <label class="check span-all">
+          <input type="checkbox" formControlName="isFeatured" />{{ 'unitForm.featured' | translate }}
+        </label>
+      }
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="card-title">{{ 'unitForm.texts' | translate }}</h2>
+    <div class="form-grid two">
+      <div class="field">
+        <label for="titleAr">{{ 'unitForm.titleAr' | translate }}</label>
+        <input id="titleAr" class="input" dir="rtl" formControlName="titleAr" [placeholder]="'unitForm.titlePlaceholderAr' | translate" [class.is-invalid]="invalid('titleAr')" />
+        <span class="hint">{{ 'unitForm.titleHint' | translate }}</span>
+      </div>
+      <div class="field">
+        <label for="titleEn">{{ 'unitForm.titleEn' | translate }}</label>
+        <input id="titleEn" class="input" dir="ltr" formControlName="titleEn" [placeholder]="'unitForm.titlePlaceholderEn' | translate" [class.is-invalid]="invalid('titleEn')" />
+        <span class="hint">{{ 'unitForm.titleHint' | translate }}</span>
+      </div>
+      <div class="field">
+        <label for="compoundAr">{{ 'unitForm.compoundAr' | translate }}</label>
+        <input id="compoundAr" class="input" dir="rtl" formControlName="compoundAr" [placeholder]="'unitForm.compoundPlaceholderAr' | translate" [class.is-invalid]="invalid('compoundAr')" />
+        <span class="hint">{{ 'unitForm.compoundHint' | translate }}</span>
+      </div>
+      <div class="field">
+        <label for="compoundEn">{{ 'unitForm.compoundEn' | translate }}</label>
+        <input id="compoundEn" class="input" dir="ltr" formControlName="compoundEn" [placeholder]="'unitForm.compoundPlaceholderEn' | translate" [class.is-invalid]="invalid('compoundEn')" />
+        <span class="hint">{{ 'unitForm.compoundHint' | translate }}</span>
+      </div>
+      <div class="field">
+        <label for="deliveryAr">{{ 'unitForm.deliveryAr' | translate }}</label>
+        <input id="deliveryAr" class="input" dir="rtl" formControlName="deliveryAr" [placeholder]="'unitForm.deliveryPlaceholder' | translate" />
+      </div>
+      <div class="field">
+        <label for="deliveryEn">{{ 'unitForm.deliveryEn' | translate }}</label>
+        <input id="deliveryEn" class="input" dir="ltr" formControlName="deliveryEn" />
+      </div>
+      <div class="field">
+        <label for="descriptionAr">{{ 'unitForm.descriptionAr' | translate }}</label>
+        <textarea id="descriptionAr" class="textarea" dir="rtl" rows="4" formControlName="descriptionAr" [class.is-invalid]="invalid('descriptionAr')"></textarea>
+      </div>
+      <div class="field">
+        <label for="descriptionEn">{{ 'unitForm.descriptionEn' | translate }}</label>
+        <textarea id="descriptionEn" class="textarea" dir="ltr" rows="4" formControlName="descriptionEn" [class.is-invalid]="invalid('descriptionEn')"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <section class="card media">
+    <div class="card-head">
+      <div>
+        <h2 class="card-title">{{ 'unitForm.images' | translate }}</h2>
+        <p class="muted small">{{ 'unitForm.imagesHint' | translate }}</p>
+      </div>
+    </div>
+
+    <div class="media-grid">
+      <!-- Cover: the image of the unit card -->
+      <div class="media-block">
+        <div class="media-head">
+          <span class="media-title"><app-icon name="star" [size]="16" />{{ 'unitForm.cover' | translate }}<em class="req">*</em></span>
+          <span class="muted small">{{ 'unitForm.coverHint' | translate }}</span>
+        </div>
+
+        @if (cover(); as src) {
+          <div class="frame cover-frame">
+            <img [src]="src" alt="" />
+            <span class="frame-tag">{{ 'unitForm.coverTag' | translate }}</span>
+            <div class="frame-tools">
+              <label class="tool">
+                <app-icon name="upload" [size]="15" />{{ 'unitForm.change' | translate }}
+                <input type="file" class="sr-only" accept="image/jpeg,image/png,image/webp" (change)="pickCover($event)" />
+              </label>
+              <button type="button" class="tool danger" (click)="removeCover()">
+                <app-icon name="trash" [size]="15" />{{ 'unitForm.remove' | translate }}
+              </button>
+            </div>
+          </div>
+        } @else {
+          <label class="drop cover-frame" [class.over]="dragOver() === 'cover'"
+            (dragover)="onDragOver($event, 'cover')" (dragleave)="dragOver.set(null)" (drop)="onDrop($event, 'cover')">
+            <span class="drop-icon"><app-icon name="upload" [size]="24" /></span>
+            <b>{{ 'unitForm.dropTitle' | translate }}</b>
+            <span class="muted small">{{ 'unitForm.dropHint' | translate }}</span>
+            <span class="btn btn-soft btn-sm">{{ 'unitForm.browse' | translate }}</span>
+            <input type="file" class="sr-only" accept="image/jpeg,image/png,image/webp" (change)="pickCover($event)" />
+          </label>
+        }
+      </div>
+
+      <!-- Gallery: up to 3 images on the details page -->
+      <div class="media-block">
+        <div class="media-head">
+          <span class="media-title"><app-icon name="layers" [size]="16" />{{ 'unitForm.gallery' | translate }}</span>
+          <span class="counter" [class.full]="!canAddImage()">{{ gallery().length }} / {{ maxGallery }}</span>
+        </div>
+
+        <div class="slots">
+          @for (src of gallerySlots(); track $index; let i = $index) {
+            @if (src) {
+              <div class="frame slot">
+                <img [src]="src" alt="" />
+                <span class="slot-no">{{ i + 1 }}</span>
+                <button type="button" class="slot-remove" (click)="removeGalleryImage(i)"
+                  [title]="'unitForm.remove' | translate" [attr.aria-label]="'unitForm.remove' | translate">
+                  <app-icon name="trash" [size]="14" />
+                </button>
+              </div>
+            } @else if (i === gallery().length) {
+              <label class="drop slot" [class.over]="dragOver() === 'gallery'"
+                (dragover)="onDragOver($event, 'gallery')" (dragleave)="dragOver.set(null)" (drop)="onDrop($event, 'gallery')">
+                <span class="drop-icon sm"><app-icon name="plus" [size]="20" /></span>
+                <span class="small">{{ 'unitForm.addImage' | translate }}</span>
+                <input type="file" class="sr-only" multiple accept="image/jpeg,image/png,image/webp" (change)="pickGallery($event)" />
+              </label>
+            } @else {
+              <div class="slot placeholder"><span class="slot-no">{{ i + 1 }}</span></div>
+            }
+          }
+        </div>
+        <span class="muted small">{{ 'unitForm.galleryHint' | translate }}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2 class="card-title">{{ 'unitForm.plans' | translate }}</h2>
+      <button type="button" class="btn btn-soft btn-sm" (click)="plans.push(planGroup())">{{ 'unitForm.addPlan' | translate }}</button>
+    </div>
+    <div class="rows" formArrayName="paymentPlans">
+      @for (plan of plans.controls; track plan; let i = $index) {
+        <div class="line four" [formGroupName]="i">
+          <input class="input" dir="rtl" formControlName="labelAr" [placeholder]="'unitForm.labelAr' | translate" [attr.aria-label]="'unitForm.labelAr' | translate" />
+          <input class="input" dir="ltr" formControlName="labelEn" [placeholder]="'unitForm.labelEn' | translate" [attr.aria-label]="'unitForm.labelEn' | translate" />
+          <input class="input" dir="rtl" formControlName="valueAr" [placeholder]="'unitForm.valueAr' | translate" [attr.aria-label]="'unitForm.valueAr' | translate" />
+          <input class="input" dir="ltr" formControlName="valueEn" [placeholder]="'unitForm.valueEn' | translate" [attr.aria-label]="'unitForm.valueEn' | translate" />
+          <button type="button" class="btn btn-ghost btn-icon" (click)="plans.removeAt(i)" [attr.aria-label]="'unitForm.remove' | translate"><app-icon name="close" [size]="18" /></button>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2 class="card-title">{{ 'unitForm.features' | translate }}</h2>
+      <button type="button" class="btn btn-soft btn-sm" (click)="features.push(featureGroup())">{{ 'unitForm.addFeature' | translate }}</button>
+    </div>
+    <div class="rows" formArrayName="features">
+      @for (feature of features.controls; track feature; let i = $index) {
+        <div class="line two" [formGroupName]="i">
+          <input class="input" dir="rtl" formControlName="nameAr" [placeholder]="'unitForm.nameAr' | translate" [attr.aria-label]="'unitForm.nameAr' | translate" />
+          <input class="input" dir="ltr" formControlName="nameEn" [placeholder]="'unitForm.nameEn' | translate" [attr.aria-label]="'unitForm.nameEn' | translate" />
+          <button type="button" class="btn btn-ghost btn-icon" (click)="features.removeAt(i)" [attr.aria-label]="'unitForm.remove' | translate"><app-icon name="close" [size]="18" /></button>
+        </div>
+      }
+    </div>
+  </section>
+
+  <div class="row end">
+    <a class="btn btn-outline" [routerLink]="listUrl()">{{ 'common.cancel' | translate }}</a>
+    <button type="submit" class="btn btn-primary" [disabled]="saving() || !lk">
+      {{ isAdmin() ? ('unitForm.saveAndPublish' | translate) : ('unitForm.submitForReview' | translate) }}
+    </button>
+  </div>
+</form>
+
+@if (journalOpen() && id(); as unitId) {
+  <app-unit-journal-drawer [unitId]="unitId" [unitCode]="current?.code ?? ''" (close)="journalOpen.set(false)" />
+}

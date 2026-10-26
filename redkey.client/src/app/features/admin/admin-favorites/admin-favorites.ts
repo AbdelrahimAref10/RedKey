@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import { LocPipe } from '../../../core/i18n/loc.pipe';
 import { Icon } from '../../../shared/components/icon/icon';
@@ -8,7 +9,7 @@ const MAX = Math.max(...FAVORITES_BY_UNIT.map(r => r.count));
 
 @Component({
   selector: 'app-admin-favorites',
-  imports: [Icon, LocPipe],
+  imports: [TranslatePipe, Icon, LocPipe],
   templateUrl: './admin-favorites.html',
   styleUrl: './admin-favorites.css',
   changeDetection: ChangeDetectionStrategy.OnPush

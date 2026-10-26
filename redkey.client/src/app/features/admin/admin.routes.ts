@@ -17,11 +17,34 @@ export default [
       },
       {
         path: 'units/new',
-        loadComponent: () => import('./unit-form/unit-form').then(m => m.UnitForm)
+        data: { mode: 'admin' },
+        loadComponent: () => import('../units/unit-editor/unit-editor').then(m => m.UnitEditor)
       },
       {
-        path: 'units/:id/edit',
-        loadComponent: () => import('./unit-form/unit-form').then(m => m.UnitForm)
+        path: 'units/:id',
+        data: { mode: 'admin' },
+        loadComponent: () => import('../units/unit-editor/unit-editor').then(m => m.UnitEditor)
+      },
+      {
+        path: 'unit-types',
+        data: { kind: 'unitTypes' },
+        loadComponent: () => import('./lookup-admin/lookup-admin').then(m => m.LookupAdmin)
+      },
+      {
+        path: 'cities',
+        loadComponent: () => import('./cities-admin/cities-admin').then(m => m.CitiesAdmin)
+      },
+      {
+        path: 'accounting',
+        loadComponent: () => import('./admin-accounting/admin-accounting').then(m => m.AdminAccounting)
+      },
+      {
+        path: 'messages',
+        loadComponent: () => import('./admin-messages/admin-messages').then(m => m.AdminMessages)
+      },
+      {
+        path: 'messages/:id',
+        loadComponent: () => import('./admin-messages/admin-messages').then(m => m.AdminMessages)
       },
       {
         path: 'requests',

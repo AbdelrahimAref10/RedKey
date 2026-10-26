@@ -20,7 +20,8 @@ internal static class AuthResponseFactory
                 FullName = user.FullName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
-                Role = user.Role
+                Role = user.Role,
+                PreferredLanguage = user.PreferredLanguage
             }
         };
     }

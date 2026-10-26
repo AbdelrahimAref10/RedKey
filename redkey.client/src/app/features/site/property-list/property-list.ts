@@ -1,75 +1,110 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, signal } from '@angular/core';
-import { AreaId, PropertyType, Purpose } from '../../../core/data/models';
-import { PROPERTIES } from '../../../core/data/properties.data';
-import { AREAS } from '../../../core/data/site.data';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, linkedSignal, numberAttribute } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { Params, Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { I18nService } from '../../../core/i18n/i18n.service';
-import { LocPipe } from '../../../core/i18n/loc.pipe';
+import { UnitsCatalog } from '../../../core/units/units-catalog.service';
 import { Icon } from '../../../shared/components/icon/icon';
+import { Pagination } from '../../../shared/components/pagination/pagination';
 import { PropertyCard } from '../../../shared/components/property-card/property-card';
 
-const TYPES: readonly PropertyType[] = ['apartment', 'villa', 'townhouse', 'chalet', 'duplex', 'office', 'studio'];
+const optionalNumber = (value: unknown): number | null => {
+  const n = Number(value);
+  return value == null || value === '' || Number.isNaN(n) ? null : n;
+};
 
+/**
+ * Units of the website, 10 per page. The URL query string is the single source of truth for
+ * the filters (?purpose=1&type=2&city=1&area=3&maxPrice=…&search=…&page=2), so pages can be shared / reloaded.
+ */
 @Component({
   selector: 'app-property-list',
-  imports: [PropertyCard, Icon, LocPipe],
+  imports: [TranslatePipe, PropertyCard, Icon, Pagination],
   templateUrl: './property-list.html',
   styleUrl: './property-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PropertyList {
+  private readonly router = inject(Router);
+  private readonly catalog = inject(UnitsCatalog);
   protected readonly i18n = inject(I18nService);
 
-  // Route data + query params (bound by withComponentInputBinding).
-  readonly purpose = input<string>();
-  readonly type = input<string>();
-  readonly area = input<string>();
-  readonly maxPrice = input<string>();
+  // Query params (bound by withComponentInputBinding).
+  readonly purpose = input(null, { transform: optionalNumber });
+  readonly type = input(null, { transform: optionalNumber });
+  readonly city = input(null, { transform: optionalNumber });
+  readonly area = input(null, { transform: optionalNumber });
+  readonly maxPrice = input(null, { transform: optionalNumber });
+  readonly search = input<string | undefined>();
+  readonly page = input(1, { transform: (v: unknown) => Math.max(1, numberAttribute(v, 1)) });
 
-  protected readonly types = TYPES;
-  protected readonly areas = AREAS;
+  /** Search box text (debounced into the URL). */
+  protected readonly searchText = linkedSignal(() => this.search() ?? '');
+  private searchTimer: ReturnType<typeof setTimeout> | undefined;
 
-  protected readonly purposeFilter = linkedSignal<Purpose | 'all'>(() => {
-    const p = this.purpose();
-    return p === 'sale' || p === 'rent' ? p : 'all';
+  private readonly lookups = rxResource({ params: () => this.i18n.lang(), stream: ({ params }) => this.catalog.lookups(params) });
+  private readonly types = rxResource({ params: () => this.i18n.lang(), stream: ({ params }) => this.catalog.unitTypes(params) });
+  private readonly cityList = rxResource({ params: () => this.i18n.lang(), stream: ({ params }) => this.catalog.cities(params) });
+  private readonly areaList = rxResource({ params: () => this.i18n.lang(), stream: ({ params }) => this.catalog.areas(params) });
+
+  protected readonly purposes = computed(() => this.lookups.value()?.unitPurposes ?? []);
+  protected readonly unitTypes = computed(() => this.types.value() ?? []);
+  protected readonly cities = computed(() => this.cityList.value() ?? []);
+  /** Areas of the selected city (all areas when no city is picked). */
+  protected readonly areas = computed(() => {
+    const city = this.city();
+    const areas = this.areaList.value() ?? [];
+    return city === null ? areas : areas.filter(a => a.cityId === city);
   });
-  protected readonly typeFilter = linkedSignal<PropertyType | ''>(() => (this.type() as PropertyType) ?? '');
-  protected readonly areaFilter = linkedSignal<AreaId | ''>(() => (this.area() as AreaId) ?? '');
-  protected readonly priceFilter = linkedSignal(() => Number(this.maxPrice()) || 0);
-  protected readonly query = signal('');
 
-  protected readonly results = computed(() => {
-    const purpose = this.purposeFilter();
-    const type = this.typeFilter();
-    const area = this.areaFilter();
-    const maxPrice = this.priceFilter();
-    const q = this.query().trim().toLowerCase();
-
-    return PROPERTIES.filter(
-      p =>
-        (purpose === 'all' || p.purpose === purpose) &&
-        (!type || p.type === type) &&
-        (!area || p.areaId === area) &&
-        (!maxPrice || p.purpose === 'rent' || p.price <= maxPrice) &&
-        (!q ||
-          p.code.toLowerCase().includes(q) ||
-          p.compound.ar.includes(q) ||
-          p.city.ar.includes(q) ||
-          p.compound.en.toLowerCase().includes(q) ||
-          p.city.en.toLowerCase().includes(q))
-    );
+  protected readonly units = rxResource({
+    params: () => ({
+      lang: this.i18n.lang(),
+      purpose: this.purpose(),
+      unitTypeId: this.type(),
+      cityId: this.city(),
+      areaId: this.area(),
+      maxPrice: this.maxPrice(),
+      search: this.search() ?? null,
+      page: this.page()
+    }),
+    stream: ({ params }) => this.catalog.units(params, params.lang)
   });
+
+  protected readonly result = computed(() => this.units.value());
 
   protected readonly title = computed(() => {
-    const t = this.i18n.t();
-    const purpose = this.purposeFilter();
-    return purpose === 'sale' ? t.site.listings.forSale : purpose === 'rent' ? t.site.listings.forRent : t.nav.properties;
+    const purpose = this.purposes().find(p => p.value === this.purpose());
+    return purpose ? `${this.i18n.instant('nav.properties')} · ${purpose.name}` : this.i18n.instant('nav.properties');
   });
 
+  constructor() {
+    inject(DestroyRef).onDestroy(() => clearTimeout(this.searchTimer));
+  }
+
+  /** Any filter change goes back to page 1. */
+  protected setFilter(params: Params): void {
+    void this.router.navigate([], { queryParams: { ...params, page: null }, queryParamsHandling: 'merge' });
+  }
+
+  protected onSearch(value: string): void {
+    this.searchText.set(value);
+    clearTimeout(this.searchTimer);
+    this.searchTimer = setTimeout(
+      () => void this.router.navigate([], {
+        queryParams: { search: value.trim() || null, page: null },
+        queryParamsHandling: 'merge',
+        replaceUrl: true
+      }),
+      400
+    );
+  }
+
+  protected goToPage(page: number): void {
+    void this.router.navigate([], { queryParams: { page }, queryParamsHandling: 'merge' });
+  }
+
   protected reset(): void {
-    this.purposeFilter.set('all');
-    this.typeFilter.set('');
-    this.areaFilter.set('');
-    this.priceFilter.set(0);
-    this.query.set('');
+    void this.router.navigate([], { queryParams: {} });
   }
 }

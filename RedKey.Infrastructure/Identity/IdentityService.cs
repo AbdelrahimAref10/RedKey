@@ -49,7 +49,7 @@ internal sealed class IdentityService : IIdentityService
             return Result<AuthenticatedUser>.Failure(ErrorCodes.Auth.RegistrationFailed);
 
         return Result<AuthenticatedUser>.Success(
-            new AuthenticatedUser(user.Id, user.FullName, user.Email, user.PhoneNumber, newUser.Role));
+            new AuthenticatedUser(user.Id, user.FullName, user.Email, user.PhoneNumber, newUser.Role, user.PreferredLanguage));
     }
 
     public async Task<Result<AuthenticatedUser>> SignInAsync(
@@ -86,7 +86,30 @@ internal sealed class IdentityService : IIdentityService
         await _userManager.UpdateAsync(user);
 
         return Result<AuthenticatedUser>.Success(
-            new AuthenticatedUser(user.Id, user.FullName, user.Email!, user.PhoneNumber, role));
+            new AuthenticatedUser(user.Id, user.FullName, user.Email!, user.PhoneNumber, role, user.PreferredLanguage));
+    }
+
+    public async Task<Result<AuthenticatedUser>> SetPreferredLanguageAsync(
+        Guid userId,
+        string language,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user is null || !user.IsActive)
+            return Unauthorized(ErrorCodes.Auth.InvalidCredentials);
+
+        var roleName = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+        if (RoleNames.ToRole(roleName) is not { } role)
+            return Unauthorized(ErrorCodes.Auth.InvalidCredentials);
+
+        if (user.PreferredLanguage != language)
+        {
+            user.PreferredLanguage = language;
+            await _userManager.UpdateAsync(user);
+        }
+
+        return Result<AuthenticatedUser>.Success(
+            new AuthenticatedUser(user.Id, user.FullName, user.Email!, user.PhoneNumber, role, user.PreferredLanguage));
     }
 
     private static Result<AuthenticatedUser> Unauthorized(string error) =>

@@ -1,0 +1,71 @@
+.confirm {
+  width: min(420px, calc(100vw - 32px));
+  padding: 0;
+  border: 0;
+  border-radius: var(--rk-radius-lg);
+  background: var(--rk-white);
+  color: var(--rk-ink);
+  box-shadow: var(--rk-shadow-lg);
+}
+
+.confirm[open] {
+  animation: confirm-in .18s ease-out;
+}
+
+.confirm::backdrop {
+  background: rgba(18, 16, 20, .55);
+  backdrop-filter: blur(2px);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 24px 22px;
+  text-align: center;
+}
+
+.badge-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  color: var(--rk-info);
+  background: var(--rk-info-bg);
+}
+
+.badge-icon.danger {
+  color: var(--rk-red);
+  background: var(--rk-red-100);
+}
+
+h2 {
+  margin: 4px 0 0;
+  font-family: var(--rk-font-display);
+  font-size: 19px;
+}
+
+p {
+  margin: 0;
+  color: var(--rk-text);
+  font-size: 14.5px;
+  line-height: 1.7;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.actions .btn {
+  flex: 1;
+}
+
+@keyframes confirm-in {
+  from { opacity: 0; transform: translateY(10px) scale(.97); }
+  to { opacity: 1; transform: none; }
+}

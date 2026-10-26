@@ -1,26 +1,32 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { Purpose } from '../../../../../core/data/models';
-import { PROPERTIES } from '../../../../../core/data/properties.data';
+import { TranslatePipe } from '@ngx-translate/core';
 import { I18nService } from '../../../../../core/i18n/i18n.service';
+import { UnitsCatalog } from '../../../../../core/units/units-catalog.service';
 import { Icon } from '../../../../../shared/components/icon/icon';
 import { PropertyCard } from '../../../../../shared/components/property-card/property-card';
 
-const FEATURED = PROPERTIES.filter(p => p.featured);
-
 @Component({
   selector: 'app-featured-properties',
-  imports: [RouterLink, Icon, PropertyCard],
+  imports: [TranslatePipe, RouterLink, Icon, PropertyCard],
   templateUrl: './featured-properties.html',
   styleUrl: './featured-properties.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FeaturedProperties {
   protected readonly i18n = inject(I18nService);
+  private readonly catalog = inject(UnitsCatalog);
 
-  protected readonly filter = signal<Purpose | 'all'>('all');
-  protected readonly items = computed(() => {
-    const f = this.filter();
-    return (f === 'all' ? FEATURED : FEATURED.filter(p => p.purpose === f)).slice(0, 6);
+  /** null = all purposes. */
+  protected readonly purpose = signal<number | null>(null);
+
+  private readonly lookups = rxResource({ params: () => this.i18n.lang(), stream: ({ params }) => this.catalog.lookups(params) });
+  protected readonly purposes = computed(() => this.lookups.value()?.unitPurposes ?? []);
+
+  protected readonly units = rxResource({
+    params: () => ({ lang: this.i18n.lang(), purpose: this.purpose() }),
+    stream: ({ params }) => this.catalog.units({ featured: true, purpose: params.purpose, pageSize: 6 }, params.lang)
   });
+  protected readonly items = computed(() => this.units.value()?.items ?? []);
 }

@@ -1,6 +1,5 @@
 import { IMAGES } from './images';
-import { AppNotification, AreaInfo, Opportunity, PropertyType, Testimonial } from './models';
-import type { IconName } from '../../shared/components/icon/icons';
+import { Opportunity, Testimonial } from './models';
 
 export const OPPORTUNITIES: readonly Opportunity[] = [
   {
@@ -61,23 +60,6 @@ export function findOpportunity(id: number): Opportunity | undefined {
   return OPPORTUNITIES.find(o => o.id === id);
 }
 
-export const AREAS: readonly AreaInfo[] = [
-  { id: 'new-cairo', name: { ar: 'القاهرة الجديدة', en: 'New Cairo' }, image: IMAGES.areas.newCairo },
-  { id: 'sheikh-zayed', name: { ar: 'الشيخ زايد', en: 'Sheikh Zayed' }, image: IMAGES.areas.sheikhZayed },
-  { id: 'north-coast', name: { ar: 'الساحل الشمالي', en: 'North Coast' }, image: IMAGES.areas.northCoast },
-  { id: 'new-capital', name: { ar: 'العاصمة الإدارية', en: 'New Capital' }, image: IMAGES.areas.newCapital }
-];
-
-export const PROPERTY_TYPE_ICONS: Readonly<Record<PropertyType, IconName>> = {
-  apartment: 'building',
-  villa: 'home',
-  townhouse: 'grid',
-  chalet: 'sun',
-  duplex: 'layers',
-  office: 'briefcase',
-  studio: 'key'
-};
-
 export const TESTIMONIALS: readonly Testimonial[] = [
   {
     name: { ar: 'محمد عبد الله', en: 'Mohamed Abdallah' },
@@ -102,68 +84,5 @@ export const TESTIMONIALS: readonly Testimonial[] = [
       ar: 'العمولة واضحة ومكتوبة على كل وحدة، والعميل بيتحجز باسمي. ده خلاني أشتغل وأنا مطمن.',
       en: 'The commission is clear on every unit and my clients are reserved under my name — I work with peace of mind.'
     }
-  }
-];
-
-export const CUSTOMER_NOTIFICATIONS: readonly AppNotification[] = [
-  {
-    id: 1, icon: 'calendar', read: false,
-    title: { ar: 'تأكيد المعاينة', en: 'Viewing confirmed' },
-    body: { ar: 'معاينة RK-1042 يوم السبت الساعة 5 مساءً.', en: 'RK-1042 viewing on Saturday at 5 PM.' },
-    time: { ar: 'من 10 دقايق', en: '10 min ago' }
-  },
-  {
-    id: 2, icon: 'trending', read: false,
-    title: { ar: 'السعر نزل', en: 'Price dropped' },
-    body: { ar: 'شاليه مراسي اللي في المفضلة نزل 5%.', en: 'The Marassi chalet in your favorites dropped 5%.' },
-    time: { ar: 'من ساعة', en: '1 hour ago' }
-  },
-  {
-    id: 3, icon: 'building', read: true,
-    title: { ar: 'وحدات جديدة', en: 'New units' },
-    body: { ar: '6 وحدات جديدة في التجمع الخامس.', en: '6 new units in the Fifth Settlement.' },
-    time: { ar: 'امبارح', en: 'Yesterday' }
-  }
-];
-
-export const BROKER_NOTIFICATIONS: readonly AppNotification[] = [
-  {
-    id: 1, icon: 'users', read: false,
-    title: { ar: 'عميلك طلب معاينة', en: 'Your client requested a viewing' },
-    body: { ar: 'نهى سمير طلبت معاينة وحدة ميفيدا.', en: 'Noha Samir requested a viewing in Mivida.' },
-    time: { ar: 'من 20 دقيقة', en: '20 min ago' }
-  },
-  {
-    id: 2, icon: 'money', read: false,
-    title: { ar: 'العمولة جاهزة', en: 'Commission ready' },
-    body: { ar: 'عمولة منى حسن 162,500 ج.م جاهزة للصرف.', en: 'Mona Hassan commission EGP 162,500 is ready.' },
-    time: { ar: 'النهارده', en: 'Today' }
-  },
-  {
-    id: 3, icon: 'checkCircle', read: true,
-    title: { ar: 'شقتك اتنشرت', en: 'Your listing is live' },
-    body: { ar: 'دوبلكس مدينتي B12 بقى ظاهر للعملاء.', en: 'Madinaty B12 duplex is now visible to customers.' },
-    time: { ar: 'امبارح', en: 'Yesterday' }
-  }
-];
-
-export const ADMIN_NOTIFICATIONS: readonly AppNotification[] = [
-  {
-    id: 1, icon: 'inbox', read: false,
-    title: { ar: 'طلب معاينة جديد', en: 'New viewing request' },
-    body: { ar: 'محمد عبد الله · RK-1042 تاج سيتي.', en: 'Mohamed Abdallah · RK-1042 Taj City.' },
-    time: { ar: 'من 5 دقايق', en: '5 min ago' }
-  },
-  {
-    id: 2, icon: 'users', read: false,
-    title: { ar: 'طلب انضمام وسيط', en: 'Broker join request' },
-    body: { ar: 'أحمد سامي بعت طلب انضمام.', en: 'Ahmed Samy sent a join request.' },
-    time: { ar: 'النهارده', en: 'Today' }
-  },
-  {
-    id: 3, icon: 'trending', read: true,
-    title: { ar: 'مهتم بالاستثمار', en: 'New investor lead' },
-    body: { ar: 'ليلى حسام مهتمة ببرج تايم.', en: 'Laila Hossam is interested in Time Tower.' },
-    time: { ar: 'من 20 دقيقة', en: '20 min ago' }
   }
 ];

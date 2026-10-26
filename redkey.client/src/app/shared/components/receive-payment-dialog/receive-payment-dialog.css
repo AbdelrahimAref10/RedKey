@@ -1,0 +1,131 @@
+.receive {
+  width: min(440px, calc(100vw - 32px));
+  padding: 0;
+  border: 0;
+  border-radius: var(--rk-radius-lg);
+  background: var(--rk-white);
+  color: var(--rk-ink);
+  box-shadow: var(--rk-shadow-lg);
+}
+
+.receive[open] {
+  animation: in .18s ease-out;
+}
+
+.receive::backdrop {
+  background: rgba(18, 16, 20, .55);
+  backdrop-filter: blur(2px);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 28px 24px 22px;
+  text-align: center;
+}
+
+.badge-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--rk-success-bg);
+  color: var(--rk-success);
+}
+
+h2 {
+  margin: 4px 0 0;
+  font-size: 18px;
+}
+
+.amount {
+  margin: 0;
+  font-family: var(--rk-font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--rk-success);
+}
+
+.desc {
+  margin: 0;
+}
+
+.label {
+  align-self: stretch;
+  margin-top: 10px;
+  text-align: start;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  align-self: stretch;
+}
+
+.option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px;
+  border: 2px solid var(--rk-line);
+  border-radius: 14px;
+  background: var(--rk-white);
+  font: inherit;
+  text-align: start;
+  color: var(--rk-text);
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+
+.option:hover {
+  border-color: var(--rk-red-200);
+}
+
+.option.on {
+  border-color: var(--rk-red);
+  background: var(--rk-red-50);
+  color: var(--rk-red);
+}
+
+.opt-name {
+  font-weight: 700;
+  color: var(--rk-ink);
+}
+
+.tick {
+  position: absolute;
+  top: 10px;
+  inset-inline-end: 10px;
+}
+
+.entry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0 0;
+  text-align: start;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  align-self: stretch;
+  margin-top: 10px;
+}
+
+.actions .btn {
+  flex: 1;
+}
+
+@keyframes in {
+  from { opacity: 0; transform: translateY(10px) scale(.97); }
+  to { opacity: 1; transform: none; }
+}

@@ -1,0 +1,44 @@
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-block-start: 8px;
+}
+
+.num,
+.nav {
+  min-width: 40px;
+  height: 40px;
+  padding-inline: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--rk-line);
+  background: var(--rk-white);
+  color: var(--rk-ink);
+  font-weight: 600;
+  display: inline-grid;
+  place-items: center;
+}
+
+.num:hover,
+.nav:hover:not(:disabled) {
+  border-color: var(--rk-red);
+  color: var(--rk-red);
+}
+
+.num.active {
+  background: var(--rk-red);
+  border-color: var(--rk-red);
+  color: #fff;
+}
+
+.nav:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+.gap {
+  color: var(--rk-muted);
+  padding-inline: 4px;
+}

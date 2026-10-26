@@ -1,22 +1,20 @@
-@let t = i18n.t();
-@let inv = t.site.invest;
 @let lang = i18n.lang();
 <section class="page">
   <div class="container stack">
     <div class="band">
       <div class="band-text">
-        <span class="tag"><app-icon name="trending" [size]="16" />{{ inv.eyebrow }}</span>
-        <h1>{{ inv.title }}</h1>
-        <p>{{ inv.text }}</p>
+        <span class="tag"><app-icon name="trending" [size]="16" />{{ 'site.invest.eyebrow' | translate }}</span>
+        <h1>{{ 'site.invest.title' | translate }}</h1>
+        <p>{{ 'site.invest.text' | translate }}</p>
       </div>
       <div class="steps">
-        @for (step of inv.steps; track $index) {
+        @for (step of ('site.invest.steps' | translate); track $index) {
           <div><b>{{ $index + 1 }}</b><span>{{ step }}</span></div>
         }
       </div>
     </div>
 
-    <h2 class="section-title">{{ inv.available }}</h2>
+    <h2 class="section-title">{{ 'site.invest.available' | translate }}</h2>
 
     <div class="grid">
       @for (o of opportunities; track o.id; let i = $index) {
@@ -29,9 +27,9 @@
             <b class="title">{{ o.title | loc: lang }}</b>
             <span class="muted place"><app-icon name="pin" [size]="15" />{{ o.area | loc: lang }}</span>
             <div class="stats">
-              <div><b>{{ o.yield }}%</b><span>{{ inv.yield }}</span></div>
-              <div><b>{{ fmt.format(o.sharePrice) }}</b><span>{{ t.common.perShare }}</span></div>
-              <div><b>{{ o.durationYears }} {{ t.common.years }}</b><span>{{ inv.duration }}</span></div>
+              <div><b>{{ o.yield }}%</b><span>{{ 'site.invest.yield' | translate }}</span></div>
+              <div><b>{{ fmt.format(o.sharePrice) }}</b><span>{{ 'common.perShare' | translate }}</span></div>
+              <div><b>{{ o.durationYears }} {{ 'common.years' | translate }}</b><span>{{ 'site.invest.duration' | translate }}</span></div>
             </div>
           </div>
         </a>

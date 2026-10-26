@@ -7,4 +7,5 @@ public sealed record AuthenticatedUser(
     string FullName,
     string Email,
     string? PhoneNumber,
-    UserRole Role);
+    UserRole Role,
+    string PreferredLanguage);

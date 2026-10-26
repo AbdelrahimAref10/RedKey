@@ -1,47 +1,45 @@
-@let t = i18n.t();
-@let o = t.admin.opportunities;
 @let lang = i18n.lang();
 <div class="page-head">
   <div>
-    <h1>{{ o.title }}</h1>
-    <p>{{ o.subtitle }}</p>
+    <h1>{{ 'admin.opportunities.title' | translate }}</h1>
+    <p>{{ 'admin.opportunities.subtitle' | translate }}</p>
   </div>
   <button type="button" class="btn" [class.btn-primary]="!showForm()" [class.btn-outline]="showForm()" (click)="showForm.set(!showForm())">
-    {{ showForm() ? t.common.cancel : o.new }}
+    {{ showForm() ? ('common.cancel' | translate) : ('admin.opportunities.new' | translate) }}
   </button>
 </div>
 
 @if (showForm()) {
   <form class="card form-grid" [formGroup]="form" (ngSubmit)="submit()" novalidate>
     <div class="field">
-      <label for="name">{{ o.name }}</label>
-      <input id="name" class="input" formControlName="name" [placeholder]="o.namePlaceholder" />
+      <label for="name">{{ 'admin.opportunities.name' | translate }}</label>
+      <input id="name" class="input" formControlName="name" [placeholder]="'admin.opportunities.namePlaceholder' | translate" />
     </div>
     <div class="field">
-      <label for="area">{{ o.area }}</label>
+      <label for="area">{{ 'admin.opportunities.area' | translate }}</label>
       <input id="area" class="input" formControlName="area" />
     </div>
     <div class="field">
-      <label for="yield">{{ o.yield }}</label>
+      <label for="yield">{{ 'admin.opportunities.yield' | translate }}</label>
       <input id="yield" class="input" type="number" step="0.1" formControlName="yield" />
     </div>
     <div class="field">
-      <label for="share">{{ o.sharePrice }}</label>
+      <label for="share">{{ 'admin.opportunities.sharePrice' | translate }}</label>
       <input id="share" class="input" type="number" formControlName="sharePrice" />
     </div>
     <div class="field">
-      <label for="duration">{{ o.duration }}</label>
+      <label for="duration">{{ 'admin.opportunities.duration' | translate }}</label>
       <input id="duration" class="input" formControlName="duration" />
     </div>
     <div class="field span-all">
-      <label for="desc">{{ o.description }}</label>
+      <label for="desc">{{ 'admin.opportunities.description' | translate }}</label>
       <textarea id="desc" class="textarea" rows="2" formControlName="description"></textarea>
     </div>
     @if (form.invalid && form.touched) {
-      <div class="alert alert-error span-all"><app-icon name="info" [size]="18" />{{ t.errors['validation.required'] }}</div>
+      <div class="alert alert-error span-all"><app-icon name="info" [size]="18" />{{ 'errors.validation.required' | translate }}</div>
     }
     <div class="span-all">
-      <button type="submit" class="btn btn-dark">{{ o.saveAndPublish }}</button>
+      <button type="submit" class="btn btn-dark">{{ 'admin.opportunities.saveAndPublish' | translate }}</button>
     </div>
   </form>
 }
@@ -52,10 +50,10 @@
       <div class="img-frame media"><img [ngSrc]="item.image" fill [priority]="i < 2" [alt]="item.title | loc: lang" /></div>
       <div class="body">
         <b>{{ item.title | loc: lang }}</b>
-        <span class="muted small">{{ item.area | loc: lang }} · {{ o.return }} {{ item.yield }}% · {{ o.share }} {{ fmt.format(item.sharePrice) }}</span>
+        <span class="muted small">{{ item.area | loc: lang }} · {{ 'admin.opportunities.return' | translate }} {{ item.yield }}% · {{ 'admin.opportunities.share' | translate }} {{ fmt.format(item.sharePrice) }}</span>
         <div class="foot">
-          <a routerLink="/admin/requests" class="small"><b>{{ item.interested }}</b> {{ o.interested }}</a>
-          <span class="badge badge-green">{{ o.visible }}</span>
+          <a routerLink="/admin/requests" class="small"><b>{{ item.interested }}</b> {{ 'admin.opportunities.interested' | translate }}</a>
+          <span class="badge badge-green">{{ 'admin.opportunities.visible' | translate }}</span>
         </div>
       </div>
     </article>

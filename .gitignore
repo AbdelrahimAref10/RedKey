@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# Uploaded unit images / unit type icons (runtime data)
+RedKey.Server/uploads/
+RedKey.Server/wwwroot/uploads/

@@ -1,64 +1,61 @@
-@let t = i18n.t();
-@let d = t.broker.dashboard;
 @let lang = i18n.lang();
 <div class="page-head">
   <div>
-    <h1>{{ d.welcome }} {{ firstName() }} 👋</h1>
-    <p>{{ d.code }}: <b class="ltr code">{{ code }}</b></p>
+    <h1>{{ 'broker.dashboard.welcome' | translate }} {{ firstName() }} 👋</h1>
+    <p>{{ 'broker.dashboard.code' | translate }}: <b class="ltr code">{{ code }}</b></p>
   </div>
   <div class="row">
-    <a class="btn btn-outline" routerLink="/broker/listings/new"><app-icon name="plus" [size]="16" />{{ d.addListing }}</a>
-    <a class="btn btn-primary" routerLink="/broker/clients/new"><app-icon name="users" [size]="16" />{{ d.registerClient }}</a>
+    <a class="btn btn-outline" routerLink="/broker/listings/new"><app-icon name="plus" [size]="16" />{{ 'broker.dashboard.addListing' | translate }}</a>
+    <a class="btn btn-primary" routerLink="/broker/clients/new"><app-icon name="users" [size]="16" />{{ 'broker.dashboard.registerClient' | translate }}</a>
   </div>
 </div>
 
-<div class="alert alert-info"><app-icon name="clock" [size]="18" />{{ d.pending }}</div>
+<div class="alert alert-info"><app-icon name="clock" [size]="18" />{{ 'broker.dashboard.pending' | translate }}</div>
 
 <div class="kpis">
   <div class="kpi accent">
-    <span class="kpi-label">{{ d.clients }}</span>
+    <span class="kpi-label">{{ 'broker.dashboard.clients' | translate }}</span>
     <b class="kpi-value">{{ kpis.clients }}</b>
-    <span class="kpi-delta">+2 {{ d.thisMonth }}</span>
+    <span class="kpi-delta">+2 {{ 'broker.dashboard.thisMonth' | translate }}</span>
   </div>
   <div class="kpi">
-    <span class="kpi-label">{{ d.sales }}</span>
+    <span class="kpi-label">{{ 'broker.dashboard.sales' | translate }}</span>
     <b class="kpi-value">{{ kpis.sales }}</b>
-    <span class="kpi-delta green">+1 {{ d.thisMonth }}</span>
+    <span class="kpi-delta green">+1 {{ 'broker.dashboard.thisMonth' | translate }}</span>
   </div>
   <div class="kpi">
-    <span class="kpi-label">{{ d.commission }}</span>
+    <span class="kpi-label">{{ 'broker.dashboard.commission' | translate }}</span>
     <b class="kpi-value">{{ kpis.commission }}</b>
     <span class="kpi-delta green">+162K</span>
   </div>
   <div class="kpi">
-    <span class="kpi-label">{{ d.listings }}</span>
-    <b class="kpi-value">{{ kpis.listings }}</b>
-    <span class="kpi-delta gold">1 {{ t.admin.brokers.st.rev }}</span>
+    <span class="kpi-label">{{ 'broker.dashboard.listings' | translate }}</span>
+    <b class="kpi-value">{{ listingsCount() }}</b>
   </div>
 </div>
 
 <div class="cols">
   <section class="card">
     <div class="card-head">
-      <h2 class="card-title">{{ d.topUnits }}</h2>
-      <a routerLink="/broker/units" class="small">{{ t.common.viewAll }}</a>
+      <h2 class="card-title">{{ 'broker.dashboard.topUnits' | translate }}</h2>
+      <a routerLink="/broker/units" class="small">{{ 'common.viewAll' | translate }}</a>
     </div>
-    @for (unit of topUnits; track unit.id) {
+    @for (unit of topUnits(); track unit.id) {
       <div class="unit">
         <div class="unit-info">
-          <b>{{ unit.title | loc: lang }} · {{ unit.compound | loc: lang }}</b>
-          <span class="muted small">{{ unit.price | money: lang }} · {{ unit.size }} {{ t.common.sqm }}</span>
+          <b>{{ unit.title }} · {{ unit.compound }}</b>
+          <span class="muted small">{{ unit.price | money: lang }} · {{ unit.size }} {{ 'common.sqm' | translate }}</span>
         </div>
-        <span class="badge badge-red">{{ t.broker.units.commission }} {{ unit.commission }}%</span>
-        <a class="btn btn-soft btn-xs" routerLink="/broker/clients/new" [queryParams]="{ unit: unit.id }">{{ d.registerClient }}</a>
+        <span class="badge badge-red">{{ 'broker.units.commission' | translate }} {{ unit.brokerCommission }}%</span>
+        <a class="btn btn-soft btn-xs" routerLink="/broker/clients/new" [queryParams]="{ unit: unit.id }">{{ 'broker.dashboard.registerClient' | translate }}</a>
       </div>
     }
   </section>
 
   <section class="card">
     <div class="card-head">
-      <h2 class="card-title">{{ d.recentClients }}</h2>
-      <a routerLink="/broker/clients" class="small">{{ t.common.viewAll }}</a>
+      <h2 class="card-title">{{ 'broker.dashboard.recentClients' | translate }}</h2>
+      <a routerLink="/broker/clients" class="small">{{ 'common.viewAll' | translate }}</a>
     </div>
     @for (client of clients; track client.id) {
       <div class="client">
@@ -67,7 +64,7 @@
           <b>{{ client.name | loc: lang }}</b>
           <span class="muted small">{{ client.unit | loc: lang }} · {{ client.reservation | loc: lang }}</span>
         </div>
-        <span class="badge" [class]="badge[client.status]">{{ t.admin.brokers.st[client.status] }}</span>
+        <span class="badge" [class]="badge[client.status]">{{ ('admin.brokers.st.' + client.status) | translate }}</span>
       </div>
     }
   </section>

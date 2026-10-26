@@ -29,7 +29,13 @@ export default [
       },
       {
         path: 'listings/new',
-        loadComponent: () => import('./listing-form/listing-form').then(m => m.ListingForm)
+        data: { mode: 'broker' },
+        loadComponent: () => import('../units/unit-editor/unit-editor').then(m => m.UnitEditor)
+      },
+      {
+        path: 'listings/:id',
+        data: { mode: 'broker' },
+        loadComponent: () => import('../units/unit-editor/unit-editor').then(m => m.UnitEditor)
       },
       {
         path: 'profile',

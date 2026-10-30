@@ -6,45 +6,154 @@
   </div>
 </div>
 
-<div class="tabs" role="tablist">
-  <button type="button" role="tab" class="tab" [class.active]="tab() === 'user'" (click)="tab.set('user')">{{ 'admin.favorites.byUser' | translate }}</button>
-  <button type="button" role="tab" class="tab" [class.active]="tab() === 'unit'" (click)="tab.set('unit')">{{ 'admin.favorites.byUnit' | translate }}</button>
-</div>
+<div class="toolbar">
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" class="tab" [class.active]="tab() === 'user'" (click)="tab.set('user')">
+      <app-icon name="users" [size]="15" />{{ 'admin.favorites.byUser' | translate }}
+      @if (byUser.value(); as r) { <span class="cnt">{{ r.totalCount }}</span> }
+    </button>
+    <button type="button" role="tab" class="tab" [class.active]="tab() === 'unit'" (click)="tab.set('unit')">
+      <app-icon name="heart" [size]="15" />{{ 'admin.favorites.byUnit' | translate }}
+    </button>
+  </div>
 
-<div class="table-wrap">
   @if (tab() === 'user') {
-    <table class="table">
-      <thead><tr><th>{{ 'admin.favorites.client' | translate }}</th><th>{{ 'common.phone' | translate }}</th><th>{{ 'admin.favorites.unit' | translate }}</th><th>{{ 'admin.favorites.price' | translate }}</th><th>{{ 'admin.favorites.when' | translate }}</th><th>{{ 'admin.favorites.after' | translate }}</th><th></th></tr></thead>
-      <tbody>
-        @for (r of byUser; track $index) {
-          <tr>
-            <td><b>{{ r.name | loc: lang }}</b></td>
-            <td class="muted"><span class="ltr">{{ r.phone }}</span></td>
-            <td>{{ r.unit | loc: lang }}</td>
-            <td class="nowrap">{{ r.price | loc: lang }}</td>
-            <td>{{ r.when | loc: lang }}</td>
-            <td class="muted small">{{ r.after | loc: lang }}</td>
-            <td><a class="btn btn-soft btn-xs" [href]="'tel:' + r.phone.replaceAll(' ', '')"><app-icon name="phone" [size]="14" />{{ 'admin.favorites.call' | translate }}</a></td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  } @else {
-    <table class="table">
-      <thead><tr><th>{{ 'admin.favorites.unitCol' | translate }}</th><th>{{ 'admin.favorites.price' | translate }}</th><th>{{ 'admin.favorites.count' | translate }}</th><th>{{ 'admin.favorites.requested' | translate }}</th><th>{{ 'admin.favorites.last' | translate }}</th></tr></thead>
-      <tbody>
-        @for (r of byUnit; track $index) {
-          <tr>
-            <td><b>{{ r.unit | loc: lang }}</b></td>
-            <td class="nowrap">{{ r.price | loc: lang }}</td>
-            <td><div class="bar-cell"><span class="bar" [style.width.px]="r.bar"></span><b>{{ r.count }}</b></div></td>
-            <td>{{ r.requested }}</td>
-            <td>{{ r.last | loc: lang }}</td>
-          </tr>
-        }
-      </tbody>
-    </table>
+    <label class="search">
+      <app-icon name="search" [size]="16" />
+      <input type="search" class="input" [placeholder]="'admin.favorites.search' | translate" [attr.aria-label]="'admin.favorites.search' | translate"
+        (input)="onSearch($any($event.target).value)" />
+    </label>
   }
 </div>
+
+@if (tab() === 'user') {
+  @if (unitFilter(); as u) {
+    <div class="filter-chip">
+      <app-icon name="heart" [size]="14" />{{ 'admin.favorites.saversOf' | translate }} <b dir="ltr">{{ u.code }}</b> · {{ u.title }}
+      <button type="button" class="icon-btn" [title]="'common.close' | translate" [attr.aria-label]="'common.close' | translate" (click)="clearUnitFilter()">
+        <app-icon name="close" [size]="14" />
+      </button>
+    </div>
+  }
+
+  @let res = byUser.value();
+  <div class="table-wrap" [class.loading]="byUser.isLoading()">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{ 'admin.favorites.client' | translate }}</th>
+          <th>{{ 'common.phone' | translate }}</th>
+          <th>{{ 'admin.favorites.unit' | translate }}</th>
+          <th>{{ 'admin.favorites.price' | translate }}</th>
+          <th>{{ 'admin.favorites.when' | translate }}</th>
+          <th>{{ 'admin.favorites.after' | translate }}</th>
+          <th class="end">{{ 'common.actions' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (f of res?.items ?? []; track f.customerUserId + f.unit.id) {
+          <tr>
+            <td>
+              <b>{{ f.customerName }}</b>
+              @if (f.customerEmail) { <span class="muted small block ltr">{{ f.customerEmail }}</span> }
+            </td>
+            <td class="nowrap">
+              @if (f.customerPhone) { <a class="phone" dir="ltr" [href]="'tel:' + f.customerPhone">{{ f.customerPhone }}</a> }
+              @else { <span class="muted">—</span> }
+            </td>
+            <td>
+              <a class="unit" [routerLink]="['/admin/units', f.unit.id]">
+                <span class="thumb"><img [ngSrc]="f.unit.coverImageUrl" width="64" height="48" alt="" /></span>
+                <span class="unit-text">
+                  <b><span dir="ltr">{{ f.unit.code }}</span> · {{ f.unit.title }}</b>
+                  <span class="muted small">{{ f.unit.purposeName }} · {{ f.unit.areaName }} · {{ f.unit.cityName }}</span>
+                </span>
+              </a>
+            </td>
+            <td class="nowrap">{{ f.unit.price | money: lang : isRent(f.unit) }}</td>
+            <td class="muted nowrap">{{ time(f.savedAtUtc) }}</td>
+            <td>
+              @if (f.requestedViewing) {
+                <span class="badge badge-green">{{ 'admin.favorites.requestedViewing' | translate }} · {{ f.viewingStatusName }}</span>
+              } @else {
+                <span class="badge badge-gold">{{ 'admin.favorites.noViewing' | translate }}</span>
+              }
+            </td>
+            <td>
+              <div class="actions">
+                @if (f.customerPhone; as phone) {
+                  <a class="icon-btn" [href]="'tel:' + phone" [title]="'admin.favorites.call' | translate" [attr.aria-label]="'admin.favorites.call' | translate">
+                    <app-icon name="phone" [size]="16" />
+                  </a>
+                  <a class="icon-btn wa" [href]="whatsapp(phone, f.customerName, f.unit)" target="_blank" rel="noopener"
+                    [title]="'admin.favorites.whatsapp' | translate" [attr.aria-label]="'admin.favorites.whatsapp' | translate">
+                    <app-icon name="message" [size]="16" />
+                  </a>
+                }
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          @if (!byUser.isLoading()) {
+            <tr><td colspan="7" class="empty-row muted">{{ 'admin.favorites.empty' | translate }}</td></tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+  @if (res && (res.totalPages ?? 0) > 1) {
+    <app-pagination [page]="res.page" [totalPages]="res.totalPages ?? 0" (pageChange)="userPage.set($event)" />
+  }
+} @else {
+  @let res = byUnit.value();
+  <div class="table-wrap" [class.loading]="byUnit.isLoading()">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{ 'admin.favorites.unitCol' | translate }}</th>
+          <th>{{ 'admin.favorites.price' | translate }}</th>
+          <th>{{ 'admin.favorites.count' | translate }}</th>
+          <th>{{ 'admin.favorites.requested' | translate }}</th>
+          <th>{{ 'admin.favorites.last' | translate }}</th>
+          <th class="end">{{ 'common.actions' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of res?.items ?? []; track r.unit.id) {
+          <tr class="clickable" (click)="showSavers(r.unit)">
+            <td>
+              <span class="unit">
+                <span class="thumb"><img [ngSrc]="r.unit.coverImageUrl" width="64" height="48" alt="" /></span>
+                <span class="unit-text">
+                  <b><span dir="ltr">{{ r.unit.code }}</span> · {{ r.unit.title }}</b>
+                  <span class="muted small">{{ r.unit.purposeName }} · {{ r.unit.areaName }} · {{ r.unit.cityName }}</span>
+                </span>
+              </span>
+            </td>
+            <td class="nowrap">{{ r.unit.price | money: lang : isRent(r.unit) }}</td>
+            <td><div class="bar-cell"><span class="bar" [style.width.px]="(r.savedCount / maxSaved()) * 120"></span><b>{{ r.savedCount }}</b></div></td>
+            <td>{{ r.requestedViewingCount }}</td>
+            <td class="muted nowrap">{{ time(r.lastSavedAtUtc) }}</td>
+            <td>
+              <div class="actions">
+                <button type="button" class="icon-btn" [title]="'admin.favorites.showSavers' | translate" [attr.aria-label]="'admin.favorites.showSavers' | translate"
+                  (click)="$event.stopPropagation(); showSavers(r.unit)">
+                  <app-icon name="users" [size]="16" />
+                </button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          @if (!byUnit.isLoading()) {
+            <tr><td colspan="6" class="empty-row muted">{{ 'admin.favorites.empty' | translate }}</td></tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+  @if (res && (res.totalPages ?? 0) > 1) {
+    <app-pagination [page]="res.page" [totalPages]="res.totalPages ?? 0" (pageChange)="unitPage.set($event)" />
+  }
+}
 
 <div class="alert alert-info"><app-icon name="info" [size]="18" />{{ 'admin.favorites.hint' | translate }}</div>

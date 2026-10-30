@@ -632,6 +632,29 @@ namespace RedKey.Persistence.Migrations
                     b.ToTable("RK_Customers", (string)null);
                 });
 
+            modelBuilder.Entity("RedKey.Domain.Entities.Favorite", b =>
+                {
+                    b.Property<Guid>("CustomerUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UnitId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("CustomerUserId", "UnitId");
+
+                    b.HasIndex("UnitId");
+
+                    b.HasIndex("CustomerUserId", "CreatedAtUtc");
+
+                    b.ToTable("RK_Favorites", (string)null);
+                });
+
             modelBuilder.Entity("RedKey.Domain.Entities.Identity.ApplicationRole", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1268,6 +1291,25 @@ namespace RedKey.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RedKey.Domain.Entities.Favorite", b =>
+                {
+                    b.HasOne("RedKey.Domain.Entities.Identity.ApplicationUser", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RedKey.Domain.Entities.Units.PropertyUnit", "Unit")
+                        .WithMany()
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Unit");
                 });
 
             modelBuilder.Entity("RedKey.Domain.Entities.Notification", b =>

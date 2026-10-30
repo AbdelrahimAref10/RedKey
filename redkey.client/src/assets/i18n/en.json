@@ -564,7 +564,15 @@
       "count": "Times saved",
       "requested": "Requested a viewing",
       "last": "Last time",
-      "hint": "Use it for follow-up: someone who saved a unit and has not requested a viewing yet is a warm lead — call them or notify them when the price drops."
+      "hint": "Use it for follow-up: someone who saved a unit and has not requested a viewing yet is a warm lead — call them or notify them when the price drops.",
+      "search": "Search by customer name, phone, email or unit code",
+      "saversOf": "Saved by",
+      "requestedViewing": "Requested a viewing",
+      "noViewing": "No viewing request yet",
+      "whatsapp": "WhatsApp them",
+      "whatsappText": "Hi {{name}}, this is the RedKey team. We saw you are interested in {{unit}} — shall we arrange a viewing?",
+      "showSavers": "Who saved it",
+      "empty": "No one saved units yet."
     }
   },
   "broker": {

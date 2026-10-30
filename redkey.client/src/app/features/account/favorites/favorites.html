@@ -1,7 +1,7 @@
 <section class="page">
   <div class="container stack">
     <div>
-      <h1>{{ 'customer.favorites.title' | translate }} <span class="count">{{ favorites.count() }}</span></h1>
+      <h1>{{ 'customer.favorites.title' | translate }} <span class="count">{{ total() }}</span></h1>
       <p class="muted">{{ 'customer.favorites.subtitle' | translate }}</p>
     </div>
 
@@ -18,5 +18,11 @@
         }
       }
     </div>
+
+    @if (result(); as r) {
+      @if ((r.totalPages ?? 0) > 1) {
+        <app-pagination [page]="r.page" [totalPages]="r.totalPages ?? 0" (pageChange)="page.set($event)" />
+      }
+    }
   </div>
 </section>

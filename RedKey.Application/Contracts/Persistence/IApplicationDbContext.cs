@@ -13,6 +13,7 @@ public interface IApplicationDbContext
     DbSet<Broker> Brokers { get; }
     DbSet<City> Cities { get; }
     DbSet<ContactMessage> ContactMessages { get; }
+    DbSet<Favorite> Favorites { get; }
     DbSet<Area> Areas { get; }
     DbSet<UnitType> UnitTypes { get; }
     DbSet<PropertyUnit> Units { get; }

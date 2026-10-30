@@ -69,3 +69,24 @@ internal sealed class ContactMessageConfiguration : IEntityTypeConfiguration<Con
         builder.HasOne(m => m.Sender).WithMany().HasForeignKey(m => m.SenderUserId).OnDelete(DeleteBehavior.Restrict);
     }
 }
+
+internal sealed class FavoriteConfiguration : IEntityTypeConfiguration<Favorite>
+{
+    public void Configure(EntityTypeBuilder<Favorite> builder)
+    {
+        builder.ToTable(TableNames.Favorites);
+
+        // One row per customer + unit: adding twice is a no-op.
+        builder.HasKey(f => new { f.CustomerUserId, f.UnitId });
+
+        // "My favorites" newest first + how many saved a unit.
+        builder.HasIndex(f => new { f.CustomerUserId, f.CreatedAtUtc });
+        builder.HasIndex(f => f.UnitId);
+
+        builder.HasOne(f => f.Customer).WithMany().HasForeignKey(f => f.CustomerUserId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(f => f.Unit).WithMany().HasForeignKey(f => f.UnitId).OnDelete(DeleteBehavior.Restrict);
+
+        // Same visibility as the unit (matches PropertyUnit's soft-delete filter).
+        builder.HasQueryFilter(f => !f.Unit.IsDeleted);
+    }
+}

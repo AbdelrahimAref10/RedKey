@@ -23,6 +23,7 @@ internal static class TableNames
     public const string ViewingRequests = "RK_ViewingRequests";
     public const string Notifications = "RK_Notifications";
     public const string ContactMessages = "RK_ContactMessages";
+    public const string Favorites = "RK_Favorites";
 
     /// <summary>Sequence behind the unit codes (RK-1000, RK-1001...).</summary>
     public const string UnitCodeSequence = "RK_UnitCodeSequence";

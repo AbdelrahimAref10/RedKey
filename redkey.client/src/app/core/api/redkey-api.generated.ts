@@ -978,6 +978,131 @@ export class AdminContactMessagesClient implements IAdminContactMessagesClient {
     }
 }
 
+export interface IAdminFavoritesClient {
+    getFavorites(search?: string | null | undefined, unitId?: string | null | undefined, page?: number | null | undefined, pageSize?: number | null | undefined): Observable<PagedResultOfFavoriteAdminDto>;
+    getByUnit(page?: number | null | undefined, pageSize?: number | null | undefined): Observable<PagedResultOfFavoriteUnitStatsDto>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class AdminFavoritesClient implements IAdminFavoritesClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    getFavorites(search?: string | null | undefined, unitId?: string | null | undefined, page?: number | null | undefined, pageSize?: number | null | undefined): Observable<PagedResultOfFavoriteAdminDto> {
+        let url_ = this.baseUrl + "/api/admin/favorites?";
+        if (search !== undefined && search !== null)
+            url_ += "search=" + encodeURIComponent("" + search) + "&";
+        if (unitId !== undefined && unitId !== null)
+            url_ += "unitId=" + encodeURIComponent("" + unitId) + "&";
+        if (page !== undefined && page !== null)
+            url_ += "page=" + encodeURIComponent("" + page) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetFavorites(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetFavorites(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagedResultOfFavoriteAdminDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagedResultOfFavoriteAdminDto>;
+        }));
+    }
+
+    protected processGetFavorites(response: HttpResponseBase): Observable<PagedResultOfFavoriteAdminDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PagedResultOfFavoriteAdminDto;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getByUnit(page?: number | null | undefined, pageSize?: number | null | undefined): Observable<PagedResultOfFavoriteUnitStatsDto> {
+        let url_ = this.baseUrl + "/api/admin/favorites/by-unit?";
+        if (page !== undefined && page !== null)
+            url_ += "page=" + encodeURIComponent("" + page) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetByUnit(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetByUnit(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagedResultOfFavoriteUnitStatsDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagedResultOfFavoriteUnitStatsDto>;
+        }));
+    }
+
+    protected processGetByUnit(response: HttpResponseBase): Observable<PagedResultOfFavoriteUnitStatsDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PagedResultOfFavoriteUnitStatsDto;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export interface IAdminUnitsClient {
     getUnits(status?: number | null | undefined, purpose?: number | null | undefined, unitTypeId?: number | null | undefined, cityId?: number | null | undefined, areaId?: number | null | undefined, maxPrice?: number | null | undefined, search?: string | null | undefined, featured?: boolean | null | undefined, page?: number | null | undefined, pageSize?: number | null | undefined, lang?: string | null | undefined): Observable<PagedResultOfUnitListItemDto>;
     create(command: CreateUnitCommand): Observable<string>;
@@ -2736,6 +2861,227 @@ export class CustomerContactMessagesClient implements ICustomerContactMessagesCl
     }
 }
 
+export interface ICustomerFavoritesClient {
+    getFavorites(page?: number | null | undefined, pageSize?: number | null | undefined, lang?: string | null | undefined): Observable<PagedResultOfUnitListItemDto>;
+    getFavoriteIds(): Observable<string[]>;
+    add(unitId: string): Observable<void>;
+    remove(unitId: string): Observable<void>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class CustomerFavoritesClient implements ICustomerFavoritesClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    getFavorites(page?: number | null | undefined, pageSize?: number | null | undefined, lang?: string | null | undefined): Observable<PagedResultOfUnitListItemDto> {
+        let url_ = this.baseUrl + "/api/customer/favorites?";
+        if (page !== undefined && page !== null)
+            url_ += "page=" + encodeURIComponent("" + page) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (lang !== undefined && lang !== null)
+            url_ += "lang=" + encodeURIComponent("" + lang) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetFavorites(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetFavorites(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagedResultOfUnitListItemDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagedResultOfUnitListItemDto>;
+        }));
+    }
+
+    protected processGetFavorites(response: HttpResponseBase): Observable<PagedResultOfUnitListItemDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PagedResultOfUnitListItemDto;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getFavoriteIds(): Observable<string[]> {
+        let url_ = this.baseUrl + "/api/customer/favorites/ids";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetFavoriteIds(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetFavoriteIds(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<string[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<string[]>;
+        }));
+    }
+
+    protected processGetFavoriteIds(response: HttpResponseBase): Observable<string[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as string[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    add(unitId: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/customer/favorites/{unitId}";
+        if (unitId === undefined || unitId === null)
+            throw new globalThis.Error("The parameter 'unitId' must be defined.");
+        url_ = url_.replace("{unitId}", encodeURIComponent("" + unitId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAdd(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAdd(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processAdd(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result404: any = null;
+            result404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ProblemDetails;
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    remove(unitId: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/customer/favorites/{unitId}";
+        if (unitId === undefined || unitId === null)
+            throw new globalThis.Error("The parameter 'unitId' must be defined.");
+        url_ = url_.replace("{unitId}", encodeURIComponent("" + unitId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRemove(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRemove(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processRemove(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export interface ICustomerLookupsClient {
     getUnitTypes(lang?: string | null | undefined): Observable<UnitTypeDto[]>;
     getCities(lang?: string | null | undefined): Observable<CityDto[]>;
@@ -3840,12 +4186,23 @@ export interface ContactMessageDetailsDto extends ContactMessageListItemDto {
     readAtUtc?: string | undefined;
 }
 
-export interface PagedResultOfUnitListItemDto {
-    items: UnitListItemDto[];
+export interface PagedResultOfFavoriteAdminDto {
+    items: FavoriteAdminDto[];
     page: number;
     pageSize: number;
     totalCount: number;
     totalPages?: number;
+}
+
+export interface FavoriteAdminDto {
+    customerUserId: string;
+    customerName: string;
+    customerPhone?: string | undefined;
+    customerEmail?: string | undefined;
+    unit: UnitListItemDto;
+    savedAtUtc: string;
+    requestedViewing: boolean;
+    viewingStatusName?: string | undefined;
 }
 
 export interface UnitListItemDto {
@@ -3883,6 +4240,29 @@ export interface UnitCreatorDto {
     fullName: string;
     role: number;
     roleName: string;
+}
+
+export interface PagedResultOfFavoriteUnitStatsDto {
+    items: FavoriteUnitStatsDto[];
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    totalPages?: number;
+}
+
+export interface FavoriteUnitStatsDto {
+    unit: UnitListItemDto;
+    savedCount: number;
+    requestedViewingCount: number;
+    lastSavedAtUtc: string;
+}
+
+export interface PagedResultOfUnitListItemDto {
+    items: UnitListItemDto[];
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    totalPages?: number;
 }
 
 export interface UnitDetailsDto {

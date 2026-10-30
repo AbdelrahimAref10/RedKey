@@ -76,39 +76,3 @@ export const BROKER_UNITS_ADMIN: readonly BrokerUnitAdminRow[] = [
   { id: 'u2', title: L('دوبلكس · مدينتي B12', 'Duplex · Madinaty B12'), broker: KARIM, price: L('8,400,000 ج', 'EGP 8,400,000'), documents: L('كاملة', 'Complete'), status: 'pub' },
   { id: 'u3', title: L('شقة 3 غرف · الرحاب', '3-bed apartment · Rehab'), broker: L('رنا مصطفى', 'Rana Mostafa'), price: L('5,100,000 ج', 'EGP 5,100,000'), documents: L('كاملة', 'Complete'), status: 'pub' }
 ];
-
-export interface FavoriteByUser {
-  name: Loc;
-  phone: string;
-  unit: Loc;
-  price: Loc;
-  when: Loc;
-  after: Loc;
-}
-
-export interface FavoriteByUnit {
-  unit: Loc;
-  price: Loc;
-  count: number;
-  requested: number;
-  last: Loc;
-}
-
-const NO_VISIT = L('لسه ما طلبش معاينة', 'No viewing request yet');
-
-export const FAVORITES_BY_USER: readonly FavoriteByUser[] = [
-  { name: L('أحمد علي', 'Ahmed Ali'), phone: '010 1234 5678', unit: L('شقة 3 غرف · تاج سيتي', '3-bed · Taj City'), price: L('8,450,000 ج', 'EGP 8,450,000'), when: L('من ساعة', '1 hour ago'), after: NO_VISIT },
-  { name: L('أحمد علي', 'Ahmed Ali'), phone: '010 1234 5678', unit: L('تاون هاوس كورنر · ميفيدا', 'Corner townhouse · Mivida'), price: L('21,900,000 ج', 'EGP 21,900,000'), when: L('امبارح', 'Yesterday'), after: L('طلب معاينة', 'Requested a viewing') },
-  { name: L('سلمى رأفت', 'Salma Raafat'), phone: '011 4455 6677', unit: L('شاليه أول صف · مراسي', 'Sea chalet · Marassi'), price: L('14,200,000 ج', 'EGP 14,200,000'), when: L('امبارح', 'Yesterday'), after: NO_VISIT },
-  { name: L('خالد منير', 'Khaled Mounir'), phone: '012 8899 0011', unit: L('شقة 3 غرف · تاج سيتي', '3-bed · Taj City'), price: L('8,450,000 ج', 'EGP 8,450,000'), when: L('من يومين', '2 days ago'), after: L('كلّمنا على واتساب', 'Contacted on WhatsApp') },
-  { name: L('ريم عادل', 'Reem Adel'), phone: '010 2233 4455', unit: L('دوبلكس بجاردن · زيد ويست', 'Garden duplex · Zed West'), price: L('16,750,000 ج', 'EGP 16,750,000'), when: L('من 3 أيام', '3 days ago'), after: NO_VISIT },
-  { name: L('ريم عادل', 'Reem Adel'), phone: '010 2233 4455', unit: L('شقة مفروشة · ذا سكوير', 'Furnished · The Square'), price: L('45,000 / شهر', 'EGP 45,000 / month'), when: L('من 3 أيام', '3 days ago'), after: NO_VISIT }
-];
-
-export const FAVORITES_BY_UNIT: readonly FavoriteByUnit[] = [
-  { unit: L('شقة 3 غرف · تاج سيتي', '3-bed · Taj City'), price: L('8,450,000 ج', 'EGP 8,450,000'), count: 46, requested: 12, last: L('من ساعة', '1 hour ago') },
-  { unit: L('تاون هاوس كورنر · ميفيدا', 'Corner townhouse · Mivida'), price: L('21,900,000 ج', 'EGP 21,900,000'), count: 31, requested: 9, last: L('امبارح', 'Yesterday') },
-  { unit: L('شاليه أول صف · مراسي', 'Sea chalet · Marassi'), price: L('14,200,000 ج', 'EGP 14,200,000'), count: 27, requested: 4, last: L('امبارح', 'Yesterday') },
-  { unit: L('دوبلكس بجاردن · زيد ويست', 'Garden duplex · Zed West'), price: L('16,750,000 ج', 'EGP 16,750,000'), count: 18, requested: 3, last: L('من 3 أيام', '3 days ago') },
-  { unit: L('شقة مفروشة · ذا سكوير', 'Furnished · The Square'), price: L('45,000 / شهر', 'EGP 45,000 / month'), count: 11, requested: 2, last: L('من 3 أيام', '3 days ago') }
-];

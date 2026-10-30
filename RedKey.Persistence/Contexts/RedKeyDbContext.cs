@@ -20,6 +20,7 @@ public sealed class RedKeyDbContext
     public DbSet<Broker> Brokers => Set<Broker>();
     public DbSet<City> Cities => Set<City>();
     public DbSet<ContactMessage> ContactMessages => Set<ContactMessage>();
+    public DbSet<Favorite> Favorites => Set<Favorite>();
     public DbSet<Area> Areas => Set<Area>();
     public DbSet<UnitType> UnitTypes => Set<UnitType>();
     public DbSet<PropertyUnit> Units => Set<PropertyUnit>();
